@@ -1,0 +1,27 @@
+<%- include ../header.ejs %>
+
+<div id="center">
+    <div id="content">
+        <div id="content-top">
+            <div class="dialog">
+                <div id="signup">
+                    <% if(typeof(data) != 'undefined' && data){ %>
+                    <div class="error alert-error">
+                        <p><%= data.msg + ' - ' + data.error %></p>
+                    </div>
+                    <% } %>
+                    <form action="/signup" method="post" id="form-signup" class="form">
+                        <!--用户账号-->
+                        <input type="text" id="username" name="username" class="input-text"/>
+                        <!--账号密码-->
+                        <input type="password" id="password" name="password" class="input-text"/>
+                        <!--注册提交按钮-->
+                        <input type="submit" value="注册">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include ../footer.ejs %>

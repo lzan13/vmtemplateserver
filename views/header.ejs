@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        <% if (typeof(title) !== 'undefined' && title) { %>
+        <%= title %>
+        <% }else{ %>
+        <%= locals.config.app_name %>
+        <% } %>
+    </title>
+    <!--引入 css 样式文件-->
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+<div id="header" class=".scroll-top">
+    <!--导航栏-->
+    <div id="nav">
+        <img class="logo" src="<%= locals.config.app_logo %>" />
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="/signin">Sign in</a></li>
+            <li><a href="/signup">Sign up</a></li>
+        </ul>
+        <div class="clear-both"></div>
+    </div>
+    <!--清除浮动控件-->
+    <div class="clear-both"></div>
+</div>

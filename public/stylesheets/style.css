@@ -1,0 +1,236 @@
+/**
+ * 1.0 - Reset
+ * css reset 部分代码，将html原有的格式全部重置
+ * ---------------------------------------------------------------------
+ */
+* {
+    margin: 0;
+    padding: 0;
+
+    /*设置浏览器过度时间*/
+    -webkit-transition: all 0.2s ease-in-out; /*safari和Chrome webkit内核浏览器特有标记 */
+    -khtml-transition: all 0.2s linear; /*KHTML内核浏览器特有标记（KHTML是WebKit的前身） */
+    -moz-transition: all 0.2s ease-in-out; /*Firefox浏览器特有标记 */
+    -ms-transition: all 0.2s ease-in-out; /*iCab浏览器特有标记*/
+    -o-transition: all 0.2s ease-in-out; /*opera浏览器特有标记 */
+    -icab-transition: all 0.2s ease-in-out; /*IE浏览器特有标记*/
+}
+
+html, body {
+    /*height: 100%;*/
+    /*width: 100%;*/
+    line-height: 1.2;
+    font-family: Arial, "Microsoft Yahei", "黑体", sans-serif;
+    font-size: 12px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font: 20px none Arial, Consolas, "Microsoft Yahei", "Courier New";
+    line-height: 1.5;
+}
+
+ul, li {
+    list-style: none;
+}
+
+a:link, a:visited {
+    text-decoration: none;
+    color: #345;
+    border: none;
+}
+
+a:hover {
+    color: rgba(65, 150, 255, 225);
+}
+
+.clear-both {
+    clear: both;
+}
+
+/**
+ * 设置网页为灰色
+ */
+/*html {*/
+/*filter: progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);*/
+/*-webkit-filter: grayscale(100%);*/
+/*}*/
+
+body {
+    background: #f8f8f8;
+    /*background-image: url('../images/bg-love.jpg');*/
+    /*background-repeat: no-repeat;*/
+    /*background-position: top center;*/
+    /*background-attachment: fixed;*/
+    /*background: url("../images/bg-love.jpg") no-repeat top center fixed;*/
+}
+
+/*模糊效果*/
+.blur {
+    /*因为 FireFox 不支持 css3 的 filter 属性，这里使用 svg 方法进行模糊*/
+    /*filter: url('../images/blur.svg#blur'); !* FireFox *!*/
+
+    /* Chrome 内核浏览器 */
+    -webkit-filter: blur(15px);
+    -moz-filter: blur(15px);
+    -ms-filter: blur(15px);
+    -o-filter: blur(15px);
+    filter: blur(15px);
+    /* IE6~IE9 */
+    filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=15, MakeShadow=false);
+}
+
+/**
+ * 页面头部导航部分
+ * ------------------------------------------------------------------------------
+ */
+#header {
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 99;
+}
+
+/*正常状态的头部样式*/
+.normal-header {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/*页面滚动时的头部样式*/
+.scroll-header {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fefefe;
+    box-shadow: 0px 2px 5px #d8d8d8;
+}
+
+/*导航部分*/
+#nav {
+    width: 1200px;
+    height: 56px;
+    margin: 0 auto;
+}
+
+#nav .logo {
+    float: left;
+    height: 36px;
+    margin: 10px;
+}
+
+#nav ul {
+    float: right;
+    margin: 0px 10px;
+}
+
+#nav ul li {
+    float: left;
+    line-height: 56px;
+    height: 56px;
+}
+
+#nav ul li a {
+    padding: 0px 10px;
+    font-size: 16px;
+    color: rgba(170, 180, 190, 225);
+}
+
+#nav ul li a:hover {
+    color: rgba(65, 150, 255, 225);
+}
+
+/**
+ * 布局中间部分
+ * ------------------------------------------------------------------------------
+ */
+#center {
+    width: 100%;
+    font-size: 14px;
+    z-index: 99;
+    /*不接收鼠标事件 */
+    pointer-events: auto;
+}
+
+/**
+ * 中间内容部分
+ * ------------------------------------------------------------------------------
+ */
+#content {
+    background: rgba(255, 255, 255, 255);
+    padding-top: 56px;
+}
+
+#content-top {
+    height: 660px;
+    position: relative;
+    background: rgba(255, 255, 255, 255);
+}
+
+#content-1 {
+    height: 300px;
+    background: rgba(249, 250, 251, 255);
+}
+
+#content-2 {
+    height: 500px;
+    background: rgba(255, 255, 255, 255);
+}
+
+#content-3 {
+    height: 300px;
+    background: rgba(249, 250, 251, 255);
+}
+
+#content-4 {
+    height: 300px;
+    background: rgba(38, 156, 232, 255);
+}
+
+#content .dialog {
+    top: 100px;
+    left: 100px;
+    width: 560px;
+    height: 220px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -280px;
+    margin-top: -110px;
+    background: rgba(255, 255, 255, 255);
+
+    /* 设置阴影 */
+    -webkit-box-shadow: 0px 4px 108px rgba(224, 222, 226, 255);
+    -moz-box-shadow: 0px 4px 108px rgba(224, 222, 226, 255);
+    box-shadow: 0px 4px 108px rgba(224, 222, 226, 255);
+    /*设置圆角*/
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+
+}
+
+.error {
+    color: #232323;
+}
+
+/**
+ * 前端页面底部部分样式
+ * ------------------------------------------------------------------------------
+ */
+#footer {
+    width: 100%;
+    background: rgba(232, 242, 252, 255);
+}
+
+/*版权信息*/
+#copyright {
+    width: 1200px;
+    margin: auto;
+}
+
+#copyright p {
+    color: rgba(101, 89, 125, 156);
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+}
