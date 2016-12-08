@@ -41,7 +41,7 @@ var token = function (req, res, next) {
     }
 
     // 生成上传 Token
-    token = uptoken(bucket, key);
+    token = uptoken(bucket, file_key);
     res.send({success: true, data: token});
 };
 exports.token = token;
