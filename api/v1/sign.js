@@ -16,7 +16,7 @@ var qiniu = require('qiniu');
 /**
  * 获取配置文件
  */
-var config = require('../app.config');
+var config = require('../../app.config');
 
 /**
  * 处理获取七牛上传 Token 请求
