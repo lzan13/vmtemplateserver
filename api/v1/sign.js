@@ -34,14 +34,10 @@ var token = function (req, res, next) {
     qiniu.conf.ACCESS_KEY = config.qn_access_key;
     qiniu.conf.SECRET_KEY = config.qn_secret_key;
 
-    // 构建上传策略函数
-    function uptoken(bucket) {
-        var putPolicy = new qiniu.rs.PutPolicy(bucket + ":" + key);
-        return putPolicy.token();
-    }
-
+    // 构建上传策略
+    var putPolicy = new qiniu.rs.PutPolicy(bucket + ":" + file_key);
     // 生成上传 Token
-    token = uptoken(bucket, file_key);
+    token = putPolicy.token();
     res.send({success: true, data: token});
 };
 exports.token = token;
