@@ -17,26 +17,27 @@ router.get('/', homeController.index);
 /**
  * 显示注册路由，指向显示注册页面方法
  */
-router.get('/signup', signController.showSignup);
+router.get('/sign_up', signController.signUpView);
 
 /**
  * 注册路由，指向处理注册数据方法
  */
-router.post('/signup', signController.signup);
+router.post('/sign_up', signController.signUp);
 
 /**
  * 显示登录路由，指向显示登录页面方法
  */
-router.get('/signin', signController.showSignin);
+router.get('/sign_in', signController.signInView);
 
 /**
  * 登录路由，指向处理登录信息方法
  */
-router.post('/signin', signController.signin);
+router.post('/sign_in', signController.signIn);
 
 /**
  * 注销路由，指向处理注销操作方法
  */
-router.post('/signout', signController.signout);
+router.post('/sign_out', signController.signOut);
 
+// 模块出口
 module.exports = router;

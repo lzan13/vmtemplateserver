@@ -3,11 +3,19 @@
  * 注册登录相关控制器，主要处理和登录注册相关的操作
  */
 
-    // 获取事件代理模块儿，解决回调嵌套灾难
+/**
+ * 获取事件代理模块儿，解决回调嵌套问题
+ */
 var EventProxy = require('eventproxy');
-// 获取配置文件
+
+/**
+ * 获取配置文件
+ */
 var config = require('../app.config');
 
+/**
+ * 获取用户代理模块
+ */
 var User = require('../proxy').User;
 
 /**
@@ -15,8 +23,8 @@ var User = require('../proxy').User;
  * @param req 请求参数
  * @param res 响应数据
  */
-exports.showSignup = function (req, res) {
-    res.render('sign/signup.ejs');
+exports.signUpView = function (req, res) {
+    res.render('sign/signUp.ejs');
 };
 
 /**
@@ -24,12 +32,12 @@ exports.showSignup = function (req, res) {
  * @param req 请求数据，包含注册参数信息
  * @param res 响应数据，包含处理结果信息
  */
-exports.signup = function (req, res) {
+exports.signUp = function (req, res) {
     var eventProxy = new EventProxy();
     // 错误处理程序
     eventProxy.on('error', function (data) {
         res.status(422);
-        res.render('sign/signup', {data: data});
+        res.render('sign/signUp', {data: data});
     });
 
     var data = {};
@@ -65,7 +73,7 @@ exports.signup = function (req, res) {
         User.saveUser(username, password, function (error, result) {
             if (result) {
                 // 注册成功，跳转到登录页，或直接登录跳转到主页面
-                res.render('sign/signin', {data: data});
+                res.render('sign/signIn', {data: data});
             } else {
                 // 注册失败
                 data.error = config.error_sign_sign_up_failed;
@@ -80,8 +88,8 @@ exports.signup = function (req, res) {
  * @param req
  * @param res
  */
-exports.showSignin = function (req, res) {
-    res.render('sign/signin');
+exports.signInView = function (req, res) {
+    res.render('sign/signIn');
 };
 
 /**
@@ -89,11 +97,11 @@ exports.showSignin = function (req, res) {
  * @param req
  * @param res
  */
-exports.signin = function (req, res) {
+exports.signIn = function (req, res) {
     var eventProxy = new EventProxy();
     eventProxy.on('error', function (error) {
         res.status(422);
-        res.render('sign/signin.ejs', {data: error});
+        res.render('sign/signIn.ejs', {data: error});
     });
 
     var data = {};
@@ -129,12 +137,8 @@ exports.signin = function (req, res) {
  * @param req
  * @param res
  */
-exports.signout = function (req, res) {
+exports.signOut = function (req, res) {
     req.session.destory();
     // 退出登录之后重定向到主页
     res.redirect('/');
 };
-
-exports.getToken = function (req, res) {
-
-}

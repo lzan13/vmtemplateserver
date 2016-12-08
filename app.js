@@ -9,7 +9,8 @@ var bodyParser = require('body-parser');
 var app = express();
 
 // 引入路由对象
-var routes = require('./routes/web-router');
+var apiRoutesV1 = require('./routes/api-router-v1');
+var webRoutes = require('./routes/web-router');
 // 获取项目全局配置文件
 var config = require('./app.config');
 app.locals.config = config;
@@ -27,7 +28,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 设置项目路由
-app.use('/', routes);
+app.use('/api/v1/', cors(), apiRoutesV1);
+app.use('/', webRoutes);
 
 /**
  * 错误处理程序，捕捉项目开发中未处理的错误，并进行简单的处理
