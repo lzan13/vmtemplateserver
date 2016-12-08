@@ -40,5 +40,5 @@ exports.upToken = function (req, res) {
 
     // 生成上传 Token
     token = uptoken(bucket, key);
-    return token;
+    res.send({success: true, data: token});
 };

@@ -7,12 +7,12 @@ var express = require('express');
 var router = express.Router();
 
 // 获取注册与登录相关控制器
-var signController = require('../controls/sign');
+var signAPI = require('../api/v1/sign');
 
 /**
  * 获取七牛 uploadToken 路由
  */
-router.get('/upload_token', signController.upToken());
+router.get('/upload_token', signAPI.upToken());
 
 // 模块出口
 module.exports = router;
