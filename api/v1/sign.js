@@ -30,7 +30,7 @@ exports.upToken = function (req, res) {
     //要上传的空间
     var bucket = config.qn_bucket_name;
     // 上传文件的 key，在客户端上传文件时自定义规则生成的 md5 值
-    var key = req.query.key;
+    var key = req.params.key;
 
     // 构建上传策略函数
     function uptoken(bucket) {
