@@ -23,6 +23,11 @@ var config = {
     // mongodb 远程连接配置
     // mongodb: 'mongodb://username:password@42.96.192.98/ml-server',
 
+    // 七牛相关配置
+    qn_access_key: 'IX84TgLqFb35Sg9q3LhwV8lTfjuVhrP9J9J90BAq',
+    qn_secret_key: 'mJQZRi3QaSZfpfl7aazU7iu12XNQ7t5V_UGdaSsY',
+    qn_bucket_name: 'mlchat',
+
     // 系统错误
     error_server_db: 1001,
 
