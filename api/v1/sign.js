@@ -23,14 +23,16 @@ var config = require('../../app.config');
  * @param req
  * @param res
  */
-exports.upToken = function (req, res) {
+var token = function (req, res, next) {
+    // 上传文件的 key，在客户端上传文件时自定义规则生成的 md5 值
+    var file_key = req.params.key;
+
+    //要上传的空间
+    var bucket = config.qn_bucket_name;
+
     // 配置七牛相关的 Access Key 和 Secret Key
     qiniu.conf.ACCESS_KEY = config.qn_access_key;
     qiniu.conf.SECRET_KEY = config.qn_secret_key;
-    //要上传的空间
-    var bucket = config.qn_bucket_name;
-    // 上传文件的 key，在客户端上传文件时自定义规则生成的 md5 值
-    var key = req.params.key;
 
     // 构建上传策略函数
     function uptoken(bucket) {
@@ -42,3 +44,4 @@ exports.upToken = function (req, res) {
     token = uptoken(bucket, key);
     res.send({success: true, data: token});
 };
+exports.token = token;

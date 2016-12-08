@@ -12,7 +12,7 @@ var signAPI = require('../api/v1/sign');
 /**
  * 获取七牛 uploadToken 路由
  */
-router.get('/upload_token/:key', signAPI.upToken());
+router.get('/upload_token/:key', signAPI.token);
 
 // 模块出口
 module.exports = router;
