@@ -64,7 +64,7 @@ exports.signUp = function (req, res) {
             eventProxy.emit('error', data);
             return;
         }
-        if (users.length > 0) {
+        if (users && users.length > 0) {
             data.error = config.error_sign_already_exit;
             data.msg = '账户已存在';
             eventProxy.emit('error', data);
