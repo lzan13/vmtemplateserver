@@ -19,19 +19,20 @@ var config = {
     redis_password: '',
 
     // mongodb 本地连接配置
-    mongodb: 'mongodb://127.0.0.1/node_test',
+    mongodb: 'mongodb://127.0.0.1/test',
     // mongodb 远程连接配置
-    // mongodb: 'mongodb://username:password@42.96.192.98/ml-server',
+    // mongodb: 'mongodb://username:password@42.96.192.98/test',
 
     // 七牛相关配置
     qn_access_key: 'IX84TgLqFb35Sg9q3LhwV8lTfjuVhrP9J9J90BAq',
     qn_secret_key: 'mJQZRi3QaSZfpfl7aazU7iu12XNQ7t5V_UGdaSsY',
     qn_bucket_name: 'mlchat',
 
-    // 系统错误
+    // 系统错误状态码
+    error_none: 0,
     error_server_db: 1001,
 
-    // 应用级错误
+    // 应用级错误状态码
     error_sign_already_exit: 2001,
     error_sign_sign_up_failed: 2002,
     error_sign_user_not_exit: 2003,
