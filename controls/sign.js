@@ -24,7 +24,7 @@ var User = require('../proxy').User;
  * @param res 响应数据
  */
 exports.signUpView = function (req, res) {
-    res.render('sign/signUp.ejs');
+    res.render('sign/sign_up');
 };
 
 /**
@@ -37,7 +37,7 @@ exports.signUp = function (req, res) {
     // 错误处理程序
     eventProxy.on('error', function (data) {
         res.status(422);
-        res.render('sign/signUp', {data: data});
+        res.render('sign/sign_up', {data: data});
     });
 
     var data = {};
@@ -73,7 +73,7 @@ exports.signUp = function (req, res) {
         User.saveUser(username, password, function (error, result) {
             if (result) {
                 // 注册成功，跳转到登录页，或直接登录跳转到主页面
-                res.render('sign/signIn', {data: data});
+                res.render('sign/sign_in', {data: data});
             } else {
                 // 注册失败
                 data.error = config.error_sign_sign_up_failed;
@@ -89,7 +89,7 @@ exports.signUp = function (req, res) {
  * @param res
  */
 exports.signInView = function (req, res) {
-    res.render('sign/signIn');
+    res.render('sign/sign_in');
 };
 
 /**
@@ -101,7 +101,7 @@ exports.signIn = function (req, res) {
     var eventProxy = new EventProxy();
     eventProxy.on('error', function (error) {
         res.status(422);
-        res.render('sign/signIn.ejs', {data: error});
+        res.render('sign/sign_in', {data: error});
     });
 
     var data = {};
