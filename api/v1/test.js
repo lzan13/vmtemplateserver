@@ -34,7 +34,7 @@ var testPost = function (req, res, next) {
     response.status = status;
     var data = {};
     data.token = token;
-    response.data = req.body;
+    response.data = " 测试post 请求正确";
     res.send(response);
 };
 
