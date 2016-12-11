@@ -72,6 +72,7 @@ exports.signUp = function (req, res) {
         }
         User.saveUser(username, password, function (error, result) {
             if (result) {
+                data.msg = '注册成功'
                 // 注册成功，跳转到登录页，或直接登录跳转到主页面
                 res.render('sign/sign_in', {data: data});
             } else {

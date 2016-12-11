@@ -30,7 +30,7 @@ var token = function (req, res, next) {
     // 上传到自己在七牛指定的空间
     var bucket = config.qn_bucket_name;
 
-    var spoce = bucket + ":" + file_key;
+    var spoce = bucket + ':' + file_key;
     // 设置 token 过期时间，单位秒
     var deadline = 1 * 60 * 60;
 
@@ -45,8 +45,28 @@ var token = function (req, res, next) {
     // 生成上传 Token
     token = putPolicy.token();
 
-    // 将获取结果返回给接口调用者
-    res.send({success: true, deadline: putPolicy.deadline, token: token});
+    /**
+     * 将请求结果返回给接口调用者，结果包含状态以及请求的数据
+     {
+        "status": { // 请求结果状态
+            "code": 10000,
+            "message": 'Success'
+        },
+        "data": {   // 请求的数据
+            result:result
+        }
+     }
+     */
+    var response = {};
+    var status = {};
+    status.code = config.error_no;
+    status.msg = 'Success';
+    response.status = status;
+    var data = {};
+    data.token = token;
+    response.data = data;
+    res.send(response);
+
 };
 
 exports.token = token;

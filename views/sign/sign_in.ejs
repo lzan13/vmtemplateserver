@@ -7,7 +7,7 @@
                 <div id="signin">
                     <% if(typeof(data) != 'undefined' && data){ %>
                     <div class="error alert-error">
-                        <p><%= data.msg + ' - ' + data.error %></p>
+                        <p><%= data.msg %></p>
                     </div>
                     <% } %>
                     <form action="/sign_in" method="post" id="form-signin" class="form">

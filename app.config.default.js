@@ -23,16 +23,27 @@ var config = {
     // mongodb 远程连接配置
     // mongodb: 'mongodb://username:password@42.96.192.98/test',
 
-    // 七牛相关配置
+    /**
+     * 七牛相关配置
+     */
     qn_access_key: 'IX84TgLqFb35Sg9q3LhwV8lTfjuVhrP9J9J90BAq',
     qn_secret_key: 'mJQZRi3QaSZfpfl7aazU7iu12XNQ7t5V_UGdaSsY',
     qn_bucket_name: 'mlchat',
 
-    // 系统错误状态码
-    error_none: 0,
-    error_server_db: 1001,
+    /**
+     * 请求返回状态结果
+     */
+    status_success: 'Success',
 
-    // 应用级错误状态码
+    /**
+     * 客户端请求系统错误状态码
+     */
+    error_no: 0,
+    error_db: 1001,
+
+    /**
+     * 客户端进行网络请求是应用级错误状态码
+     */
     error_sign_already_exit: 2001,
     error_sign_sign_up_failed: 2002,
     error_sign_user_not_exit: 2003,
