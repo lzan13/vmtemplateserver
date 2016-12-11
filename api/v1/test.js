@@ -14,7 +14,7 @@ var EventProxy = require('eventproxy');
 var config = require('../../app.config');
 
 var testPost = function (req, res, next) {
-    console.log("收到请求的 body: " + req.body.toString());
+    console.log("收到请求的 body: " + req.body.key1 + req.body.key2);
     /**
      * 将请求结果返回给接口调用者，结果包含状态以及请求的数据
      {
