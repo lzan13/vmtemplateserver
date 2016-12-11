@@ -18,7 +18,7 @@ router.get('/upload_token/:key', signAPI.token);
 /**
  * 测试 post 请求，主要测试客户端提价 post 参数
  */
-router.post('/test_post', testAPI.textPost);
+router.post('/test_post', testAPI.testPost);
 
 // 模块出口
 module.exports = router;
