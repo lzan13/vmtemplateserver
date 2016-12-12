@@ -33,8 +33,8 @@ var testPost = function (req, res, next) {
     status.msg = 'Success';
     response.status = status;
     var data = {};
-    data.token = token;
-    response.data = " 测试post 请求正确";
+    data.result = "测试post 请求正确";
+    response.data = data;
     res.send(response);
 };
 
