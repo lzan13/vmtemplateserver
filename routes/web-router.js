@@ -14,19 +14,19 @@ var home = require('../controls/home');
 router.get('/', home.index);
 
 // 显示注册页面
-router.get('/sign_up', sign.signUpView);
+router.get('/signup', sign.signUpView);
 
 // 注册账户
-router.post('/sign_up', sign.signUp);
+router.post('/signup', sign.signUp);
 
 // 显示登录界面
-router.get('/sign_in', sign.signInView);
+router.get('/signin', sign.signInView);
 
 // 登录
-router.post('/sign_in', sign.signIn);
+router.post('/signin', sign.signIn);
 
 // 退出账户
-router.post('/sign_out', sign.signOut);
+router.post('/signout', sign.signOut);
 
 // 模块出口
 module.exports = router;

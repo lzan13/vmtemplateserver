@@ -34,26 +34,35 @@ var config = {
     qn_bucket_name: '改成你自己在七牛的 bucket name',
 
     /**
-     * 请求返回状态结果
+     * 定义项目错误码以及错误描述
+     * 系统状态码
      */
-    status_success: 'Success',
+    code: {
+        normal: 0,
+        db_exception: 1001,
+        user_already_exist: 2001,
+        user_not_exist: 2002,
+        sign_up_failed: 2003,
+        sign_in_failed: 2004,
+        invalid_password: 2005,
+        params_empty: 2006
+    },
 
     /**
-     * 客户端请求系统错误状态码
+     * 定义常用字符串
      */
-    error_no: 0,
-    error_db: 1001,
-
-    /**
-     * 客户端进行网络请求是应用级错误状态码
-     */
-    error_sign_already_exit: 2001,
-    error_sign_sign_up_failed: 2002,
-    error_sign_user_not_exit: 2003,
-    error_sign_sign_in_failed: 2004,
-    error_sign_invalid_password: 2005,
-    error_sign_username_password_null: 2006
-
+    msg: {
+        undefined: 'undefined',
+        msg_success: 'success',
+        // 状态描述
+        db_exception: 'Service db exception',
+        user_already_exist: 'User already exist',
+        user_not_exist: 'User not exist',
+        sign_up_failed: 'Sign up failed',
+        sign_in_failed: 'Sign in failed',
+        invalid_password: 'Invalid password',
+        params_empty: 'Params empty'
+    }
 };
 
 module.exports = config;

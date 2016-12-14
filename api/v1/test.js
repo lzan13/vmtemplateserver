@@ -4,11 +4,6 @@
  */
 
 /**
- * 获取事件代理模块儿，解决回调嵌套问题
- */
-var EventProxy = require('eventproxy');
-
-/**
  * 获取配置文件
  */
 var config = require('../../app.config');

@@ -24,7 +24,7 @@ var User = require('../proxy').User;
  * @param res 响应数据
  */
 exports.signUpView = function (req, res) {
-    res.render('sign/sign_up');
+    res.render('sign/signup');
 };
 
 /**
@@ -35,12 +35,9 @@ exports.signUpView = function (req, res) {
 exports.signUp = function (req, res) {
     var eventProxy = new EventProxy();
     // 错误处理程序
-    eventProxy.on('error', function (data) {
-        res.status(422);
-        res.render('sign/sign_up', {data: data});
+    eventProxy.on('error', function (error) {
+        res.render('sign/signup', error);
     });
-
-    var data = {};
 
     // 获取请求提交的数据
     var username = req.body.username;
@@ -48,37 +45,30 @@ exports.signUp = function (req, res) {
 
     // 校验数据，判断必须数据是否有空值
     var isEmpty = [username, password].some(function (item) {
-        return item === '';
+        return item === '' || typeof (item) === 'undefined';
     });
     if (isEmpty) {
-        data.error = config.error_sign_username_password_null;
-        data.msg = '用户名密码不能为空';
-        eventProxy.emit('error', data);
+        eventProxy.emit('error', {code: config.code.params_empty, msg: config.msg.params_empty});
         return;
     }
     User.getUserByUsername(username, function (error, user) {
         if (error) {
             // 服务器数据库错误
-            data.error = config.error_db;
-            data.msg = '服务器查询数据失败';
-            eventProxy.emit('error', data);
+            eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception});
             return;
         }
         if (user) {
-            data.error = config.error_sign_already_exit;
-            data.msg = '账户已存在';
-            eventProxy.emit('error', data);
+            eventProxy.emit('error', {code: config.code.user_already_exist, msg: config.msg.user_already_exist});
             return;
         }
         User.createAndSaveUser(username, password, function (error, result) {
             if (result) {
-                data.msg = '注册成功'
                 // 注册成功，跳转到登录页，或直接登录跳转到主页面
-                res.render('sign/sign_in', {data: data});
+                res.render('sign/signin', {code: config.code.normal, msg: config.success});
             } else {
                 // 注册失败
-                data.error = config.error_sign_sign_up_failed;
-                eventProxy.emit('error', data);
+                eventProxy.emit('error', {code: config.code.sign_up_failed, msg: config.msg.sign_up_failed});
+                return;
             }
         });
     });
@@ -102,7 +92,7 @@ exports.signIn = function (req, res) {
     var eventProxy = new EventProxy();
     eventProxy.on('error', function (error) {
         res.status(422);
-        res.render('sign/sign_in', {data: error});
+        res.render('sign/signin', {data: error});
     });
 
     var data = {};
@@ -113,7 +103,7 @@ exports.signIn = function (req, res) {
         return item === '';
     });
     if (isEmpty) {
-        data.error = config.error_sign_username_password_null;
+        data.error = config.code.params_empty;
         data.msg = '用户名和密码不能为空';
         eventProxy.emit('error', data);
         return;
@@ -124,7 +114,7 @@ exports.signIn = function (req, res) {
             res.status(200);
             res.render('index');
         } else {
-            data.error = config.error_sign_user_not_exit;
+            data.error = config.code.user_not_exist;
             data.msg = '用户名密码错误';
             eventProxy.emit('error', data);
             return;
