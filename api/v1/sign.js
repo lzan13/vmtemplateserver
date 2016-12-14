@@ -29,7 +29,7 @@ var token = function (req, res, next) {
 
     var spoce = bucket + ':' + file_key;
     // 设置 token 过期时间，单位秒
-    var deadline = 1 * 60 * 60;
+    var deadline = Math.round(new Date().getTime() / 1000) + 60 * 60;
 
     // 配置七牛相关的 Access Key 和 Secret Key
     qiniu.conf.ACCESS_KEY = config.qn_access_key;
@@ -38,30 +38,39 @@ var token = function (req, res, next) {
     // 构建上传策略
     var putPolicy = new qiniu.rs.PutPolicy(spoce);
     // 设置 token 过期时间
-    putPolicy.deadline = Math.round(new Date().getTime() / 1000) + deadline;
+    putPolicy.deadline = deadline;
     // 生成上传 Token
     token = putPolicy.token();
 
     /**
-     * 将请求结果返回给接口调用者，结果包含状态以及请求的数据
-     {
-        "status": { // 请求结果状态
-            "code": 10000,
-            "message": 'Success'
-        },
-        "data": {   // 请求的数据
-            result:result
-        }
-     }
+     * 构建响应体，并将响应结果返回给接口调用者，结果包含状态以及请求得到的数据
+     * {
+     *    "status": { // 响应状态
+     *        "code": 10000,
+     *        "message": 'Success'
+     *    },
+     *    "data": {   // 响应的数据
+     *        token: token,
+     *        deadline: deadline
+     *    }
+     * }
      */
     var response = {};
+    // 构建响应状态数据体
     var status = {};
     status.code = config.error_no;
     status.msg = 'Success';
+    // 设置响应状态信息
     response.status = status;
+
+    // 构建响应数据体
     var data = {};
     data.token = token;
+    data.deadline = deadline;
+    // 设置响应数据信息
     response.data = data;
+
+    // 发送响应结果给请求者
     res.send(response);
 
 };
