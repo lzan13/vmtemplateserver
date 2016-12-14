@@ -6,6 +6,9 @@ var User = require('../models').User;
 
 /**
  * 根据用户名查找用户
+ * Callback:
+ * - err, 数据库异常
+ * - user, 用户
  * @param username 用户名
  * @param callback 回调函数
  */
@@ -15,36 +18,66 @@ exports.getUserByUsername = function (username, callback) {
 
 /**
  * 根据邮箱查找用户
- * @param email 邮箱地址
- * @param callback 回调函数
+ * Callback:
+ * - err, 数据库异常
+ * - user, 用户
+ * @param {String} email 邮箱地址
+ * @param {Function} callback 回调函数
  */
 exports.getUserByMail = function (email, callback) {
     User.findOne({email: email}, callback);
 };
+
 /**
- * 根据查询条件查询符合的数据
- * @param query 查询条件
- * @param opt 选项
- * @param callback 回到函数
+ * 根据用户名列表查找用户列表
+ * Callback:
+ * - err, 数据库异常
+ * - users, 用户列表
+ * @param {Array} names 用户名列表
+ * @param {Function} callback 回调函数
+ */
+exports.getUserByNames = function (names, callback) {
+    User.find({username: {$in: names}}, callback);
+}
+
+/**
+ * 根据关键字，获取一组用户
+ * Callback:
+ * - err, 数据库异常
+ * - users, 用户列表
+ * @param {String} query 查询关键字
+ * @param {Object} opt 查询选项
+ * @param {Function} callback 回调函数
  */
 exports.getUsersByQuery = function (query, opt, callback) {
     User.find(query, '', opt, callback);
 };
 
-exports.getUserByUsernameAndKey = function (username, key, callback) {
+/**
+ * 根据用户名和密码获取账户
+ * Callback:
+ * - err, 数据库异常
+ * - user, 用户
+ * @param {String} username 用户名
+ * @param {String} password 用户密码
+ * @param {Function} callback 回调函数
+ */
+exports.getUserByUsernameAndKey = function (username, password, callback) {
 
 };
 
 /**
  * 保存账户
- * @param username 账户名
- * @param password 账户密码
- * @param callback 回调函数
+ * Callback
+ * - err, 数据库异常
+ * - user, 用户
+ * @param {String} username 用户名
+ * @param {String} password 用户密码
+ * @param {Function} callback 回调函数
  */
-exports.saveUser = function (username, password, callback) {
+exports.createAndSaveUser = function (username, password, callback) {
     var user = new User();
     user.username = username;
     user.password = password;
     user.save(callback);
-
 };

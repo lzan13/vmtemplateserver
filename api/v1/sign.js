@@ -2,19 +2,16 @@
  * Created by lzan13 on 2016/12/8.
  * 登录注册以及验证相关接口模块
  */
-
 /**
- * 获取事件代理模块儿，解决回调嵌套问题
+ * 事件代理
  */
 var EventProxy = require('eventproxy');
-
 /**
- * 七牛 sdk
+ * 七牛 SDK
  */
 var qiniu = require('qiniu');
-
 /**
- * 获取配置文件
+ * 项目配置文件
  */
 var config = require('../../app.config');
 

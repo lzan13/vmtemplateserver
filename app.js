@@ -1,3 +1,6 @@
+/**
+ * 程序入口，由 express 创建项目时生成
+ */
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');

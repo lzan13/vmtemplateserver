@@ -20,15 +20,18 @@ var config = {
 
     // mongodb 本地连接配置
     mongodb: 'mongodb://127.0.0.1/test',
-    // mongodb 远程连接配置
-    // mongodb: 'mongodb://username:password@42.96.192.98/test',
+    /**
+     * mongodb 远程连接配置，需要你的 mongodb 开启远程连接配置
+     * mongodb://<username>:<password>@服务器 ip/dbame
+     */
+    // mongodb: 'mongodb://服务器 IP 地址:27017/test',
 
     /**
      * 七牛相关配置
      */
-    qn_access_key: 'IX84TgLqFb35Sg9q3LhwV8lTfjuVhrP9J9J90BAq',
-    qn_secret_key: 'mJQZRi3QaSZfpfl7aazU7iu12XNQ7t5V_UGdaSsY',
-    qn_bucket_name: 'mlchat',
+    qn_access_key: '改成你自己在七牛的 access key',
+    qn_secret_key: '改成你自己在七牛的 secret key',
+    qn_bucket_name: '改成你自己在七牛的 bucket name',
 
     /**
      * 请求返回状态结果

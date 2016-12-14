@@ -1,43 +1,32 @@
+/**
+ * Create by lzan13 on 2016/9/23.
+ * 项目前端路由
+ */
 var express = require('express');
-
 // 获取项目路由
 var router = express.Router();
-
 // 获取注册与登录相关控制器
-var signController = require('../controls/sign');
-
+var sign = require('../controls/sign');
 // 获取信息展示相关控制器
-var homeController = require('../controls/home');
+var home = require('../controls/home');
 
-/**
- * 主页默认路由，指向限制主页面方法
- */
-router.get('/', homeController.index);
+// 主页
+router.get('/', home.index);
 
-/**
- * 显示注册路由，指向显示注册页面方法
- */
-router.get('/sign_up', signController.signUpView);
+// 显示注册页面
+router.get('/sign_up', sign.signUpView);
 
-/**
- * 注册路由，指向处理注册数据方法
- */
-router.post('/sign_up', signController.signUp);
+// 注册账户
+router.post('/sign_up', sign.signUp);
 
-/**
- * 显示登录路由，指向显示登录页面方法
- */
-router.get('/sign_in', signController.signInView);
+// 显示登录界面
+router.get('/sign_in', sign.signInView);
 
-/**
- * 登录路由，指向处理登录信息方法
- */
-router.post('/sign_in', signController.signIn);
+// 登录
+router.post('/sign_in', sign.signIn);
 
-/**
- * 注销路由，指向处理注销操作方法
- */
-router.post('/sign_out', signController.signOut);
+// 退出账户
+router.post('/sign_out', sign.signOut);
 
 // 模块出口
 module.exports = router;

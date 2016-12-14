@@ -56,21 +56,21 @@ exports.signUp = function (req, res) {
         eventProxy.emit('error', data);
         return;
     }
-    User.getUserByUsername(username, function (error, users) {
+    User.getUserByUsername(username, function (error, user) {
         if (error) {
             // 服务器数据库错误
-            data.error = config.error_server_db;
+            data.error = config.error_db;
             data.msg = '服务器查询数据失败';
             eventProxy.emit('error', data);
             return;
         }
-        if (users && users.length > 0) {
+        if (user) {
             data.error = config.error_sign_already_exit;
             data.msg = '账户已存在';
             eventProxy.emit('error', data);
             return;
         }
-        User.saveUser(username, password, function (error, result) {
+        User.createAndSaveUser(username, password, function (error, result) {
             if (result) {
                 data.msg = '注册成功'
                 // 注册成功，跳转到登录页，或直接登录跳转到主页面
