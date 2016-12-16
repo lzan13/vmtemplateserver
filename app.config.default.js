@@ -1,6 +1,9 @@
-/**
+/************************************************************************
+ *
  * 项目配置文件
- */
+ * 运行项目时需要复制一份到当前目录，并命名为 app.config.js
+ *
+ ************************************************************************/
 var config = {
     // 项目名称
     app_name: 'ml-server',
@@ -38,14 +41,19 @@ var config = {
      * 系统状态码
      */
     code: {
-        normal: 0,
+        no_error: 0,
+        // 系统级别状态码
         db_exception: 1001,
+        // 应用级别状态码
+        params_empty: 2000,
         user_already_exist: 2001,
         user_not_exist: 2002,
         sign_up_failed: 2003,
         sign_in_failed: 2004,
         invalid_password: 2005,
-        params_empty: 2006
+        invalid_access_token: 2007,
+        no_permission_action: 2008,
+        user_disable: 2009
     },
 
     /**
@@ -53,16 +61,20 @@ var config = {
      */
     msg: {
         undefined: 'undefined',
-        msg_success: 'success',
         // 状态描述
-        db_exception: 'Service db exception',
+        success: 'success',
+        db_exception: 'Service db exception ',
+        params_empty: 'Params empty',
         user_already_exist: 'User already exist',
         user_not_exist: 'User not exist',
         sign_up_failed: 'Sign up failed',
         sign_in_failed: 'Sign in failed',
         invalid_password: 'Invalid password',
-        params_empty: 'Params empty'
+        invalid_access_token: 'Authentication failed, Invalid access token',
+        no_permission_action: 'No permission action',
+        user_disable: 'User is disabled'
     }
+
 };
 
 module.exports = config;

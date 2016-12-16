@@ -15,16 +15,12 @@ router.get('/', home.index);
 
 // 显示注册页面
 router.get('/signup', sign.signUpView);
-
 // 注册账户
 router.post('/signup', sign.signUp);
-
 // 显示登录界面
 router.get('/signin', sign.signInView);
-
 // 登录
 router.post('/signin', sign.signIn);
-
 // 退出账户
 router.post('/signout', sign.signOut);
 

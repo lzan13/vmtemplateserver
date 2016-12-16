@@ -24,7 +24,7 @@ var User = require('../proxy').User;
  * @param res 响应数据
  */
 exports.signUpView = function (req, res) {
-    res.render('sign/signup');
+    res.render('sign/sign_up');
 };
 
 /**
@@ -33,10 +33,11 @@ exports.signUpView = function (req, res) {
  * @param res 响应数据，包含处理结果信息
  */
 exports.signUp = function (req, res) {
+    // 构建响应数据
     var eventProxy = new EventProxy();
     // 错误处理程序
     eventProxy.on('error', function (error) {
-        res.render('sign/signup', error);
+        res.render('sign/sign_up', {error: error});
     });
 
     // 获取请求提交的数据
@@ -48,6 +49,7 @@ exports.signUp = function (req, res) {
         return item === '' || typeof (item) === 'undefined';
     });
     if (isEmpty) {
+        // 参数为空
         eventProxy.emit('error', {code: config.code.params_empty, msg: config.msg.params_empty});
         return;
     }
@@ -58,13 +60,15 @@ exports.signUp = function (req, res) {
             return;
         }
         if (user) {
+            // 用户已存在
             eventProxy.emit('error', {code: config.code.user_already_exist, msg: config.msg.user_already_exist});
             return;
         }
         User.createAndSaveUser(username, password, function (error, result) {
             if (result) {
                 // 注册成功，跳转到登录页，或直接登录跳转到主页面
-                res.render('sign/signin', {code: config.code.normal, msg: config.success});
+                var success = {code: config.code.no_error, msg: config.msg.success};
+                res.render('sign/sign_in', {success: success});
             } else {
                 // 注册失败
                 eventProxy.emit('error', {code: config.code.sign_up_failed, msg: config.msg.sign_up_failed});
@@ -90,33 +94,33 @@ exports.signInView = function (req, res) {
  */
 exports.signIn = function (req, res) {
     var eventProxy = new EventProxy();
+    // 错误处理程序
     eventProxy.on('error', function (error) {
-        res.status(422);
-        res.render('sign/signin', {data: error});
+        res.render('sign/sign_in', {error: error});
     });
-
-    var data = {};
 
     var username = req.body.username;
     var password = req.body.password;
     var isEmpty = [username, password].some(function (item) {
-        return item === '';
+        return item === '' || typeof (item) === 'undefined';
     });
     if (isEmpty) {
-        data.error = config.code.params_empty;
-        data.msg = '用户名和密码不能为空';
-        eventProxy.emit('error', data);
+        // 参数为空
+        eventProxy.emit('error', {error: config.code.params_empty, msg: config.msg.params_empty});
         return;
     }
-    User.getUserByUsernameAndKey(username, password, function (error, user) {
+    User.getUserByUsername(username, function (error, user) {
         if (user) {
+            if (user.password !== password) {
+                // 密码无效
+                eventProxy.emit('error', {error: config.code.invalid_password, msg: config.msg.invalid_password});
+                return;
+            }
             req.session.user = user;
-            res.status(200);
-            res.render('index');
+            res.render('/', {success: {code: config.code.no_error, msg: config.msg.success}});
         } else {
-            data.error = config.code.user_not_exist;
-            data.msg = '用户名密码错误';
-            eventProxy.emit('error', data);
+            // 用户不存在
+            eventProxy.emit('error', {error: config.code.user_not_exist, msg: config.msg.user_not_exist});
             return;
         }
     });

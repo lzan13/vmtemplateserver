@@ -15,6 +15,7 @@
     "express": "~4.14.0",
     "mongoose": "^4.7.1",
     "morgan": "~1.7.0",
+    "node-uuid": "^1.4.7",
     "qiniu": "^6.1.13",
     "serve-favicon": "~2.3.0"
   }

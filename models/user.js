@@ -6,6 +6,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+/**
+ * 构建用户数据信息结构
+ * 主要包含字段：username,password,email,avatar, cover, nickname, signature, location, url, gender, create_at, update_at, disable, is_bleack, access_token
+ * @type {mongoose.Schema}
+ */
 var UserSchema = new Schema({
     username: {
         type: String,
@@ -15,7 +20,7 @@ var UserSchema = new Schema({
         index: true
     },
     password: {type: String, required: true},
-    email: {type: String},
+    email: {type: String, unique: true},
     avatar: {type: String},
     cover: {type: String},
     nickname: {type: String},
@@ -27,12 +32,13 @@ var UserSchema = new Schema({
         enum: ['male', 'female', 'unknown'],
         default: 'unknown'
     },
+    friends: {type: Array},
     create_at: {type: Date, default: Date.now},
     update_at: {type: Date, default: Date.now},
 
     disable: {type: Boolean, default: false},
     is_block: {type: Boolean, default: false},
-    accessToken: {type: String}
+    access_token: {type: String}
 });
 
 // 设置不自动索引

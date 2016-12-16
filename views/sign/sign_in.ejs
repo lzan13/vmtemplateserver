@@ -5,11 +5,18 @@
         <div id="content-top">
             <div class="dialog">
                 <div id="signin">
-                    <% if(typeof(data) != 'undefined' && data){ %>
+                    <% if(typeof(error) !== 'undefined' && error){ %>
+                    <!--错误提示-->
                     <div class="error alert-error">
-                        <p><%= data.msg %></p>
+                        <p><%= error.msg %></p>
+                    </div>
+                    <% } else if (typeof (success) !== 'undefined' && success) { %>
+                    <!--成功提示-->
+                    <div class="success alert-success">
+                        <p><%= success.msg %></p>
                     </div>
                     <% } %>
+                    <!--登录表单-->
                     <form action="/signin" method="post" id="form-signin" class="form">
                         <!--用户账号-->
                         <input type="text" id="username" name="username"/>

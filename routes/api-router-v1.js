@@ -8,6 +8,8 @@ var express = require('express');
  * 获取项目路由
  */
 var router = express.Router();
+// 中间件
+var middleware = require('../api/v1/middleware');
 // 认证以及 token 相关接口
 var authAPI = require('../api/v1/auth');
 // 账户相关接口
@@ -16,34 +18,37 @@ var userAPI = require('../api/v1/user');
 var testAPI = require('../api/v1/test');
 
 /**
- * 获取七牛 uploadToken
- * 需要在 url 跟着需要上传文件的 key
+ * 认证相关接口
  */
+// 获取七牛 uploadToken, 需要在 url 跟着需要上传文件的 key
 router.get('/auth/upload_token/:key', authAPI.uploadToken);
+// 客户端进行登录认证，返回账户 access token
+router.post('/auth/token', authAPI.token);
 
 /**
- * 注册新账户接口
+ * 用户相关接口
  */
-router.post('/users/create', userAPI.createAndSaveUser);
+// 注册新账户接口
+router.post('/users/create', userAPI.createUser);
+// 更新用户信息
+router.put('/users/update', middleware.auth, userAPI.updateUser);
+// 更新用户头像
+router.put('/users/avatar', middleware.auth, userAPI.updateAvatar);
+// 更新用户背景图
+router.put('/users/cover', middleware.auth, userAPI.updateCover);
+// 根据用户名获取用户信息
+router.get('/users/:username', userAPI.getUserInfo);
+// 添加好友
+router.put('/users/firends/:username', userAPI.addFriend);
+// 删除好友
+router.delete('/users/firends/:username', userAPI.addFriend);
+// 获取好友信息，需要提供好友用户名列表
+router.get('/users/:username/friends/:friends', middleware.auth, userAPI.getFriendsInfo);
 
 /**
- * 根据用户名获取单个用户
+ * 测试相关接口
  */
-router.get('/users/:username', userAPI.getUserByUsername);
-
-/**
- * 获取用户列表，需要提供用户名列表参数
- */
-router.post('/users/', userAPI.getUsersByNames);
-
-/**
- *  获取好友信息，需要提供好友用户名列表
- */
-router.post('/users/friends', userAPI.getUsersByNames);
-
-/**
- * 测试 post 请求，主要测试客户端提交 post 参数
- */
+// post 请求，主要测试客户端提交 post 参数
 router.post('/tests/post', testAPI.testPost);
 
 // 模块出口
