@@ -8,7 +8,6 @@ var User = require('../models').User;
 // 进行查询时需要的列
 var selected = 'username email avatar cover nickname signature location url gender create_at update_at disable is_black';
 
-
 /**
  * 保存账户
  * Callback
@@ -99,7 +98,3 @@ exports.getUserByUsernameAndKey = function (username, password, callback) {
 exports.getUserByAccessToken = function (access_token, callback) {
     User.findOne({access_token: access_token}, callback);
 };
-
-exports.getUsersFriends = function (usernames, callback) {
-
-}

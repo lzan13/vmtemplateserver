@@ -16,6 +16,10 @@ mongoose.connect(
         }
     });
 
+require('./friend');
+require('./token');
 require('./user');
 
+exports.Friend = mongoose.model('Friend');
+exports.Token = mongoose.model('Token');
 exports.User = mongoose.model('User');

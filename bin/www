@@ -47,7 +47,6 @@ function normalizePort(val) {
 /**
  * HTTP server onError 监听
  */
-
 function onError(error) {
     if (error.syscall !== 'listen') {
         throw error;
@@ -73,9 +72,8 @@ function onError(error) {
 }
 
 /**
- * HTTP server onListing 监听
+ * HTTP server onListening 监听
  */
-
 function onListening() {
     var addr = server.address();
     var bind = typeof addr === 'string'

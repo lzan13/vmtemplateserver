@@ -8,7 +8,8 @@ var Schema = mongoose.Schema;
 
 /**
  * 构建用户数据信息结构
- * 主要包含字段：username,password,email,avatar, cover, nickname, signature, location, url, gender, create_at, update_at, disable, is_bleack, access_token
+ * 主要包含字段：username,password,email,avatar, cover, nickname, signature, location, url, gender,
+ * create_at, update_at, disable, is_bleack, access_token
  * @type {mongoose.Schema}
  */
 var UserSchema = new Schema({
@@ -27,12 +28,12 @@ var UserSchema = new Schema({
     signature: {type: String},
     location: {type: String},
     url: {type: String},
+    // 性别，0 女，1 男，2 合体
     gender: {
-        type: String,
-        enum: ['male', 'female', 'unknown'],
-        default: 'unknown'
+        type: Number,
+        enum: [0, 1, 2],
+        default: 2
     },
-    friends: {type: Array},
     create_at: {type: Date, default: Date.now},
     update_at: {type: Date, default: Date.now},
 

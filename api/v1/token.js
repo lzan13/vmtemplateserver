@@ -22,25 +22,25 @@ var config = require('../../app.config');
 var User = require('../../proxy').User;
 
 /**
+ * 构建响应体，并将响应结果返回给接口调用者，结果包含状态以及请求得到的数据
+ * {
+ *    "status": { // 响应状态
+ *        "code": 0,
+ *        "message": 'Success'
+ *    },
+ *    "data": {   // 响应的数据
+ *        result:result
+ *    }
+ * }
+ */
+var result = {status: {code: config.code.no_error, msg: config.msg.success}, data: {}};
+
+/**
  * 处理获取七牛上传 Token 请求
  * @param req 请求参数
  * @param res 响应数据
  */
 exports.uploadToken = function (req, res, next) {
-    /**
-     * 构建响应体，并将响应结果返回给接口调用者，结果包含状态以及请求得到的数据
-     * {
-     *    "status": { // 响应状态
-     *        "code": 10000,
-     *        "message": 'Success'
-     *    },
-     *    "data": {   // 响应的数据
-     *        token: token,
-     *        deadline: deadline
-     *    }
-     * }
-     */
-    var response = {status: {}, data: {}};
 
     // 上传文件的 key，在客户端上传文件时自定义规则生成的 md5 值
     var file_key = req.params.key;
@@ -63,15 +63,12 @@ exports.uploadToken = function (req, res, next) {
     // 生成上传 Token
     var token = putPolicy.token();
 
-    // 响应状态
-    response.status.code = config.code.no_error;
-    response.status.msg = config.msg.success;
     // 响应数据
-    response.data.token = token;
-    response.data.deadline = deadline;
+    result.data.token = token;
+    result.data.deadline = deadline;
 
     // 发送响应结果给请求者
-    res.send(response);
+    res.send(result);
 };
 
 /**
@@ -81,14 +78,12 @@ exports.uploadToken = function (req, res, next) {
  * @param next
  */
 exports.token = function (req, res, next) {
-    var response = {status: {}, data: {}};
-
     var eventProxy = new EventProxy();
     // 错误回调处理接口
-    eventProxy.on('error', function (error) {
+    eventProxy.fail(function (error) {
         // 响应状态
-        response.status = error;
-        res.send(response);
+        result.status = error;
+        res.send(result);
     });
 
     var username = req.body.username;
@@ -98,34 +93,31 @@ exports.token = function (req, res, next) {
     });
     if (isEmpty) {
         // 参数为空
-        eventProxy.emit('error', {error: config.code.params_empty, msg: config.msg.params_empty});
+        eventProxy.throw({error: config.code.params_empty, msg: config.msg.params_empty});
         return;
     }
     User.getUserByUsername(username, function (error, user) {
         if (error) {
             // 服务器数据库错误
-            eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         if (user) {
             User.getUserByUsernameAndKey(username, password, function (error, user) {
                 if (user) {
-                    // 响应状态
-                    response.status.code = config.code.no_error;
-                    response.status.msg = config.msg.success;
                     // 响应数据
-                    response.data.user = user;
+                    result.data.user = user;
                     // 发送响应结果给请求者
-                    res.send(response);
+                    res.send(result);
                 } else {
                     // 密码错误
-                    eventProxy.emit('error', {code: config.code.invalid_password, msg: config.msg.invalid_password});
+                    eventProxy.throw({code: config.code.invalid_password, msg: config.msg.invalid_password});
                     return;
                 }
             });
         } else {
             // 用户不存在
-            eventProxy.emit('error', {code: config.code.user_not_exist, msg: config.msg.user_not_exist});
+            eventProxy.throw({code: config.code.user_not_exist, msg: config.msg.user_not_exist});
             return;
         }
     });

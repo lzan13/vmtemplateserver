@@ -37,6 +37,15 @@ var config = {
     qn_bucket_name: '改成你自己在七牛的 bucket name',
 
     /**
+     * 环信相关配置
+     */
+    em_org_name: '开发者企业 id，appkey 前半部分',
+    em_app_name: '开发者后台 app name，appkey 后半部分',
+    em_base_url: 'rest api 地址',
+    em_client_id: '环信后台 appkey 下的 client id',
+    em_client_secret: '环信后台 appkey 下的 client secret',
+
+    /**
      * 定义项目错误码以及错误描述
      * 系统状态码
      */
@@ -46,14 +55,15 @@ var config = {
         db_exception: 1001,
         // 应用级别状态码
         params_empty: 2000,
-        user_already_exist: 2001,
-        user_not_exist: 2002,
-        sign_up_failed: 2003,
-        sign_in_failed: 2004,
-        invalid_password: 2005,
+        data_is_empty: 2001,
+        user_already_exist: 2002,
+        user_not_exist: 2003,
+        sign_up_failed: 2004,
+        sign_in_failed: 2005,
+        invalid_password: 2006,
         invalid_access_token: 2007,
         no_permission_action: 2008,
-        user_disable: 2009
+        user_is_disable: 2009
     },
 
     /**
@@ -65,6 +75,7 @@ var config = {
         success: 'success',
         db_exception: 'Service db exception ',
         params_empty: 'Params empty',
+        data_is_empty: 'Data is empty',
         user_already_exist: 'User already exist',
         user_not_exist: 'User not exist',
         sign_up_failed: 'Sign up failed',
@@ -72,9 +83,8 @@ var config = {
         invalid_password: 'Invalid password',
         invalid_access_token: 'Authentication failed, Invalid access token',
         no_permission_action: 'No permission action',
-        user_disable: 'User is disabled'
+        user_is_disable: 'User is disabled'
     }
-
 };
 
 module.exports = config;

@@ -18,32 +18,31 @@ var config = require('../../app.config');
 var User = require('../../proxy').User;
 
 /**
+ * 构建响应体，并将响应结果返回给接口调用者，结果包含状态以及请求得到的数据
+ * {
+ *    "status": { // 响应状态
+ *        "code": 0,
+ *        "message": 'Success'
+ *    },
+ *    "data": {   // 响应的数据
+ *        result:result
+ *    }
+ * }
+ */
+var result = {status: {code: config.code.no_error, msg: config.msg.success}, data: {}};
+
+/**
  * 创建并保存账户
  * @param req 请求参数
  * @param res 响应数据
  */
 exports.createUser = function (req, res, next) {
-    /**
-     * 构建响应体，并将响应结果返回给接口调用者，结果包含状态以及请求得到的数据
-     * {
-     *    "status": { // 响应状态
-     *        "code": 10000,
-     *        "message": 'Success'
-     *    },
-     *    "data": {   // 响应的数据
-     *        token: token,
-     *        deadline: deadline
-     *    }
-     * }
-     */
-    var response = {status: {}, data: {}};
-
     var eventProxy = new EventProxy();
     // 错误回调处理接口
-    eventProxy.on('error', function (error) {
+    eventProxy.fail(function (error) {
         // 响应状态
-        response.status = error;
-        res.send(response);
+        result.status = error;
+        res.send(result);
     });
 
     // 获取请求提交的数据
@@ -55,37 +54,35 @@ exports.createUser = function (req, res, next) {
         return item === '' || typeof(item) === config.msg.success;
     });
     if (isEmpty) {
-        eventProxy.emit('error', {code: config.code.params_empty, msg: config.msg.params_empty});
+        eventProxy.throw({code: config.code.params_empty, msg: config.msg.params_empty});
         return;
     }
     // 注册前首先查询是否已经存在
     User.getUserByUsername(username, function (error, user) {
         if (error) {
             // 服务器数据库错误
-            eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         if (user) {
             // 用户已存在
-            eventProxy.emit('error', {code: config.code.user_already_exist, msg: config.msg.user_already_exist});
+            eventProxy.throw({code: config.code.user_already_exist, msg: config.msg.user_already_exist});
             return;
         }
         // 创建并保存一个新用户
         User.createAndSaveUser(username, password, function (error, user) {
             if (error) {
                 // 数据库异常
-                eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+                eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
                 return;
             }
             if (user) {
                 // 注册成功
-                response.status.code = config.code.no_error;
-                response.status.msg = config.msg.success;
-                response.data.user = user;
-                res.send(response);
+                result.data.user = user;
+                res.send(result);
             } else {
                 // 注册失败
-                eventProxy.emit('error', {code: config.code.sign_up_failed, msg: config.msg.sign_up_failed});
+                eventProxy.throw({code: config.code.sign_up_failed, msg: config.msg.sign_up_failed});
                 return;
             }
         });
@@ -99,19 +96,15 @@ exports.createUser = function (req, res, next) {
  * @param next
  */
 exports.updateUser = function (req, res, next) {
-    var response = {status: {}, data: {}};
-
     var eventProxy = new EventProxy();
     // 错误回调处理接口
-    eventProxy.on('error', function (error) {
+    eventProxy.fail(function (error) {
         // 响应状态
-        response.status = error;
-        res.send(response);
+        result.status = error;
+        res.send(result);
     });
 
     var email = req.body.email;
-    var avatar = req.body.avatar;
-    var cover = req.body.cover;
     var nickname = req.body.nickname;
     var signature = req.body.signature;
     var location = req.body.location;
@@ -121,7 +114,7 @@ exports.updateUser = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception});
+            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception});
             return;
         }
         user.email = email;
@@ -134,14 +127,12 @@ exports.updateUser = function (req, res, next) {
         user.save(function (error, user) {
             if (error) {
                 // 数据库异常
-                eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception});
+                eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception});
                 return;
             }
             // 保存成功，将更新后的用户信息返回
-            response.status.code = config.code.no_error;
-            response.status.msg = config.msg.success;
-            response.data.user = user;
-            res.send(response);
+            result.data.user = user;
+            res.send(result);
         });
     });
 };
@@ -153,14 +144,12 @@ exports.updateUser = function (req, res, next) {
  * @param next
  */
 exports.updateAvatar = function (req, res, next) {
-    var response = {status: {}, data: {}};
-
     var eventProxy = new EventProxy();
     // 错误回调处理接口
-    eventProxy.on('error', function (error) {
+    eventProxy.fail(function (error) {
         // 响应状态
-        response.status = error;
-        res.send(response);
+        result.status = error;
+        res.send(result);
     });
 
     // 获取请求提交的数据
@@ -169,15 +158,13 @@ exports.updateAvatar = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         user.avatar = avatar;
         user.save(function (error, user) {
-            response.status.code = config.code.no_error;
-            response.status.msg = config.msg.success;
-            response.data.user = user;
-            res.send(response);
+            result.data.user = user;
+            res.send(result);
         });
     });
 };
@@ -189,14 +176,12 @@ exports.updateAvatar = function (req, res, next) {
  * @param next
  */
 exports.updateCover = function (req, res, next) {
-    var response = {status: {}, data: {}};
-
     var eventProxy = new EventProxy();
     // 错误回调处理接口
-    eventProxy.on('error', function (error) {
+    eventProxy.fail(function (error) {
         // 响应状态
-        response.status = error;
-        res.send(response);
+        result.status = error;
+        res.send(result);
     });
 
     // 获取请求提交的数据
@@ -205,15 +190,13 @@ exports.updateCover = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         user.cover = cover;
         user.save(function (error, user) {
-            response.status.code = config.code.no_error;
-            response.status.msg = config.msg.success;
-            response.data.user = user;
-            res.send(response);
+            result.data.user = user;
+            res.send(result);
         });
     });
 };
@@ -225,14 +208,12 @@ exports.updateCover = function (req, res, next) {
  * @param next
  */
 exports.getUserInfo = function (req, res, next) {
-    var response = {status: {}, data: {}};
-
     var eventProxy = new EventProxy();
     // 错误回调处理接口
-    eventProxy.on('error', function (error) {
+    eventProxy.fail(function (error) {
         // 响应状态
-        response.status = error;
-        res.send(response);
+        result.status = error;
+        res.send(result);
     });
 
     // 获取请求提交的数据
@@ -240,40 +221,18 @@ exports.getUserInfo = function (req, res, next) {
     User.getUserByUsername(username, function (error, user) {
         if (error) {
             // 数据库异常
-            eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         if (user) {
-            response.status.code = config.code.no_error;
-            response.status.msg = config.msg.success;
-            response.data.user = user;
-            res.send(response);
+            result.data.user = user;
+            res.send(result);
         } else {
             // 用户不存在
-            eventProxy.emit('error', {code: config.code.user_not_exist, msg: config.msg.user_not_exist});
+            eventProxy.throw({code: config.code.user_not_exist, msg: config.msg.user_not_exist});
             return;
         }
     });
-};
-
-/**
- * 添加好友
- * @param req
- * @param res
- * @param next
- */
-exports.addFriend = function (req, res, next) {
-
-};
-
-/**
- * 删除好友
- * @param req
- * @param res
- * @param next
- */
-exports.removeFirend = function (req, res, next) {
-
 };
 
 /**
@@ -282,37 +241,31 @@ exports.removeFirend = function (req, res, next) {
  * @param res 响应数据
  * @param next
  */
-exports.getFriendsInfo = function (req, res, next) {
-    var response = {status: {}, data: {}};
-
+exports.getFriends = function (req, res, next) {
     var eventProxy = new EventProxy();
     // 错误回调处理接口
-    eventProxy.on('error', function (error) {
+    eventProxy.fail(function (error) {
         // 响应状态
-        response.status = error;
-        res.send(response);
+        result.status = error;
+        res.send(result);
     });
 
     // 获取请求提交的数据
-    var username = req.params.username;
     var friends = req.params.friends;
-    var firendArray = friends.split(',');
-    User.getUserByNames(firendArray, function (error, users) {
+    var friendArray = friends.split(',');
+    User.getUserByNames(friendArray, function (error, users) {
         if (error) {
             // 数据库异常
-            eventProxy.emit('error', {code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         if (users && users.length > 0) {
-            response.status.code = config.code.no_error;
-            response.status.msg = config.msg.success;
-            response.data.users = users;
-            res.send(response);
+            result.data.users = users;
+            res.send(result);
         } else {
-            // 用户不存在
-            eventProxy.emit('error', {code: config.code.user_not_exist, msg: config.msg.user_not_exist});
+            // 数据为空
+            eventProxy.throw({code: config.code.data_is_empty, msg: config.msg.data_is_empty});
             return;
         }
     });
 };
-
