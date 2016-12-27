@@ -3,26 +3,20 @@
  * 用户信息相关操作接口模块儿
  */
 
-/**
- * 事件代理
- */
+    // 事件代理
 var EventProxy = require('eventproxy');
-/**
- * 项目配置文件
- */
+// 项目配置文件
 var config = require('../../app.config');
-
-/**
- * 获取用户代理模块
- */
+// 获取用户代理模块
 var User = require('../../proxy').User;
+var easemob = require('./easemob/em_rest');
 
 /**
  * 构建响应体，并将响应结果返回给接口调用者，结果包含状态以及请求得到的数据
  * {
  *    "status": { // 响应状态
  *        "code": 0,
- *        "message": 'Success'
+ *        "msg": 'Success'
  *    },
  *    "data": {   // 响应的数据
  *        result:result
@@ -37,55 +31,60 @@ var result = {status: {code: config.code.no_error, msg: config.msg.success}, dat
  * @param res 响应数据
  */
 exports.createUser = function (req, res, next) {
-    var eventProxy = new EventProxy();
-    // 错误回调处理接口
-    eventProxy.fail(function (error) {
-        // 响应状态
-        result.status = error;
-        res.send(result);
-    });
-
+    // 回调代理
+    var ep = new EventProxy();
     // 获取请求提交的数据
     var username = req.body.username;
     var password = req.body.password;
-
     // 校验数据，判断必须数据是否有空值
     var isEmpty = [username, password].some(function (item) {
         return item === '' || typeof(item) === config.msg.success;
     });
     if (isEmpty) {
-        eventProxy.throw({code: config.code.params_empty, msg: config.msg.params_empty});
-        return;
+        return ep.throw({code: config.code.params_empty, msg: config.msg.params_empty});
     }
-    // 注册前首先查询是否已经存在
-    User.getUserByUsername(username, function (error, user) {
-        if (error) {
-            // 服务器数据库错误
-            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
-            return;
+    // 调用环信 rest 接口先注册环信账户，成功之后再注册本地账户
+    easemob.createUser(username, password, function (data) {
+        if (data.status.code !== config.code.no_error) {
+            return res.send(data);
         }
-        if (user) {
-            // 用户已存在
-            eventProxy.throw({code: config.code.user_already_exist, msg: config.msg.user_already_exist});
-            return;
-        }
-        // 创建并保存一个新用户
-        User.createAndSaveUser(username, password, function (error, user) {
+        // 注册前首先查询是否已经存在
+        User.getUserByUsername(username, function (error, user) {
             if (error) {
-                // 数据库异常
-                eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+                // 服务器数据库错误
+                ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
                 return;
             }
             if (user) {
-                // 注册成功
-                result.data.user = user;
-                res.send(result);
-            } else {
-                // 注册失败
-                eventProxy.throw({code: config.code.sign_up_failed, msg: config.msg.sign_up_failed});
+                // 用户已存在
+                ep.throw({code: config.code.user_already_exist, msg: config.msg.user_already_exist});
                 return;
             }
+            // 创建并保存一个新用户
+            User.createAndSaveUser(username, password, function (error, user) {
+                if (error) {
+                    // 数据库异常
+                    ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+                    return;
+                }
+                if (user) {
+                    // 注册成功
+                    result.data.user = user;
+                    res.send(result);
+                } else {
+                    // 注册失败
+                    ep.throw({code: config.code.sign_up_failed, msg: config.msg.sign_up_failed});
+                    return;
+                }
+            });
         });
+    });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
     });
 };
 
@@ -96,13 +95,8 @@ exports.createUser = function (req, res, next) {
  * @param next
  */
 exports.updateUser = function (req, res, next) {
-    var eventProxy = new EventProxy();
-    // 错误回调处理接口
-    eventProxy.fail(function (error) {
-        // 响应状态
-        result.status = error;
-        res.send(result);
-    });
+    // 回调代理
+    var ep = new EventProxy();
 
     var email = req.body.email;
     var nickname = req.body.nickname;
@@ -114,12 +108,10 @@ exports.updateUser = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception});
+            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception});
             return;
         }
         user.email = email;
-        user.avatar = avatar;
-        user.cover = cover;
         user.nickname = nickname;
         user.signature = signature;
         user.location = location;
@@ -127,13 +119,20 @@ exports.updateUser = function (req, res, next) {
         user.save(function (error, user) {
             if (error) {
                 // 数据库异常
-                eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception});
+                ep.throw({code: config.code.db_exception, msg: config.msg.db_exception});
                 return;
             }
             // 保存成功，将更新后的用户信息返回
             result.data.user = user;
             res.send(result);
         });
+    });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
     });
 };
 
@@ -144,21 +143,15 @@ exports.updateUser = function (req, res, next) {
  * @param next
  */
 exports.updateAvatar = function (req, res, next) {
-    var eventProxy = new EventProxy();
-    // 错误回调处理接口
-    eventProxy.fail(function (error) {
-        // 响应状态
-        result.status = error;
-        res.send(result);
-    });
-
+    // 回调代理
+    var ep = new EventProxy();
     // 获取请求提交的数据
     var avatar = req.body.avatar;
     var access_token = req.body.access_token;
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         user.avatar = avatar;
@@ -166,6 +159,13 @@ exports.updateAvatar = function (req, res, next) {
             result.data.user = user;
             res.send(result);
         });
+    });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
     });
 };
 
@@ -176,21 +176,15 @@ exports.updateAvatar = function (req, res, next) {
  * @param next
  */
 exports.updateCover = function (req, res, next) {
-    var eventProxy = new EventProxy();
-    // 错误回调处理接口
-    eventProxy.fail(function (error) {
-        // 响应状态
-        result.status = error;
-        res.send(result);
-    });
-
+    // 回调代理
+    var ep = new EventProxy();
     // 获取请求提交的数据
     var cover = req.body.cover;
     var access_token = req.body.access_token;
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         user.cover = cover;
@@ -198,6 +192,13 @@ exports.updateCover = function (req, res, next) {
             result.data.user = user;
             res.send(result);
         });
+    });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
     });
 };
 
@@ -208,31 +209,31 @@ exports.updateCover = function (req, res, next) {
  * @param next
  */
 exports.getUserInfo = function (req, res, next) {
-    var eventProxy = new EventProxy();
-    // 错误回调处理接口
-    eventProxy.fail(function (error) {
-        // 响应状态
-        result.status = error;
-        res.send(result);
-    });
-
+    // 回调代理
+    var ep = new EventProxy();
     // 获取请求提交的数据
     var username = req.params.username;
     User.getUserByUsername(username, function (error, user) {
         if (error) {
             // 数据库异常
-            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
-            return;
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
         }
         if (user) {
             result.data.user = user;
             res.send(result);
         } else {
             // 用户不存在
-            eventProxy.throw({code: config.code.user_not_exist, msg: config.msg.user_not_exist});
-            return;
+            return ep.throw({code: config.code.user_not_exist, msg: config.msg.user_not_exist});
         }
     });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
+    });
+
 };
 
 /**
@@ -242,21 +243,15 @@ exports.getUserInfo = function (req, res, next) {
  * @param next
  */
 exports.getFriends = function (req, res, next) {
-    var eventProxy = new EventProxy();
-    // 错误回调处理接口
-    eventProxy.fail(function (error) {
-        // 响应状态
-        result.status = error;
-        res.send(result);
-    });
-
+    // 回调代理
+    var ep = new EventProxy();
     // 获取请求提交的数据
     var friends = req.params.friends;
     var friendArray = friends.split(',');
     User.getUserByNames(friendArray, function (error, users) {
         if (error) {
             // 数据库异常
-            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         if (users && users.length > 0) {
@@ -264,8 +259,15 @@ exports.getFriends = function (req, res, next) {
             res.send(result);
         } else {
             // 数据为空
-            eventProxy.throw({code: config.code.data_is_empty, msg: config.msg.data_is_empty});
+            ep.throw({code: config.code.data_is_empty, msg: config.msg.data_is_empty});
             return;
         }
+    });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
     });
 };

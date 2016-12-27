@@ -3,22 +3,13 @@
  * 验证相关接口模块
  */
 
-/**
- * 事件代理
- */
+    // 事件代理
 var EventProxy = require('eventproxy');
-/**
- * 七牛 SDK
- */
+// 七牛 SDK
 var qiniu = require('qiniu');
-/**
- * 项目配置文件
- */
+// 项目配置文件
 var config = require('../../app.config');
-
-/**
- * 获取用户代理模块
- */
+// 获取用户代理模块
 var User = require('../../proxy').User;
 
 /**
@@ -26,7 +17,7 @@ var User = require('../../proxy').User;
  * {
  *    "status": { // 响应状态
  *        "code": 0,
- *        "message": 'Success'
+ *        "msg": 'Success'
  *    },
  *    "data": {   // 响应的数据
  *        result:result
@@ -41,7 +32,6 @@ var result = {status: {code: config.code.no_error, msg: config.msg.success}, dat
  * @param res 响应数据
  */
 exports.uploadToken = function (req, res, next) {
-
     // 上传文件的 key，在客户端上传文件时自定义规则生成的 md5 值
     var file_key = req.params.key;
 
@@ -78,13 +68,8 @@ exports.uploadToken = function (req, res, next) {
  * @param next
  */
 exports.token = function (req, res, next) {
-    var eventProxy = new EventProxy();
-    // 错误回调处理接口
-    eventProxy.fail(function (error) {
-        // 响应状态
-        result.status = error;
-        res.send(result);
-    });
+    // 回调代理
+    var ep = new EventProxy();
 
     var username = req.body.username;
     var password = req.body.password;
@@ -93,13 +78,13 @@ exports.token = function (req, res, next) {
     });
     if (isEmpty) {
         // 参数为空
-        eventProxy.throw({error: config.code.params_empty, msg: config.msg.params_empty});
+        ep.throw({error: config.code.params_empty, msg: config.msg.params_empty});
         return;
     }
     User.getUserByUsername(username, function (error, user) {
         if (error) {
             // 服务器数据库错误
-            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             return;
         }
         if (user) {
@@ -111,15 +96,20 @@ exports.token = function (req, res, next) {
                     res.send(result);
                 } else {
                     // 密码错误
-                    eventProxy.throw({code: config.code.invalid_password, msg: config.msg.invalid_password});
+                    ep.throw({code: config.code.invalid_password, msg: config.msg.invalid_password});
                     return;
                 }
             });
         } else {
             // 用户不存在
-            eventProxy.throw({code: config.code.user_not_exist, msg: config.msg.user_not_exist});
+            ep.throw({code: config.code.user_not_exist, msg: config.msg.user_not_exist});
             return;
         }
     });
-
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
+    });
 };

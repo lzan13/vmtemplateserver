@@ -14,14 +14,14 @@ var User = require('../../proxy').User;
  * {
  *    "status": { // 响应状态
  *        "code": 0,
- *        "message": 'Success'
+ *        "msg": 'Success'
  *    },
  *    "data": {   // 响应的数据
  *        result:result
  *    }
  * }
  */
-var result = {status: {code: config.code.no_error, msg: config.msg.success}, data: {}};
+var result = {status: {}, data: {}};
 
 /**
  * 首先对请求进行验证，检查是否有权限进行操作
@@ -31,32 +31,33 @@ var result = {status: {code: config.code.no_error, msg: config.msg.success}, dat
  */
 exports.auth = function (req, res, next) {
     // 回调代理
-    var eventProxy = new EventProxy();
-    eventProxy.fail(function (error) {
-        result.status = error;
-        res.send(result);
-    });
-
+    var ep = new EventProxy();
     // 获取请求参数中的 access token
     var access_token = String(req.body.access_token || req.query.access_token || '');
 
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception});
+            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception});
             return;
         }
         if (!user) {
-            // token 无效
-            eventProxy.throw({code: config.code.invalid_access_token, msg: config.msg.invalid_access_token});
+            // 验证失败，无权继续操作
+            ep.throw({code: config.code.no_permission_action, msg: config.msg.no_permission_action});
             return;
         }
         if (user.disable) {
-            // token 无效
-            eventProxy.throw({code: config.code.user_is_disable, msg: config.msg.user_is_disable});
+            // 账户被禁用
+            ep.throw({code: config.code.user_is_disable, msg: config.msg.user_is_disable});
             return;
         }
         req.user = user;
         next();
+    });
+
+    //
+    ep.fail(function (error) {
+        result.status = error;
+        res.send(result);
     });
 };

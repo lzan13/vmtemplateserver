@@ -21,7 +21,7 @@ var User = require('../../proxy').User;
  * {
  *    "status": { // 响应状态
  *        "code": 0,
- *        "message": 'Success'
+ *        "msg": 'Success'
  *    },
  *    "data": {   // 响应的数据
  *        result:result
@@ -37,39 +37,38 @@ var result = {status: {code: config.code.no_error, msg: config.msg.success}, dat
  * @param next
  */
 exports.addFriend = function (req, res, next) {
-    var eventProxy = new EventProxy();
-    // 错误回调处理接口
-    eventProxy.fail(function (error) {
-        // 响应状态
-        result.status = error;
-        res.send(result);
-    });
+    // 回调代理
+    var ep = new EventProxy();
 
     var username = req.user.username;
     var friend_username = req.params.username;
     Friend.getFriendByUsername(username, friend_username, function (error, friend) {
         if (friend) {
             // 好友关系已存在，重复的请求
-            return eventProxy.throw({
-                code: config.code.duplication_request,
-                msg: config.msg.duplication_request
-            });
+            return ep.throw({code: config.code.duplication_request, msg: config.msg.duplication_request});
         }
         User.getUserByUsername(friend_username, function (error, user) {
             if (!user) {
                 // 用户不存在
-                return eventProxy.throw({code: config.code.user_not_exist, msg: config.msg.user_not_exist});
+                return ep.throw({code: config.code.user_not_exist, msg: config.msg.user_not_exist});
             }
             Friend.addFriendByUsername(username, friend_username, function (error, friend) {
                 if (error) {
                     // 数据库异常
-                    return eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception});
+                    return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception});
                 }
                 // 添加好友成功
                 result.data.friend = friend;
                 res.send(result);
             });
         });
+    });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
     });
 };
 
@@ -105,20 +104,14 @@ exports.removeFriend = function (req, res, next) {
  * @param next
  */
 exports.getFriends = function (req, res, next) {
-    var eventProxy = new EventProxy();
-    // 错误回调处理接口
-    eventProxy.fail(function (error) {
-        // 响应状态
-        result.status = error;
-        res.send(result);
-    });
-
+    // 回调代理
+    var ep = new EventProxy();
     // 获取请求提交的数据
     var username = req.user.username;
     Friend.getFriendsByUsername(username, function (error, friends) {
         if (error) {
             // 数据库异常
-            return eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception});
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
         }
         if (friends && friends.length > 0) {
             var friendArray = [];
@@ -128,14 +121,21 @@ exports.getFriends = function (req, res, next) {
             User.getUserByNames(friendArray, function (error, users) {
                 if (error) {
                     // 数据库异常
-                    return eventProxy.throw({code: config.code.db_exception, msg: config.msg.db_exception});
+                    return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
                 }
                 result.data.friends = users;
                 res.send(result)
             });
         } else {
             // 查询数据为空
-            return eventProxy.throw({code: config.code.data_is_empty, msg: config.msg.data_is_empty});
+            return ep.throw({code: config.code.data_is_empty, msg: config.msg.data_is_empty});
         }
+    });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
     });
 };

@@ -23,7 +23,7 @@ var testAPI = require('../api/v1/test');
  * 认证相关接口
  */
 // 获取七牛 uploadToken, 需要在 url 跟着需要上传文件的 key
-router.get('/auth/upload_token/:key', tokenAPI.uploadToken);
+router.get('/auth/upload-token/:key', tokenAPI.uploadToken);
 // 客户端进行登录认证，返回账户 access token
 router.post('/auth/token', tokenAPI.token);
 
