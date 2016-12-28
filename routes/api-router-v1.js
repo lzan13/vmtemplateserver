@@ -51,7 +51,7 @@ router.delete('/friends/:username', middleware.auth, friendAPI.removeFriend);
 // 获取好友信息，需验证账户 token
 router.get('/friends/list', middleware.auth, friendAPI.getFriends);
 // 获取好友信息，带上用户好友 username 集合参数，需验证账户 token
-router.get('/friends/:friends', middleware.auth, userAPI.getFriends);
+router.get('/friends/:names', middleware.auth, userAPI.getFriends);
 
 /**
  * 测试相关接口

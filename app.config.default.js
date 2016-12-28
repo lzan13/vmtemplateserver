@@ -53,6 +53,7 @@ var config = {
         no_error: 0,
         // 系统级别状态码
         db_exception: 1001,
+        request_failed: 1002,
         // 应用级别状态码
         params_empty: 2000,
         data_is_empty: 2001,
@@ -61,9 +62,9 @@ var config = {
         sign_up_failed: 2004,
         sign_in_failed: 2005,
         invalid_password: 2006,
-        invalid_access_token: 2007,
-        no_permission_action: 2008,
-        user_is_disable: 2009
+        no_permission_action: 2007,
+        user_is_disable: 2008,
+        duplication_request: 2009
     },
 
     /**
@@ -74,6 +75,7 @@ var config = {
         // 状态描述
         success: 'success',
         db_exception: 'Service db exception ',
+        request_failed: 'Request failed',
         params_empty: 'Params empty',
         data_is_empty: 'Data is empty',
         user_already_exist: 'User already exist',
@@ -81,9 +83,9 @@ var config = {
         sign_up_failed: 'Sign up failed',
         sign_in_failed: 'Sign in failed',
         invalid_password: 'Invalid password',
-        invalid_access_token: 'Authentication failed, Invalid access token',
         no_permission_action: 'No permission action',
-        user_is_disable: 'User is disabled'
+        user_is_disable: 'User is disabled',
+        duplication_request: 'Duplication request'
     }
 };
 

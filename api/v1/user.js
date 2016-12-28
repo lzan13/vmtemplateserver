@@ -246,9 +246,9 @@ exports.getFriends = function (req, res, next) {
     // 回调代理
     var ep = new EventProxy();
     // 获取请求提交的数据
-    var friends = req.params.friends;
-    var friendArray = friends.split(',');
-    User.getUserByNames(friendArray, function (error, users) {
+    var names = req.params.names;
+    var friends = names.split(',');
+    User.getUserByNames(friends, function (error, users) {
         if (error) {
             // 数据库异常
             ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
