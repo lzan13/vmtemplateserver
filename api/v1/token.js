@@ -90,6 +90,8 @@ exports.token = function (req, res, next) {
         if (user) {
             User.getUserByUsernameAndKey(username, password, function (error, user) {
                 if (user) {
+                    result.status.code = config.code.no_error;
+                    result.status.msg = config.msg.success;
                     // 响应数据
                     result.data.user = user;
                     // 发送响应结果给请求者

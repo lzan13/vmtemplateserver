@@ -242,7 +242,7 @@ exports.getUserInfo = function (req, res, next) {
  * @param res 响应数据
  * @param next
  */
-exports.getFriends = function (req, res, next) {
+exports.getUsers = function (req, res, next) {
     // 回调代理
     var ep = new EventProxy();
     // 获取请求提交的数据

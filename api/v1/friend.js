@@ -123,6 +123,8 @@ exports.getFriends = function (req, res, next) {
                     // 数据库异常
                     return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
                 }
+                result.status.code = config.code.no_error;
+                result.status.msg = config.msg.success;
                 result.data.friends = users;
                 res.send(result)
             });

@@ -21,7 +21,7 @@ var User = require('../../proxy').User;
  *    }
  * }
  */
-var result = {status: {}, data: {}};
+var result = {status: {code: config.code.no_error, msg: config.msg.success}, data: {}};
 
 /**
  * 首先对请求进行验证，检查是否有权限进行操作

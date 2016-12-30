@@ -40,7 +40,7 @@ router.put('/users/avatar', middleware.auth, userAPI.updateAvatar);
 router.put('/users/cover', middleware.auth, userAPI.updateCover);
 // 根据用户名获取用户信息
 router.get('/users/:username', userAPI.getUserInfo);
-
+router.get('/users/:names', userAPI.getUsers);
 /**
  * 好友关系先关接口
  */
