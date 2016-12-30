@@ -52,20 +52,17 @@ exports.createUser = function (req, res, next) {
         User.getUserByUsername(username, function (error, user) {
             if (error) {
                 // 服务器数据库错误
-                ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
-                return;
+                return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
             }
             if (user) {
                 // 用户已存在
-                ep.throw({code: config.code.user_already_exist, msg: config.msg.user_already_exist});
-                return;
+                return ep.throw({code: config.code.user_already_exist, msg: config.msg.user_already_exist});
             }
             // 创建并保存一个新用户
             User.createAndSaveUser(username, password, function (error, user) {
                 if (error) {
                     // 数据库异常
-                    ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
-                    return;
+                    return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
                 }
                 if (user) {
                     // 注册成功
@@ -73,8 +70,7 @@ exports.createUser = function (req, res, next) {
                     res.send(result);
                 } else {
                     // 注册失败
-                    ep.throw({code: config.code.sign_up_failed, msg: config.msg.sign_up_failed});
-                    return;
+                    return ep.throw({code: config.code.sign_up_failed, msg: config.msg.sign_up_failed});
                 }
             });
         });
@@ -108,8 +104,7 @@ exports.updateUser = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception});
-            return;
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception});
         }
         user.email = email;
         user.nickname = nickname;
@@ -119,8 +114,7 @@ exports.updateUser = function (req, res, next) {
         user.save(function (error, user) {
             if (error) {
                 // 数据库异常
-                ep.throw({code: config.code.db_exception, msg: config.msg.db_exception});
-                return;
+                return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception});
             }
             // 保存成功，将更新后的用户信息返回
             result.data.user = user;
@@ -151,8 +145,7 @@ exports.updateAvatar = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
-            return;
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
         }
         user.avatar = avatar;
         user.save(function (error, user) {
@@ -184,8 +177,7 @@ exports.updateCover = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
-            return;
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
         }
         user.cover = cover;
         user.save(function (error, user) {
@@ -251,16 +243,14 @@ exports.getUsers = function (req, res, next) {
     User.getUserByNames(friends, function (error, users) {
         if (error) {
             // 数据库异常
-            ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
-            return;
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
         }
         if (users && users.length > 0) {
-            result.data.users = users;
+            result.data = users;
             res.send(result);
         } else {
             // 数据为空
-            ep.throw({code: config.code.data_is_empty, msg: config.msg.data_is_empty});
-            return;
+            return ep.throw({code: config.code.data_is_empty, msg: config.msg.data_is_empty});
         }
     });
 

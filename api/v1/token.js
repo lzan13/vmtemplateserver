@@ -93,7 +93,7 @@ exports.token = function (req, res, next) {
                     result.status.code = config.code.no_error;
                     result.status.msg = config.msg.success;
                     // 响应数据
-                    result.data.user = user;
+                    result.data = user;
                     // 发送响应结果给请求者
                     res.send(result);
                 } else {
