@@ -8,6 +8,7 @@ var EventProxy = require('eventproxy');
 var request = require('request');
 var Token = require('../../../proxy').Token;
 
+var loger = require('../../../common/loger');
 // 项目配置文件
 var config = require('../../../app.config');
 var org_name = config.em_org_name;
@@ -140,6 +141,7 @@ var getToken = function (callback) {
  */
 var createUser = function (username, password, callback) {
     getToken(function (data) {
+        loger.i("获取 token 结果：" + data);
         var options = {
             method: 'POST',
             uri: '/users',
