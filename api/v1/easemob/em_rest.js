@@ -141,7 +141,7 @@ var getToken = function (callback) {
  */
 var createUser = function (username, password, callback) {
     getToken(function (data) {
-        loger.i("获取 token 结果：" + data);
+        loger.i("获取 token 结果：" + JSON.constructor(data));
         var options = {
             method: 'POST',
             uri: '/users',
