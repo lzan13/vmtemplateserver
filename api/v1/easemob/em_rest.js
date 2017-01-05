@@ -141,13 +141,13 @@ var getToken = function (callback) {
  */
 var createUser = function (username, password, callback) {
     getToken(function (data) {
-        loger.i("获取 token 结果：" + JSON.constructor(data));
+        loger.i("获取 token 结果：" + data.data.access_token);
         var options = {
             method: 'POST',
             uri: '/users',
             headers: {
                 'content-type': 'application/json',
-                'authorization': 'bearer ' + data.data.access_token
+                'authorization': 'Bearer ' + data.data.access_token
             },
             body: {
                 username: username,
