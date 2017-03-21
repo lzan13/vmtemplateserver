@@ -6,7 +6,7 @@
  ************************************************************************/
 var config = {
     // 项目名称
-    app_name: 'ml-server',
+    app_name: 'VMServer',
     // 项目 logo
     app_logo: '/images/logo.svg',
 
@@ -14,7 +14,7 @@ var config = {
     app_port: 6666,
 
     // 连接 redis 密匙
-    session_secret: 'ml-secret-123',
+    session_secret: 'vm-secret-123',
     // 连接 redis 地址和端口
     redis_host: '127.0.0.1',
     redis_port: 6379,
