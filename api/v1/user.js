@@ -9,7 +9,8 @@ var EventProxy = require('eventproxy');
 var config = require('../../app.config');
 // 获取用户代理模块
 var User = require('../../proxy').User;
-var easemob = require('./easemob/em_rest');
+// 环信 Rest 接口封装
+var easemob = require('../../easemob/em-rest');
 
 /**
  * 构建响应体，并将响应结果返回给接口调用者，结果包含状态以及请求得到的数据
@@ -131,6 +132,45 @@ exports.updateUser = function (req, res, next) {
 };
 
 /**
+ * 更新用户昵称
+ * @param req 请求参数
+ * @param res 响应数据
+ * @param next
+ */
+exports.updateNickname = function (req, res, next) {
+    // 回调代理
+    var ep = new EventProxy();
+    // 获取请求提交的数据
+    var username = req.user.username;
+    var nickname = req.body.nickname;
+    var access_token = req.body.access_token;
+    // 调用环信 rest 接口先注册环信账户，成功之后再注册本地账户
+    easemob.updateNickname(username, nickname, function (data) {
+        if (data.status.code !== config.code.no_error) {
+            return res.send(data);
+        }
+        User.getUserByAccessToken(access_token, function (error, user) {
+            if (error) {
+                // 数据库异常
+                return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            }
+            user.nickname = nickname;
+            user.save(function (error, user) {
+                result.data.user = user;
+                res.send(result);
+            });
+        });
+    });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
+    });
+};
+
+/**
  * 更新用户头像
  * @param req 请求参数
  * @param res 响应数据
@@ -180,6 +220,38 @@ exports.updateCover = function (req, res, next) {
             return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
         }
         user.cover = cover;
+        user.save(function (error, user) {
+            result.data.user = user;
+            res.send(result);
+        });
+    });
+
+    // 错误回调处理接口
+    ep.fail(function (error) {
+        // 响应状态
+        result.status = error;
+        res.send(result);
+    });
+};
+
+/**
+ * 更新用户签名
+ * @param req 请求参数
+ * @param res 响应数据
+ * @param next
+ */
+exports.updateSignature = function (req, res, next) {
+    // 回调代理
+    var ep = new EventProxy();
+    // 获取请求提交的数据
+    var signature = req.body.signature;
+    var access_token = req.body.access_token;
+    User.getUserByAccessToken(access_token, function (error, user) {
+        if (error) {
+            // 数据库异常
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+        }
+        user.signature = signature;
         user.save(function (error, user) {
             result.data.user = user;
             res.send(result);

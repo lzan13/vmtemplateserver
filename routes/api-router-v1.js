@@ -17,7 +17,7 @@ var userAPI = require('../api/v1/user');
 // 好友关系相关模块儿
 var friendAPI = require('../api/v1/friend');
 // 测试接口
-var testAPI = require('../api/v1/test');
+var testAPI = require('../test/test');
 
 /**
  * 认证相关接口
@@ -34,15 +34,20 @@ router.post('/auth/token', tokenAPI.token);
 router.post('/users/create', userAPI.createUser);
 // 更新用户信息，需验证账户 token
 router.put('/users/update', middleware.auth, userAPI.updateUser);
+// 更新用户昵称
+router.put('/users/nickname', middleware.auth, userAPI.updateNickname);
 // 更新用户头像，需验证账户 token
 router.put('/users/avatar', middleware.auth, userAPI.updateAvatar);
 // 更新用户背景图，需验证账户 token
 router.put('/users/cover', middleware.auth, userAPI.updateCover);
+// 更新用户签名
+router.put('/users/signature', middleware.auth, userAPI.updateSignature);
 // 根据用户名获取用户信息
 router.get('/users/:username', userAPI.getUserInfo);
+// 根据用户列表获取用户信息集合
 router.get('/users/:names', userAPI.getUsers);
 /**
- * 好友关系先关接口
+ * 好友关系相关接口
  */
 // 添加好友，需验证账户 token
 router.put('/friends/:username', middleware.auth, friendAPI.addFriend);
@@ -60,6 +65,7 @@ router.get('/friends/:names', middleware.auth, userAPI.getUsers);
 router.post('/tests/post', testAPI.testPost);
 router.get('/tests/easemobs/token', testAPI.testGetToken);
 router.post('/tests/easemobs/users/create', testAPI.testCreateUser);
+router.post('/tests/callback', testAPI.testCallback);
 
 // 模块出口
 module.exports = router;

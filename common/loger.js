@@ -8,10 +8,12 @@ var debug = "debug - ";
 var error = "error - ";
 
 exports.i = function (msg) {
+    console.log(JSON.stringify(msg));
     console.log(info + msg);
 };
 
 exports.d = function (msg) {
+    console.log(JSON.stringify(msg));
     console.log(debug + msg);
 };
 

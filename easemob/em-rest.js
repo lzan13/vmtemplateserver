@@ -1,16 +1,18 @@
-/*
- * Created by lzan13
+/**
+ * Created by lzan13 on 2017/3/21.
  * 封装调用环信 rest 接口模块儿
  */
 
 var EventProxy = require('eventproxy');
 // 网络请求框架
 var request = require('request');
-var Token = require('../../../proxy').Token;
+var Token = require('../proxy/index').Token;
 
-var loger = require('../../../common/loger');
+var loger = require('../common/loger');
+var tools = require('../common/tools');
 // 项目配置文件
-var config = require('../../../app.config');
+var config = require('../app.config.js');
+
 var org_name = config.em_org_name;
 var app_name = config.em_app_name;
 var baseUrl = config.em_base_url + org_name + "/" + app_name;
@@ -235,6 +237,27 @@ var updateNickname = function (username, nickname, callback) {
         });
     });
 };
+
+/**
+ * 环信实时回调数据接收操作接口
+ * @param body 实时回调数据
+ * @returns {{callId: string, accept: string, reason: string, security: string}}
+ */
+var callback = function (body) {
+    loger.i(body);
+    var data = {
+        callId: "",        //与环信推送的一致
+        accept: "true",    //表明接受了此推送
+        reason: "",        //可选，accept为false时使用
+        security: ""       //签名。格式如下: MD5（callId+约定的key+"true"），约定key为654321
+    };
+    data.callId = body.callId;
+    data.security = tools.dataToMD5(data.callId + config.em_callback_key + "true");
+    loger.i(data);
+    return data;
+};
+
+exports.callback = callback;
 
 exports.getToken = getToken;
 exports.createUser = createUser;

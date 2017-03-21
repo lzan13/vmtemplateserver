@@ -11,7 +11,7 @@ var config = {
     app_logo: '/images/logo.svg',
 
     // 项目端口
-    app_port: 5121,
+    app_port: 6666,
 
     // 连接 redis 密匙
     session_secret: 'ml-secret-123',
@@ -39,6 +39,8 @@ var config = {
     /**
      * 环信相关配置
      */
+    em_access_token: 'em_access_token',
+    em_callback_key: '123456',
     em_org_name: '开发者企业 id，appkey 前半部分',
     em_app_name: '开发者后台 app name，appkey 后半部分',
     em_base_url: 'rest api 地址',
