@@ -53,7 +53,7 @@ exports.createUser = function (req, res, next) {
         User.getUserByUsername(username, function (error, user) {
             if (error) {
                 // 服务器数据库错误
-                return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+                return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.errmsg});
             }
             if (user) {
                 // 用户已存在
@@ -63,7 +63,7 @@ exports.createUser = function (req, res, next) {
             User.createAndSaveUser(username, password, function (error, user) {
                 if (error) {
                     // 数据库异常
-                    return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+                    return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.errmsg});
                 }
                 if (user) {
                     // 注册成功
@@ -152,7 +152,7 @@ exports.updateNickname = function (req, res, next) {
         User.getUserByAccessToken(access_token, function (error, user) {
             if (error) {
                 // 数据库异常
-                return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+                return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.errmsg});
             }
             user.nickname = nickname;
             user.save(function (error, user) {
@@ -185,7 +185,7 @@ exports.updateAvatar = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.errmsg});
         }
         user.avatar = avatar;
         user.save(function (error, user) {
@@ -217,7 +217,7 @@ exports.updateCover = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.errmsg});
         }
         user.cover = cover;
         user.save(function (error, user) {
@@ -249,7 +249,7 @@ exports.updateSignature = function (req, res, next) {
     User.getUserByAccessToken(access_token, function (error, user) {
         if (error) {
             // 数据库异常
-            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.errmsg});
         }
         user.signature = signature;
         user.save(function (error, user) {
@@ -280,7 +280,7 @@ exports.getUserInfo = function (req, res, next) {
     User.getUserByUsername(username, function (error, user) {
         if (error) {
             // 数据库异常
-            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.errmsg});
         }
         if (user) {
             result.data.user = user;
@@ -315,7 +315,7 @@ exports.getUsers = function (req, res, next) {
     User.getUserByNames(friends, function (error, users) {
         if (error) {
             // 数据库异常
-            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.msg});
+            return ep.throw({code: config.code.db_exception, msg: config.msg.db_exception + error.errmsg});
         }
         if (users && users.length > 0) {
             result.data = users;

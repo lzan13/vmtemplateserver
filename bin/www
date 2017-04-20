@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('ml-server:server');
 var http = require('http');
 
+var logger = require('../common/logger');
+
 var config = require('../app.config');
 
 /**
@@ -59,11 +61,11 @@ function onError(error) {
     // handle specific listen errors with friendly messages
     switch (error.code) {
         case 'EACCES':
-            console.error(bind + ' requires elevated privileges');
+            logger.e('%s requires elevated privileges', bind);
             process.exit(1);
             break;
         case 'EADDRINUSE':
-            console.error(bind + ' is already in use');
+            logger.e(bind + ' is already in use');
             process.exit(1);
             break;
         default:
@@ -80,5 +82,5 @@ function onListening() {
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
-    console.log("VMServer has started！Listener port: " + port);
+    logger.i("VMServer has started！Listener port: %d", port);
 }

@@ -3,9 +3,9 @@
  * 用来测试一些临时接口
  */
 
-// 配置文件
+    // 配置文件
 var config = require('../app.config.js');
-var loger = require('../common/loger');
+var logger = require('../common/logger');
 
 // 环信相关接口请求模块儿
 var easemob = require('../easemob/em-rest');
@@ -24,7 +24,7 @@ var easemob = require('../easemob/em-rest');
 var result = {status: config.code.no_error, msg: config.msg.success, data: {}};
 
 exports.testPost = function (req, res, next) {
-    loger.i("收到请求的 body: value1-" + req.body.key1 + ", value2-" + req.body.key2 + ", value3-" + req.body.key3);
+    logger.i('收到请求的 body: value1-%s, value2-%s, value3-%s', req.body.key1, req.body.key2, req.body.key3);
     result.data.result = "测试post 请求正确";
     res.send(result);
 };
@@ -45,6 +45,6 @@ exports.testCreateUser = function (req, res, next) {
 
 exports.testCallback = function (req, res, next) {
     var body = req.body;
-    var data = easemob.callback(body);
+    var data = easemob.imCallback(body);
     res.send(data);
 };

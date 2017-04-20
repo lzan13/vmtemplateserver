@@ -8,7 +8,7 @@ var EventProxy = require('eventproxy');
 var request = require('request');
 var Token = require('../proxy/index').Token;
 
-var loger = require('../common/loger');
+var logger = require('../common/logger');
 var tools = require('../common/tools');
 // 项目配置文件
 var config = require('../app.config.js');
@@ -127,9 +127,9 @@ var getToken = function (callback) {
             // 保存 token 信息到本地
             Token.createAndSaveToken(config.em_access_token, access_token, deadline, function (error, token) {
                 if (error) {
-                    console.log('token save failed, because db exception');
+                    logger.i('token save failed, because db exception');
                 }
-                console.log('token save success');
+                logger.i('token save success');
                 return callback(result);
             });
         });
@@ -143,7 +143,7 @@ var getToken = function (callback) {
  */
 var createUser = function (username, password, callback) {
     getToken(function (data) {
-        loger.i("获取 token 结果：" + data.data.access_token);
+        logger.i("获取 token 结果：" + data.data.access_token);
         var options = {
             method: 'POST',
             uri: '/users',
@@ -158,55 +158,7 @@ var createUser = function (username, password, callback) {
         };
         requestEasemob(options, function (error, response, body) {
             if (error) {
-                console.log(error);
-                result.status.code = config.code.request_failed;
-                result.status.msg = config.msg.request_failed;
-                result.data = error;
-                return callback(result);
-            }
-            if (response.statusCode !== 200) {
-                if (response.statusCode === 401) {
-                    isExpires = true;
-                    result.status.code = config.code.no_permission_action;
-                    result.status.msg = config.msg.no_permission_action;
-                    result.data = response.body;
-                } else if (response.statusCode === 400 && response.body.error === 'duplicate_unique_property_exists') {
-                    result.status.code = config.code.user_already_exist;
-                    result.status.msg = config.msg.user_already_exist;
-                    result.data = response.body;
-                } else {
-                    result.status.code = config.code.request_failed;
-                    result.status.msg = config.msg.request_failed;
-                    result.data = response.body;
-                }
-                return callback(result);
-            } else {
-                result.status.code = config.code.no_error;
-                result.status.msg = config.msg.success;
-                result.data = body;
-                return callback(result);
-            }
-        });
-    });
-};
-
-var updateNickname = function (username, nickname, callback) {
-    getToken(function (data) {
-        loger.i("获取 token 结果：" + data.data.access_token);
-        var options = {
-            method: 'PUT',
-            uri: '/users/' + username,
-            headers: {
-                'content-type': 'application/json',
-                'authorization': 'Bearer ' + data.data.access_token
-            },
-            body: {
-                nickname: nickname
-            }
-        };
-        requestEasemob(options, function (error, response, body) {
-            if (error) {
-                console.log(error);
+                logger.e(error);
                 result.status.code = config.code.request_failed;
                 result.status.msg = config.msg.request_failed;
                 result.data = error;
@@ -239,12 +191,66 @@ var updateNickname = function (username, nickname, callback) {
 };
 
 /**
- * 环信实时回调数据接收操作接口
+ * 更新环信 IM 账户昵称
+ * @param username 账户名
+ * @param nickname 新昵称
+ * @param callback 回调
+ */
+var updateNickname = function (username, nickname, callback) {
+    getToken(function (data) {
+        logger.i("获取 token 结果：" + data.data.access_token);
+        var options = {
+            method: 'PUT',
+            uri: '/users/' + username,
+            headers: {
+                'content-type': 'application/json',
+                'authorization': 'Bearer ' + data.data.access_token
+            },
+            body: {
+                nickname: nickname
+            }
+        };
+        requestEasemob(options, function (error, response, body) {
+            if (error) {
+                logger.e(error);
+                result.status.code = config.code.request_failed;
+                result.status.msg = config.msg.request_failed;
+                result.data = error;
+                return callback(result);
+            }
+            if (response.statusCode !== 200) {
+                if (response.statusCode === 401) {
+                    isExpires = true;
+                    result.status.code = config.code.no_permission_action;
+                    result.status.msg = config.msg.no_permission_action;
+                    result.data = response.body;
+                } else if (response.statusCode === 400 && response.body.error === 'duplicate_unique_property_exists') {
+                    result.status.code = config.code.user_already_exist;
+                    result.status.msg = config.msg.user_already_exist;
+                    result.data = response.body;
+                } else {
+                    result.status.code = config.code.request_failed;
+                    result.status.msg = config.msg.request_failed;
+                    result.data = response.body;
+                }
+                return callback(result);
+            } else {
+                result.status.code = config.code.no_error;
+                result.status.msg = config.msg.success;
+                result.data = body;
+                return callback(result);
+            }
+        });
+    });
+};
+
+/**
+ * 环信 IM 实时回调数据接收操作接口
  * @param body 实时回调数据
  * @returns {{callId: string, accept: string, reason: string, security: string}}
  */
-var callback = function (body) {
-    loger.i(body);
+var imCallback = function (body) {
+    logger.i(body);
     var data = {
         callId: "",        //与环信推送的一致
         accept: "true",    //表明接受了此推送
@@ -253,11 +259,11 @@ var callback = function (body) {
     };
     data.callId = body.callId;
     data.security = tools.dataToMD5(data.callId + config.em_callback_key + "true");
-    loger.i(data);
+    logger.i(data);
     return data;
 };
 
-exports.callback = callback;
+exports.imCallback = imCallback;
 
 exports.getToken = getToken;
 exports.createUser = createUser;

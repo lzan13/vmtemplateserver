@@ -63,9 +63,9 @@ router.get('/friends/:names', middleware.auth, userAPI.getUsers);
  */
 // post 请求，主要测试客户端提交 post 参数
 router.post('/tests/post', testAPI.testPost);
-router.get('/tests/easemobs/token', testAPI.testGetToken);
-router.post('/tests/easemobs/users/create', testAPI.testCreateUser);
-router.post('/tests/callback', testAPI.testCallback);
+router.get('/tests/hyphenate/token', testAPI.testGetToken);
+router.post('/tests/hyphenate/users/create', testAPI.testCreateUser);
+router.post('/tests/hyphenate/callback', testAPI.testCallback);
 
 // 模块出口
 module.exports = router;
