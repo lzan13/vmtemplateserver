@@ -1,0 +1,27 @@
+{
+  "apps": [
+    {
+      "name": "VMServer",
+      "script": "server/bin/www",
+      "env": {
+        "NODE_ENV": "development",
+        "AWESOME_SERVICE_API_TOKEN": "xxx"
+      },
+      "env_production": {
+        "NODE_ENV": "production"
+      },
+      "env_staging": {
+        "NODE_ENV": "staging",
+        "TEST": true
+      },
+      "max_memory_restart": "256M",
+      "restart_delay": 5000,
+      "min_uptime": 1000,
+      "max_restarts": 15,
+      "merge_logs": true,
+      "error_file": "./data/logs/pm2-err.log",
+      "out_file": "./data/logs/pm2-out.log",
+      "pid_file": "./data/logs/pm2.pid"
+    }
+  ]
+}

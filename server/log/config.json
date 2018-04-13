@@ -1,0 +1,51 @@
+{
+  "appenders": {
+    "VAccess": {
+      "type": "dateFile",
+      "filename": "./data/logs/vm_access.log",
+      "encoding": "utf-8",
+      "maxLogSize": 1024000000,
+      "numBackups": 3
+    },
+    "VConsole": {
+      "type": "console"
+    },
+    "VServer": {
+      "type": "dateFile",
+      "filename": "./data/logs/vm_server.log",
+      "encoding": "utf-8",
+      "maxLogSize": 1024000000,
+      "numBackups": 3
+    },
+    "VError": {
+      "type": "dateFile",
+      "filename": "./data/logs/vm_error.log",
+      "encoding": "utf-8",
+      "maxLogSize": 1024000000,
+      "numBackups": 3
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": [
+        "VConsole",
+        "VServer"
+      ],
+      "level": "debug"
+    },
+    "error": {
+      "appenders": [
+        "VConsole",
+        "VError"
+      ],
+      "level": "error"
+    },
+    "http": {
+      "appenders": [
+        "VConsole",
+        "VAccess"
+      ],
+      "level": "info"
+    }
+  }
+}
