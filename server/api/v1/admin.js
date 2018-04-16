@@ -6,6 +6,7 @@
 var EventProxy = require('eventproxy');
 var Account = require('../../proxys').Account;
 var config = require('../../config');
+var tools = require('../../common/tools');
 
 /**
  * 获取全部账户
@@ -23,8 +24,8 @@ exports.getAllAccounts = function (req, res, next) {
     ep.fail(next);
     Account.getAccountByQuery(query, options, ep.done(function (accounts) {
         if (accounts.length === 0) {
-            return ep.emit('error', {code: config.code.err_account_not_exist, message: 'account_not_exist'});
+            return ep.emit('error', tools.reqResult(config.code.err_account_not_exist, 'account_not_exist'));
         }
-        res.json({code: 0, message: 'success', data: accounts[0]});
+        res.json(tools.reqResult(0, 'success', accounts[0]));
     }));
 };

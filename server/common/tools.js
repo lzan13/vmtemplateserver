@@ -87,4 +87,21 @@ exports.formatStrs = function (objs) {
     });
 };
 
+exports.reqResult = function (code, msg, data) {
+    if (code == 0) {
+        return {
+            code: code,
+            message: msg,
+            data: data
+        }
+    } else {
+        return {
+            code: code,
+            status: 200,
+            message: msg,
+            data: data
+        }
+    }
+};
+
 

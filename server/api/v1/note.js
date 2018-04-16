@@ -18,21 +18,24 @@ exports.createNote = function (req, res, next) {
     var account = req.account;
     var content = req.body.content;
     var tags = req.body.tags || '';
+
+    var ep = new EventProxy();
+    ep.fail(next);
+
     var error;
     if (content === null) {
         error = 'content_is_null';
     }
     if (error) {
-        return res.json({code: config.code.err_invalid_param, message: error});
+        return ep.emit('error', tools.reqResult(config.code.err_invalid_param, error));
     }
+
     var tagArr;
     if (tags !== '') {
         tagArr = tags.split(',');
     }
-    var ep = new EventProxy();
-    ep.fail(next);
     Note.createAndSaveNote(account.id, content, tagArr, ep.done(function (article) {
-        res.json({code: 0, msg: 'success', data: article});
+        res.json(tools.reqResult(0, 'success', article));
     }));
 };
 
@@ -46,18 +49,18 @@ exports.addNoteToTrash = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-        return ep.emit('error', {code: config.code.err_invalid_param, message: 'invalid_id_format'})
+        return ep.emit('error', tools.reqResult(config.code.err_invalid_param, 'invalid_id_format'));
     }
     Note.getNoteById(id, ep.done(function (article) {
         if (!article) {
-            return ep.emit('error', {code: config.code.err_article_not_exist, message: 'article_not_exist'})
+            return ep.emit('error', tools.reqResult(config.code.err_article_not_exist, 'article_not_exist'));
         }
         if (article.authorId !== account.id) {
-            return ep.emit('error', {code: config.code.err_not_permission, message: 'not_permission'})
+            return ep.emit('error', tools.reqResult(config.code.err_not_permission, 'not_permission'));
         }
         article.deleted = true;
-        article.save(ep.done(function (result) {
-            res.json({code: 0, msg: 'success', data: result});
+        article.save(ep.done(function (article) {
+            res.json(tools.reqResult(0, 'success', article));
         }));
     }));
 };
@@ -72,18 +75,18 @@ exports.restoreNoteForTrash = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-        return ep.emit('error', {code: config.code.err_invalid_param, message: 'invalid_id_format'})
+        return ep.emit('error', tools.reqResult(config.code.err_invalid_param, 'invalid_id_format'));
     }
     Note.getNoteById(id, ep.done(function (article) {
         if (!article) {
-            return ep.emit('error', {code: config.code.err_article_not_exist, message: 'article_not_exist'})
+            return ep.emit('error', tools.reqResult(config.code.err_article_not_exist, 'article_not_exist'));
         }
         if (article.authorId !== account.id) {
-            return ep.emit('error', {code: config.code.err_not_permission, message: 'not_permission'})
+            return ep.emit('error', tools.reqResult(config.code.err_not_permission, 'not_permission'));
         }
         article.deleted = false;
-        article.save(ep.done(function (result) {
-            res.json({code: 0, msg: 'success', data: result});
+        article.save(ep.done(function (article) {
+            res.json(tools.reqResult(0, 'success', article));
         }));
     }));
 };
@@ -97,17 +100,17 @@ exports.removeNoteForEvery = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-        return ep.emit('error', {code: config.code.err_invalid_param, message: 'invalid_id_format'})
+        return ep.emit('error', tools.reqResult(config.code.err_invalid_param, 'invalid_id_format'));
     }
     Note.getNoteById(id, ep.done(function (article) {
         if (!article) {
-            return ep.emit('error', {code: config.code.err_article_not_exist, message: 'article_not_exist'})
+            return ep.emit('error', tools.reqResult(config.code.err_article_not_exist, 'article_not_exist'));
         }
         if (article.authorId !== account.id) {
-            return ep.emit('error', {code: config.code.err_not_permission, message: 'not_permission'})
+            return ep.emit('error', tools.reqResult(config.code.err_not_permission, 'not_permission'));
         }
-        Note.removeNoteById(id, ep.done(function (result) {
-            res.json({code: 0, msg: 'success', data: result});
+        Note.removeNoteById(id, ep.done(function (article) {
+            res.json(tools.reqResult(0, 'success', article));
         }));
     }));
 };
@@ -120,8 +123,8 @@ exports.clearNotesForTrash = function (req, res, next) {
     var account = req.account;
     var ep = new EventProxy();
     ep.fail(next);
-    Note.clearNotesForTrash(account.id, ep.done(function (result) {
-        res.json({code: 0, msg: 'success', data: result});
+    Note.clearNotesForTrash(account.id, ep.done(function (article) {
+        res.json(tools.reqResult(0, 'success', article));
     }));
 };
 /**
@@ -137,15 +140,15 @@ exports.updateNote = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-        return ep.emit('error', {code: config.code.err_invalid_param, message: 'invalid_id_format'})
+        return ep.emit('error', tools.reqResult(config.code.err_invalid_param, 'invalid_id_format'));
     }
     Note.getNoteById(id, function (error, article) {
         if (!article) {
             // 如果文章不存在，直接新建
-            return ep.emit('error', {code: config.code.err_article_not_exist, message: 'article_not_exist'})
+            return ep.emit('error', tools.reqResult(config.code.err_article_not_exist, 'article_not_exist'));
         }
         if (article.authorId !== account.id) {
-            return ep.emit('error', {code: config.code.err_not_permission, message: 'not_permission'})
+            return ep.emit('error', tools.reqResult(config.code.err_not_permission, 'not_permission'));
         }
 
         var tagArr;
@@ -155,7 +158,7 @@ exports.updateNote = function (req, res, next) {
         article.content = content;
         article.tags = tagArr;
         article.save(ep.done(function (article) {
-            res.json({code: 0, msg: 'success', data: article});
+            res.json(tools.reqResult(0, 'success', article));
         }));
     });
 };
@@ -168,16 +171,16 @@ exports.getNoteById = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-        return ep.emit('error', {code: config.code.err_invalid_param, message: 'invalid_id_format'})
+        return ep.emit('error', tools.reqResult(config.code.err_invalid_param, 'invalid_id_format'));
     }
     Note.getNoteById(id, function (error, article) {
         if (error) {
             return next(error);
         }
         if (!article) {
-            return ep.emit('error', {code: config.code.err_article_not_exist, message: 'article_not_exist'})
+            return ep.emit('error', tools.reqResult(config.code.err_article_not_exist, 'article_not_exist'));
         }
-        res.json({code: 0, msg: 'success', data: article});
+        res.json(tools.reqResult(0, 'success', article));
     });
 };
 
@@ -191,7 +194,7 @@ exports.getNotesForTrash = function (req, res, next) {
     ep.fail(next);
     var query = {authorId: account.id, deleted: true};
     Note.getNotesByQuery(query, {}, ep.done(function (articles) {
-        res.json({code: 0, message: 'success', data: articles});
+        res.json(tools.reqResult(0, 'success', articles));
     }));
 };
 
@@ -220,7 +223,7 @@ exports.getAllNotes = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     Note.getNotesByQuery(query, options, ep.done(function (articles) {
-        res.json({code: 0, message: 'success', data: articles});
+        res.json(tools.reqResult(0, 'success', articles));
     }));
 };
 
@@ -233,7 +236,7 @@ exports.getAllTags = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     var query = {authorId: account.id};
-    Note.getNotesTags(query, ep.done(function (result) {
-        res.json({code: 0, message: 'success', data: result});
+    Note.getNotesTags(query, ep.done(function (article) {
+        res.json(tools.reqResult(0, 'success', article));
     }));
 };
