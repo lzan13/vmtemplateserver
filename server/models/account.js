@@ -9,7 +9,7 @@ var Schema = mongoose.Schema;
 
 /**
  * 构建用户数据信息结构
- * 主要包含字段: name, email, phone, password, avatar, cover, gender, address, description, create_at, update_at, token, activated, deleted, admin
+ * 主要包含字段: name, email, phone, password, avatar, cover, gender, address, nickname, description, create_at, update_at, token, activated, deleted, admin
  * @type {mongoose.Schema}
  */
 var AccountSchema = new Schema({
@@ -26,6 +26,7 @@ var AccountSchema = new Schema({
         default: 2
     },
     address: {type: String},
+    nickname: {type: String},
     description: {type: String},
     create_at: {type: Date, default: Date.now},
     update_at: {type: Date, default: Date.now},

@@ -30,7 +30,7 @@ app.use('/api/v1', apiRouter);
  */
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
-    err.code = 404;
+    err.status = 404;
     next(err);
 });
 
@@ -38,12 +38,12 @@ app.use(function (req, res, next) {
  * 错误处理
  */
 app.use(function (err, req, res, next) {
-    res.status(err.code || 500);
+    res.status(err.status || 500);
     var result = {code: err.code || err.status, status: err.status, message: err.message};
     if (app.get('env') === 'development') {
         result.error = err.stack;
     }
-    logger.e(result);
+    result.status = undefined;
     res.json(result);
 });
 

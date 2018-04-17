@@ -5,7 +5,7 @@
 var Account = require('../models').Account;
 
 // 进行查询时需要的列
-var selected = 'name email phone avatar cover gender address description create_at update_at activated deleted admin';
+var selected = 'name email phone avatar cover gender address nickname description create_at update_at activated deleted admin';
 
 /**
  * 创建账户并保存
