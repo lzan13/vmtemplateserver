@@ -40,7 +40,7 @@ exports.createAccountByEmail = function (req, res, next) {
         var name = 'v' + (count + 1);
         var code = 'V-' + tools.authCode();
         Account.createAndSaveAccount(name, account, password, code, ep.done(function (account) {
-            mail.sendActivateMail(account, code);
+            mail.sendActivateMail(account.email, code);
             res.json(tools.reqResult(0, 'success', account));
         }));
     });
