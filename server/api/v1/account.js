@@ -20,6 +20,9 @@ exports.createAccountByEmail = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
 
+    var ep = new EventProxy();
+    ep.fail(next);
+
     var error;
     if (account === '') {
         error = 'account_is_null';
