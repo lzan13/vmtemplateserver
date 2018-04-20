@@ -8,7 +8,7 @@ var logger = require('./log/logger.js');
 var config = require('./config');
 
 // 引入 api 路由
-var apiRouter = require('./api-v1');
+var apiRouter = require('./api_router_v1');
 
 // 实例化 express 对象
 var app = express();

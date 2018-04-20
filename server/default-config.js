@@ -3,9 +3,9 @@
  */
 module.exports = {
     // 端口
-    port: 52157,
+    port: 8899,
     // 部署请求地址
-    site_url: 'http://localhost:52157',
+    site_url: 'http://localhost:8899',
 
     /**
      * session 配置
@@ -21,14 +21,15 @@ module.exports = {
      */
     token: {
         secret: 'vTokenSecret13', // 修改为自己独有的 secret 字符串
-        expires: 60 * 60 // 测试过期用10秒
+        expires: 60 * 60 // 测试过期用60秒
         // expires: 30 * 24 * 60 * 60
     },
 
     /**
      * 数据库配置
      */
-    mongodb_uri: 'mongodb://localhost:27017/vnote',
+    // mongodb_uri: 'mongodb://localhost:27017/vmnote',
+    mongodb_uri: 'mongodb://vmnote:vmdbDlove13@localhost:27017/vmnote',
     mongodb_opts: {
         useMongoClient: true,
         autoIndex: false, // Don't build indexes
