@@ -2,28 +2,54 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>来自 VNotes 的激活邮件</title>
+    <title>来自 VMLoft 的激活邮件</title>
 </head>
 <body>
-<div style="width:100%; background-color:#f8f8f8; margin: 0; padding: 0;">
+<!--账户激活邮件内容-->
+<div style="width:100%; background-color:#f8f8f8; margin: 0; padding: 0; font-family: Roboto-Regular,Helvetica,Arial,sans-serif; font-size: 13px;">
     <div style="width: 100%; height: 36px;"></div>
-    <div style="min-width: 360px; max-width: 600px; margin: 20px auto; box-shadow: 0px 1px 2px #a8a8a8; border-radius:4px; font-size: 13px;">
+    <div style="min-width: 360px; max-width: 600px; margin: 20px auto; box-shadow: 0px 1px 2px #a8a8a8; border-radius:4px;">
         <div style="width:100%; color: #ffffff; background-color: #298afe; border-top-left-radius: 4px; border-top-right-radius: 4px; font-size: 22px; text-align:center;">
-            <div style="padding: 20px;">激活你的 VNotes 账户</div>
+            <div style="padding: 20px;">激活你的账户</div>
         </div>
-        <div style="width: 100%; text-align: left;  background-color: #ffffff; ">
-            <div style="min-width: 320px; max-width: 500px; margin: auto; font-family: Roboto-Regular,Helvetica,Arial,sans-serif; color: #232323; line-height: 1.5; padding: 4px 0;">
+        <div style="width: 100%; text-align: left;  background-color: #ffffff;">
+            <div style="min-width: 320px; max-width: 500px; margin: auto; color: #232323; line-height: 1.5; padding: 4px 0;">
                 <div style="font-size: 18px; padding: 20px 10px;">尊敬的{0}，您好！</div>
-                <div style="padding: 10px;">感谢您注册 VNotes，请点击下边的链接激活您的账户</div>
+                <div style="padding: 10px;">感谢您注册 VMLoft 账户，请点击下边的链接激活您的账户</div>
                 <div style="padding: 5px 10px;">
-                    <a href="http://localhost:52157/api/v1/accounts/activate?account={1}&code={2}">激活账户</a>
+                    <a href="{1}/api/v1/accounts/activate?account={2}&code={3}">激活账户</a>
                 </div>
                 <div style="padding: 10px;">如果你并没进行此类操作请忽略此邮件！</div>
-                <div style="padding: 24px 10px;">By - VNotes 团队</div>
+                <div style="padding: 24px 10px;">By - VMLoft 团队</div>
             </div>
         </div>
         <div style="min-width: 360px; max-width: 600px; padding: 5px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; background-color: #f8f8f8; color: #898989">
-            ©️ 2017 VNotes.
+            ©️ 2017 VMLoft.
+        </div>
+    </div>
+    <div style="width: 100%; height: 36px;"></div>
+</div>
+
+<!--验证码邮件内容-->
+<div style="width:100%; background-color:#f8f8f8; margin: 0; padding: 0; font-family: Roboto-Regular,Helvetica,Arial,sans-serif; font-size: 13px;">
+    <div style="width: 100%; height: 36px;"></div>
+    <div style="min-width: 360px; max-width: 600px; margin: 20px auto; box-shadow: 0px 1px 2px #a8a8a8; border-radius:4px;">
+        <div style="width:100%; color: #ffffff; background-color: #298afe; border-top-left-radius: 4px; border-top-right-radius: 4px; font-size: 22px; text-align:center;">
+            <div style="padding: 20px;">VMLoft 验证码</div>
+        </div>
+        <div style="width: 100%; text-align: left;  background-color: #ffffff; ">
+            <div style="min-width: 320px; max-width: 500px; margin: auto; color: #232323; line-height: 1.5; padding: 4px 0;">
+                <div style="font-size: 18px; padding: 20px 10px;">尊敬的{0}，您好！</div>
+                <div style="padding: 10px;">您现在正在进行敏感操作，下边是您这次操作的验证码</div>
+                <div style="padding: 5px 10px;">
+                    <strong style="color: #ff7138; font-size: 20px">{1}</strong>
+                </div>
+                <div style="padding: 10px;">如果你并没进行此类操作请忽略此邮件！</div>
+                <div style="padding: 24px 10px;">By - VMLoft 团队</div>
+            </div>
+        </div>
+        <div style="min-width: 360px; max-width: 600px; padding: 5px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; background-color: #f8f8f8; color: #898989">
+            ©️ 2017 VMLoft.
         </div>
     </div>
     <div style="width: 100%; height: 36px;"></div>

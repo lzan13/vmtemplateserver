@@ -30,18 +30,18 @@ exports.createAccountByEmail = function (req, res, next) {
         error = 'password_is_null';
     }
     if (error) {
-        return ep.emit('error', tools.reqResult(config.code.err_invalid_param, error));
+        return ep.emit('error', tools.reqError(config.code.err_invalid_param, error));
     }
 
     ep.all('exist', 'count', function (exist, count) {
         if (exist) {
-            return ep.emit('error', tools.reqResult(config.code.err_account_exist, 'account_exist'));
+            return ep.emit('error', tools.reqError(config.code.err_account_exist, 'account_exist'));
         }
         var name = 'v' + (count + 1);
         var code = 'V-' + tools.authCode();
         Account.createAndSaveAccount(name, account, password, code, ep.done(function (account) {
             mail.sendActivateMail(account.email, code);
-            res.json(tools.reqResult(0, 'success', account));
+            res.json(tools.reqDone(account));
         }));
     });
 
@@ -65,15 +65,15 @@ exports.updateAccountName = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     if (!name) {
-        return ep.emit('error', tools.reqResult(config.code.err_invalid_param, 'invalid_param'));
+        return ep.emit('error', tools.reqError(config.code.err_invalid_param, 'invalid_param'));
     }
     Account.getAccountByName(name, ep.done(function (exist) {
         if (exist && token !== exist.token) {
-            return ep.emit('error', tools.reqResult(config.code.err_account_name_exist, 'err_account_name_exist'));
+            return ep.emit('error', tools.reqError(config.code.err_account_name_exist, 'err_account_name_exist'));
         }
         account.name = name;
         account.save(ep.done(function (account) {
-            res.json(tools.reqResult(0, 'success', account));
+            res.json(tools.reqDone(account));
         }));
     }));
 };
@@ -88,7 +88,7 @@ exports.updateAccountAvatar = function (req, res, next) {
     ep.fail(next);
     account.avatar = avatar;
     account.save(ep.done(function (account) {
-        res.json(tools.reqResult(0, 'success', account));
+        res.json(tools.reqDone(account));
     }));
 };
 
@@ -102,7 +102,7 @@ exports.updateAccountCover = function (req, res, next) {
     ep.fail(next);
     account.cover = cover;
     account.save(ep.done(function (account) {
-        res.json(tools.reqResult(0, 'success', account));
+        res.json(tools.reqDone(account));
     }));
 };
 
@@ -122,7 +122,7 @@ exports.updateAccountInfo = function (req, res, next) {
     account.nickname = nickname;
     account.description = description;
     account.save(ep.done(function (account) {
-        res.json(tools.reqResult(0, 'success', account));
+        res.json(tools.reqDone(account));
     }));
 };
 
@@ -138,12 +138,12 @@ exports.changePassword = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     if (tools.cryptoSHA1(oldPassword) !== account.password) {
-        return ep.emit('error', tools.reqResult(config.code.err_invalid_password, 'invalid_password'));
+        return ep.emit('error', tools.reqError(config.code.err_invalid_password, 'invalid_password'));
     }
     account.password = password;
     account.token = createToken(account.email, account.admin);
     account.save(ep.done(function (account) {
-        res.json(tools.reqResult(0, 'success', {
+        res.json(tools.reqDone({
             token: account.token,
             expiresIn: config.token.expires
         }));
@@ -161,20 +161,20 @@ exports.activateAccount = function (req, res, next) {
     ep.fail(next);
     Account.authAccount(query, ep.done(function (accounts) {
         if (accounts.length <= 0) {
-            return ep.emit('error', tools.reqResult(config.code.err_account_not_exist, 'account_not_exist'));
+            return ep.emit('error', tools.reqError(config.code.err_account_not_exist, 'account_not_exist'));
         }
         var account = accounts[0];
         if (!account.activated) {
             if (activateCode !== account.code) {
-                return ep.emit('error', tools.reqResult(config.code.err_invalid_activate_link, 'invalid_activate_link'))
+                return ep.emit('error', tools.reqError(config.code.err_invalid_activate_link, 'invalid_activate_link'))
             }
             account.code = null;
             account.activated = true;
             account.save(ep.done(function (account) {
-                res.json(tools.reqResult(0, 'success', 'account activate success'));
+                res.json(tools.reqDone('account activate success'));
             }));
         } else {
-            res.json(tools.reqResult(0, 'success', 'account activate success'))
+            res.json(tools.reqDone('account activate success'))
         }
     }));
 };
@@ -190,21 +190,21 @@ exports.authAccount = function (req, res, next) {
     ep.fail(next);
     Account.authAccount(query, ep.done(function (accounts) {
         if (accounts.length <= 0) {
-            return ep.emit('error', tools.reqResult(config.code.err_account_not_exist, 'account_not_exist'));
+            return ep.emit('error', tools.reqError(config.code.err_account_not_exist, 'account_not_exist'));
         }
         var account = accounts[0];
         if (account.password !== tools.cryptoSHA1(password)) {
-            return ep.emit('error', tools.reqResult(config.code.err_invalid_password, 'invalid_password'));
+            return ep.emit('error', tools.reqError(config.code.err_invalid_password, 'invalid_password'));
         }
         if (!account.activated) {
-            return ep.emit('error', tools.reqResult(config.code.err_account_no_activated, 'account_no_activated'));
+            return ep.emit('error', tools.reqError(config.code.err_account_no_activated, 'account_no_activated'));
         }
         if (account.deleted) {
-            return ep.emit('error', tools.reqResult(config.code.err_account_deleted, 'account_deleted'));
+            return ep.emit('error', tools.reqError(config.code.err_account_deleted, 'account_deleted'));
         }
         account.token = createToken(account.email, account.admin);
         account.save(ep.done(function (account) {
-            res.json(tools.reqResult(0, 'success', account));
+            res.json(tools.reqDone(account));
         }));
     }));
 };
@@ -241,9 +241,9 @@ exports.getAccount = function (req, res, next) {
     ep.fail(next);
     Account.getAccountByQuery(query, {}, ep.done(function (accounts) {
         if (accounts.length === 0) {
-            return ep.emit('error', tools.reqResult(config.code.err_account_not_exist, 'account_not_exist'));
+            return ep.emit('error', tools.reqError(config.code.err_account_not_exist, 'account_not_exist'));
         }
-        res.json(tools.reqResult(0, 'success', accounts[0]));
+        res.json(tools.reqDone(accounts[0]));
     }));
 };
 
@@ -265,8 +265,8 @@ exports.searchAccounts = function (req, res, next) {
     ep.fail(next);
     Account.getAccountByQuery(query, options, ep.done(function (accounts) {
         if (accounts.length === 0) {
-            return ep.emit('error', tools.reqResult(config.code.err_account_not_exist, 'account_not_exist'));
+            return ep.emit('error', tools.reqError(config.code.err_account_not_exist, 'account_not_exist'));
         }
-        res.json(tools.reqResult(0, 'success', accounts[0]));
+        res.json(tools.reqDone(accounts[0]));
     }));
 };

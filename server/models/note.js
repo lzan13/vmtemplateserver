@@ -7,14 +7,15 @@ var Schema = mongoose.Schema;
 
 /**
  * 构建笔记数据信息结构
- * 主要包含字段: authorId, content, tags, top, deleted, cretae_at, update_at
+ * 主要包含字段: authorId, content, tags, pinup, blog, deleted, create_at, update_at
  * @type {mongoose.Schema}
  */
 var NoteSchema = new Schema({
     authorId: {type: String},
     content: {type: String},
     tags: {type: Array},
-    top: {type: Boolean, default: false},
+    pinup: {type: Boolean, default: false},
+    blog: {type: Boolean, default: false},
     deleted: {type: Boolean, default: false},
     create_at: {type: Date, default: Date.now},
     update_at: {type: Date, default: Date.now}

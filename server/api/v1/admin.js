@@ -24,8 +24,8 @@ exports.getAllAccounts = function (req, res, next) {
     ep.fail(next);
     Account.getAccountByQuery(query, options, ep.done(function (accounts) {
         if (accounts.length === 0) {
-            return ep.emit('error', tools.reqResult(config.code.err_account_not_exist, 'account_not_exist'));
+            return ep.emit('error', tools.reqError(config.code.err_account_not_exist, 'account_not_exist'));
         }
-        res.json(tools.reqResult(0, 'success', accounts[0]));
+        res.json(tools.reqDone(accounts[0]));
     }));
 };

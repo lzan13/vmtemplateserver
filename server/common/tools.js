@@ -87,20 +87,30 @@ exports.formatStrs = function (objs) {
     });
 };
 
-exports.reqResult = function (code, msg, data) {
-    if (code == 0) {
-        return {
-            code: code,
-            message: msg,
-            data: data
-        }
-    } else {
-        return {
-            code: code,
-            status: 200,
-            message: msg,
-            data: data
-        }
+/**
+ * 成功的请求结果
+ */
+exports.reqDone = function (data, totalCount) {
+    var result = {
+        code: 0,
+        message: 'success'
+    };
+    if (totalCount) {
+        result.totalCount = totalCount;
+        result.resultCount = data.length;
+    }
+    result.data = data;
+    return result
+};
+
+/**
+ * 错误的请求结果
+ */
+exports.reqError = function (code, msg) {
+    return {
+        code: code,
+        message: msg,
+        status: 200
     }
 };
 
