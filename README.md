@@ -7,4 +7,4 @@ VMServer
 
 - [server](./server) 主要放置的是 API 接口实现，
 - [client](./client) 主要是 web 前端界面（暂未实现）和 server 端放置在同一仓库下
-- [Android](https://github.com/lzan13/VNotes) android 客户端（开发中）
+- [Android](https://github.com/lzan13/VMNote) android 客户端（开发中）

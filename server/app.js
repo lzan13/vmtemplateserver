@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 /**
  * 设置 api 路由
  */
-app.use('/api/v1', apiRouter);
+app.use('/v1', apiRouter);
 
 /**
  * 错误处理程序，捕捉项目开发中未处理的错误，并进行简单的处理
