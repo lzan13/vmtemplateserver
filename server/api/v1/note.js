@@ -34,8 +34,44 @@ exports.createNote = function (req, res, next) {
         tagArr = tags.split(',');
     }
     Note.createAndSaveNote(account.id, content, tagArr, ep.done(function (note) {
+        account.note_count += 1;
+        account.save();
         res.json(tools.reqDone(note));
     }));
+};
+
+/**
+ * 更新笔记
+ */
+exports.updateNote = function (req, res, next) {
+    var account = req.account;
+    var id = req.params.id;
+    var content = req.body.content;
+    var tags = req.body.tags;
+
+    var ep = new EventProxy();
+    ep.fail(next);
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        return ep.emit('error', tools.reqError(config.code.err_invalid_param, 'invalid_id_format'));
+    }
+    Note.getNoteById(id, function (error, note) {
+        if (!note) {
+            return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
+        }
+        if (note.authorId !== account.id) {
+            return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
+        }
+
+        var tagArr;
+        if (tags !== '') {
+            tagArr = tags.split(',');
+        }
+        note.content = content;
+        note.tags = tagArr;
+        note.save(ep.done(function (note) {
+            res.json(tools.reqDone(note));
+        }));
+    });
 };
 
 /**
@@ -105,8 +141,11 @@ exports.removeNoteForever = function (req, res, next) {
         if (note.authorId !== account.id) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
-        Note.removeNoteById(id, ep.done(function (note) {
-            res.json(tools.reqDone(note));
+        Note.removeNoteById(id, ep.done(function (result) {
+            account.note_count -= result.n;
+            account.save(ep.done(function (account) {
+                res.json(tools.reqDone(account));
+            }));
         }));
     }));
 };
@@ -119,42 +158,11 @@ exports.clearNotesForTrash = function (req, res, next) {
     var ep = new EventProxy();
     ep.fail(next);
     Note.clearNotesForTrash(account.id, ep.done(function (result) {
-        res.json(tools.reqDone(result));
-    }));
-};
-/**
- * 更新笔记
- */
-exports.updateNote = function (req, res, next) {
-    var account = req.account;
-    var id = req.params.id;
-    var content = req.body.content;
-    var tags = req.body.tags;
-
-    var ep = new EventProxy();
-    ep.fail(next);
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-        return ep.emit('error', tools.reqError(config.code.err_invalid_param, 'invalid_id_format'));
-    }
-    Note.getNoteById(id, function (error, note) {
-        if (!note) {
-            // 如果文章不存在，直接新建
-            return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
-        }
-        if (note.authorId !== account.id) {
-            return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
-        }
-
-        var tagArr;
-        if (tags !== '') {
-            tagArr = tags.split(',');
-        }
-        note.content = content;
-        note.tags = tagArr;
-        note.save(ep.done(function (note) {
-            res.json(tools.reqDone(note));
+        account.note_count -= result.n;
+        account.save(ep.done(function (account) {
+            res.json(tools.reqDone(account));
         }));
-    });
+    }));
 };
 
 /**
@@ -294,7 +302,7 @@ exports.searchNotes = function (req, res, next) {
  */
 exports.syncNotes = function (req, res, next) {
     var account = req.account;
-    var query = {authorId: account.id, deleted: false};
+    var query = {authorId: account.id};
     // 修改时间，这里作为客户端增量更新同步的 key
     var syncKey = req.query.syncKey;
     if (syncKey) {

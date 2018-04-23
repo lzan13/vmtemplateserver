@@ -9,7 +9,7 @@ var Schema = mongoose.Schema;
 
 /**
  * 构建用户数据信息结构
- * 主要包含字段: name, email, phone, password, avatar, cover, gender, address, nickname, description, create_at, update_at, token, activated, deleted, admin
+ * 主要包含字段: name, email, phone, password, avatar, cover, gender, address, nickname, description, note_count, create_at, update_at, token, activated, deleted, admin
  * @type {mongoose.Schema}
  */
 var AccountSchema = new Schema({
@@ -28,6 +28,7 @@ var AccountSchema = new Schema({
     address: {type: String},
     nickname: {type: String},
     description: {type: String},
+    note_count: {type: Number},
     create_at: {type: Date, default: Date.now},
     update_at: {type: Date, default: Date.now},
     // token，用于认证登录，新注册账户这里会保存激活字符串，用来邮箱激活
