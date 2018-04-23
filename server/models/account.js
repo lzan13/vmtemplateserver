@@ -28,7 +28,7 @@ var AccountSchema = new Schema({
     address: {type: String},
     nickname: {type: String},
     description: {type: String},
-    note_count: {type: Number},
+    note_count: {type: Number, default: 0},
     create_at: {type: Date, default: Date.now},
     update_at: {type: Date, default: Date.now},
     // token，用于认证登录，新注册账户这里会保存激活字符串，用来邮箱激活
