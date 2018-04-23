@@ -141,8 +141,8 @@ exports.removeNoteForever = function (req, res, next) {
         if (note.authorId !== account.id) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
-        Note.removeNoteById(id, ep.done(function (result) {
-            account.note_count -= result.n;
+        Note.removeNoteById(id, ep.done(function (removeResult) {
+            account.note_count -= removeResult.result.n;
             account.save(ep.done(function (account) {
                 res.json(tools.reqDone(account));
             }));
@@ -157,8 +157,8 @@ exports.clearNotesForTrash = function (req, res, next) {
     var account = req.account;
     var ep = new EventProxy();
     ep.fail(next);
-    Note.clearNotesForTrash(account.id, ep.done(function (result) {
-        account.note_count -= result.n;
+    Note.clearNotesForTrash(account.id, ep.done(function (removeResult) {
+        account.note_count -= removeResult.result.n;
         account.save(ep.done(function (account) {
             res.json(tools.reqDone(account));
         }));
