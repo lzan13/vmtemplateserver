@@ -18,7 +18,10 @@ exports.createNote = function (req, res, next) {
     var id = req.body.id || '';
     var content = req.body.content || '';
     var tags = req.body.tags || '';
-    logger.d(req.body);
+    var pinup = req.body.pinup;
+    var blog = req.body.blog;
+    var deleted = req.body.delete;
+
     var ep = new EventProxy();
     ep.fail(next);
 
@@ -34,10 +37,30 @@ exports.createNote = function (req, res, next) {
     if (tags !== '') {
         tagArr = tags.split(',');
     }
-    Note.createAndSaveNote(id, account.id, content, tagArr, ep.done(function (note) {
-        account.note_count += 1;
-        account.save();
-        res.json(tools.reqDone(note));
+    // 先查询是否存在，如果存在，则直接修改
+    Note.getNoteById(id, ep.done(function (note) {
+        if (note) {
+            note.content = content;
+            if (pinup) {
+                note.pinup = pinup;
+            }
+            if (blog) {
+                note.blog = blog;
+            }
+            if (deleted) {
+                note.deleted = deleted;
+            }
+            note.save(ep.done(function (note) {
+                res.json(tools.reqDone(note));
+            }));
+        } else {
+            // 笔记不存在，新建
+            Note.createAndSaveNote(id, account.id, content, tagArr, ep.done(function (note) {
+                account.note_count += 1;
+                account.save();
+                res.json(tools.reqDone(note));
+            }));
+        }
     }));
 };
 
@@ -46,19 +69,30 @@ exports.createNote = function (req, res, next) {
  */
 exports.updateNote = function (req, res, next) {
     var account = req.account;
-    var id = req.params.id;
-    var content = req.body.content;
-    var tags = req.body.tags;
+    var id = req.params.id || '';
+    var content = req.body.content || '';
+    var tags = req.body.tags || '';
     var pinup = req.body.pinup;
     var blog = req.body.blog;
     var deleted = req.body.delete;
 
     var ep = new EventProxy();
     ep.fail(next);
+
+    var error;
+    if (id === '') {
+        error = 'note_id_is_null';
+    }
+    if (content === '') {
+        error = 'content_is_null';
+    }
+    if (error) {
+        return ep.emit('error', tools.reqError(config.code.err_invalid_param, error));
+    }
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
         return ep.emit('error', tools.reqError(config.code.err_invalid_param, 'invalid_id_format'));
     }
-    Note.getNoteById(id, function (error, note) {
+    Note.getNoteById(id, ep.done(function (note) {
         if (!note) {
             return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
         }
@@ -83,7 +117,7 @@ exports.updateNote = function (req, res, next) {
         note.save(ep.done(function (note) {
             res.json(tools.reqDone(note));
         }));
-    });
+    }));
 };
 
 /**
