@@ -16,7 +16,7 @@ exports.getAllTags = function (req, res, next) {
     var account = req.account;
     var ep = new EventProxy();
     ep.fail(next);
-    var query = {authorId: account.id};
+    var query = {author_id: account.id};
     Note.getNotesTags(query, ep.done(function (tags) {
         res.json(tools.reqDone(tags));
     }));

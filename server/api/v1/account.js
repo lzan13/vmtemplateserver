@@ -15,6 +15,7 @@ var config = require('../../config');
  * 创建新账户
  */
 exports.createAccountByEmail = function (req, res, next) {
+    var id = req.body.id || '';
     var account = req.body.account || '';
     var password = req.body.password || '';
     var ep = new EventProxy();
@@ -39,7 +40,7 @@ exports.createAccountByEmail = function (req, res, next) {
         }
         var name = 'v' + (count + 1);
         var code = 'V-' + tools.authCode();
-        Account.createAndSaveAccount(name, account, password, code, ep.done(function (account) {
+        Account.createAndSaveAccount(id, name, account, password, code, ep.done(function (account) {
             mail.sendActivateMail(account.email, code);
             res.json(tools.reqDone(account));
         }));

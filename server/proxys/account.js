@@ -2,16 +2,21 @@
  * Created by lzan13 on 2017/11/9.
  */
 
+var mongoose = require('mongoose');
 var Account = require('../models').Account;
 
 // 进行查询时需要的列
-var selected = 'name email phone avatar cover gender address nickname description note_count create_at update_at activated deleted admin';
+var selected = '_id name email phone avatar cover gender address nickname description note_count create_at update_at activated deleted admin';
 
 /**
  * 创建账户并保存
  */
-exports.createAndSaveAccount = function (name, email, password, code, callback) {
+exports.createAndSaveAccount = function (id, name, email, password, code, callback) {
     var account = new Account();
+    if (id === '') {
+        id = mongoose.Types.ObjectId();
+    }
+    account._id = id;
     account.name = name;
     account.email = email;
     account.password = password;

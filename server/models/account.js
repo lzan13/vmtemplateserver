@@ -9,12 +9,13 @@ var Schema = mongoose.Schema;
 
 /**
  * 构建用户数据信息结构
- * 主要包含字段: name, email, phone, password, avatar, cover, gender, address, nickname, description, note_count, create_at, update_at, token, activated, deleted, admin
+ * 主要包含字段: _id, name, email, phone, password, avatar, cover, gender, address, nickname, description, note_count, create_at, update_at, token, activated, deleted, admin
  * @type {mongoose.Schema}
  */
 var AccountSchema = new Schema({
-    name: {type: String},
-    email: {type: String},
+    _id: {type: Schema.Types.ObjectId, index: true, unique: true, required: true},
+    name: {type: String, index: true, unique: true},
+    email: {type: String, unique: true, required: true},
     phone: {type: String},
     password: {type: String},
     avatar: {type: String},
@@ -40,12 +41,13 @@ var AccountSchema = new Schema({
     deleted: {type: Boolean, default: false},
     // 管理员身份
     admin: {type: Boolean, default: false}
-});
+}, {autoIndex: false});
 
-// 设置索引
-AccountSchema.set('autoIndex', false);
-AccountSchema.index({name: 1}, {unique: true});
-AccountSchema.index({email: 1}, {unique: true, required: true});
+// 设置方式好像无效
+// AccountSchema.set('_id', false);
+// AccountSchema.set('autoIndex', false);
+// AccountSchema.index({name: 1}, {unique: true});
+// AccountSchema.index({email: 1}, {unique: true, required: true});
 
 // 每次调用 save 方法，都检查密码是否修改，然后将密码加密处理，同时数据的 update_at 值为当前时间
 AccountSchema.pre('save', function (next) {

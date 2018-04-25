@@ -2,14 +2,19 @@
  * Created by lzan13 on 2017/11/20.
  */
 
+var mongoose = require('mongoose');
 var Note = require('../models').Note;
 
 /**
  * 创建并保存笔记
  */
-exports.createAndSaveNote = function (authorId, content, tags, callback) {
+exports.createAndSaveNote = function (id, author_id, content, tags, callback) {
     var note = new Note();
-    note.authorId = authorId;
+    if (id === '') {
+        id = mongoose.Types.ObjectId();
+    }
+    note._id = id;
+    note.author_id = author_id;
     note.content = content;
     note.tags = tags;
     note.save(callback);
@@ -19,14 +24,14 @@ exports.createAndSaveNote = function (authorId, content, tags, callback) {
  * 删除笔记
  */
 exports.removeNoteById = function (id, callback) {
-    Note.deleteOne({_id: id}, callback)
+    Note.deleteOne({id: id}, callback)
 };
 
 /**
  * 永久删除回收站笔记
  */
-exports.clearNotesForTrash = function (authorId, callback) {
-    Note.deleteMany({authorId: authorId, deleted: true}, callback);
+exports.clearNotesForTrash = function (author_id, callback) {
+    Note.deleteMany({author_id: author_id, deleted: true}, callback);
 };
 
 /**

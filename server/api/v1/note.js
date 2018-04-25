@@ -15,14 +15,15 @@ var config = require('../../config');
  */
 exports.createNote = function (req, res, next) {
     var account = req.account;
-    var content = req.body.content;
+    var id = req.body.id || '';
+    var content = req.body.content || '';
     var tags = req.body.tags || '';
     logger.d(req.body);
     var ep = new EventProxy();
     ep.fail(next);
 
     var error;
-    if (content === null) {
+    if (content === '') {
         error = 'content_is_null';
     }
     if (error) {
@@ -33,7 +34,7 @@ exports.createNote = function (req, res, next) {
     if (tags !== '') {
         tagArr = tags.split(',');
     }
-    Note.createAndSaveNote(account.id, content, tagArr, ep.done(function (note) {
+    Note.createAndSaveNote(id, account.id, content, tagArr, ep.done(function (note) {
         account.note_count += 1;
         account.save();
         res.json(tools.reqDone(note));
@@ -48,6 +49,9 @@ exports.updateNote = function (req, res, next) {
     var id = req.params.id;
     var content = req.body.content;
     var tags = req.body.tags;
+    var pinup = req.body.pinup;
+    var blog = req.body.blog;
+    var deleted = req.body.delete;
 
     var ep = new EventProxy();
     ep.fail(next);
@@ -58,16 +62,24 @@ exports.updateNote = function (req, res, next) {
         if (!note) {
             return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
         }
-        if (note.authorId !== account.id) {
+        if (note.author_id !== account.id) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
 
-        var tagArr;
         if (tags !== '') {
-            tagArr = tags.split(',');
+            var tagArr = tags.split(',');
+            note.tags = tagArr;
+        }
+        if (pinup) {
+            note.pinup = pinup;
+        }
+        if (blog) {
+            note.blog = blog;
+        }
+        if (deleted) {
+            note.deleted = deleted;
         }
         note.content = content;
-        note.tags = tagArr;
         note.save(ep.done(function (note) {
             res.json(tools.reqDone(note));
         }));
@@ -89,7 +101,7 @@ exports.addNoteToTrash = function (req, res, next) {
         if (!note) {
             return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
         }
-        if (note.authorId !== account.id) {
+        if (note.author_id !== account.id) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
         note.deleted = true;
@@ -114,7 +126,7 @@ exports.restoreNoteForTrash = function (req, res, next) {
         if (!note) {
             return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
         }
-        if (note.authorId !== account.id) {
+        if (note.author_id !== account.id) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
         note.deleted = false;
@@ -138,7 +150,7 @@ exports.removeNoteForever = function (req, res, next) {
         if (!note) {
             return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
         }
-        if (note.authorId !== account.id) {
+        if (note.author_id !== account.id) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
         Note.removeNoteById(id, ep.done(function (removeResult) {
@@ -191,7 +203,7 @@ exports.getNoteById = function (req, res, next) {
  */
 exports.getNotesForTrash = function (req, res, next) {
     var account = req.account;
-    var query = {authorId: account.id, deleted: true};
+    var query = {author_id: account.id, deleted: true};
 
     // 分页
     var page = parseInt(req.query.page, 10) || 1;
@@ -215,7 +227,7 @@ exports.getNotesForTrash = function (req, res, next) {
  */
 exports.getAllNotes = function (req, res, next) {
     var account = req.account;
-    var query = {authorId: account.id, deleted: false};
+    var query = {author_id: account.id, deleted: false};
     // tags
     var tags = req.query.tags;
     if (tags) {
@@ -244,7 +256,7 @@ exports.getAllNotes = function (req, res, next) {
  */
 exports.getNotesCount = function (req, res, next) {
     var account = req.account;
-    var query = {authorId: account.id};
+    var query = {author_id: account.id};
     // tags
     var tags = req.query.tags;
     if (tags) {
@@ -266,7 +278,7 @@ exports.getNotesCount = function (req, res, next) {
  */
 exports.searchNotes = function (req, res, next) {
     var account = req.account;
-    var query = {authorId: account.id, deleted: false};
+    var query = {author_id: account.id, deleted: false};
     var q = req.query.q;
     if (q) {
         var re = new RegExp(q, 'i');
@@ -302,7 +314,7 @@ exports.searchNotes = function (req, res, next) {
  */
 exports.syncNotes = function (req, res, next) {
     var account = req.account;
-    var query = {authorId: account.id};
+    var query = {author_id: account.id};
     // 修改时间，这里作为客户端增量更新同步的 key
     var syncKey = req.query.syncKey;
     if (syncKey) {
