@@ -20,7 +20,7 @@ exports.authAdmin = function (req, res, next) {
     ep.fail(next);
     var token = req.header('Authorization');
     if (!token) {
-        return ep.emit('error', {code: config.code.err_token_invalid, message: 'token_invalid'});
+        return ep.emit('error', tools.reqError(config.code.err_token_invalid, 'token_invalid'));
     }
     token = token.substring(7);
     jwt.verify(token, config.token.secret, function (error) {
@@ -57,7 +57,7 @@ exports.authToken = function (req, res, next) {
     ep.fail(next);
     var token = req.header('Authorization');
     if (!token) {
-        return ep.emit('error', {code: config.code.err_token_invalid, message: 'token_invalid'});
+        return ep.emit('error', tools.reqError(config.code.err_token_invalid, 'token_invalid'));
     }
     token = token.substring(7);
     jwt.verify(token, config.token.secret, function (error) {
