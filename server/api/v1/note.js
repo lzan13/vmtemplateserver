@@ -69,10 +69,14 @@ exports.createNote = function (req, res, next) {
         }
     });
 
-    // 查询笔记是否已存在
-    Note.getNoteById(id, ep.done(function (note) {
-        return ep.emit("note", note);
-    }));
+    if (id === '') {
+        return ep.emit('note', null);
+    } else {
+        // 查询笔记是否已存在
+        Note.getNoteById(id, ep.done(function (note) {
+            return ep.emit('note', note);
+        }));
+    }
 };
 
 /**

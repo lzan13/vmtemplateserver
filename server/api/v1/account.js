@@ -131,7 +131,6 @@ exports.updateAccountInfo = function (req, res, next) {
  * 修改密码
  */
 exports.changePassword = function (req, res, next) {
-    var token = req.token;
     var account = req.account;
     var oldPassword = req.body.oldPassword;
     var password = req.body.password;
