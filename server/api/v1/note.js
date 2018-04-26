@@ -283,7 +283,7 @@ exports.getAllNotes = function (req, res, next) {
 
     // 分类
     var category_id = req.query.category_id;
-    if(category_id) {
+    if (category_id) {
         query.category_id = category_id;
     }
 
@@ -320,7 +320,7 @@ exports.getNotesCount = function (req, res, next) {
 
     // 分类
     var category_id = req.query.category_id;
-    if(category_id) {
+    if (category_id) {
         query.category_id = category_id;
     }
 
@@ -355,7 +355,7 @@ exports.searchNotes = function (req, res, next) {
 
     // 分类
     var category_id = req.query.category_id;
-    if(category_id) {
+    if (category_id) {
         query.category_id = category_id;
     }
 
@@ -390,19 +390,15 @@ exports.syncNotes = function (req, res, next) {
         query.update_at = {"$gt": syncKey};
     }
 
-    // 分页
-    var page = parseInt(req.query.page, 10) || 1;
-    page = page > 0 ? page : 1;
     var limit = Number(req.query.limit) || config.default_limit;
-    var skipCount = (page - 1) * limit;
     // 按照更新时间排序
-    var options = {skip: skipCount, limit: limit, sort: 'update_at'};
+    var options = {limit: limit, sort: 'update_at'};
 
     var ep = new EventProxy();
     ep.fail(next);
     Note.getNotesCountByQuery(query, ep.done(function (totalCount) {
         Note.getNotesByQuery(query, options, ep.done(function (notes) {
-            res.json(tools.reqDone(notes, totalCount - skipCount));
+            res.json(tools.reqDone(notes, totalCount));
         }));
     }));
 };
