@@ -237,8 +237,14 @@ function createToken(email, admin) {
  */
 exports.getAccount = function (req, res, next) {
     var id = req.params.id || '';
+
     var ep = new EventProxy();
     ep.fail(next);
+
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        return ep.emit('error', tools.reqError(config.code.err_invalid_param, 'invalid_id_format'));
+    }
+    
     Account.getAccountById(id, ep.done(function (account) {
         if (!account) {
             return ep.emit('error', tools.reqError(config.code.err_account_not_exist, 'account_not_exist'));
