@@ -236,15 +236,14 @@ function createToken(email, admin) {
  * 获取单个账户
  */
 exports.getAccount = function (req, res, next) {
-    var name = req.params.name;
-    query = {'$or': [{name: name}, {email: name}, {phone: name}]};
+    var id = req.params.id || '';
     var ep = new EventProxy();
     ep.fail(next);
-    Account.getAccountByQuery(query, {}, ep.done(function (accounts) {
-        if (accounts.length === 0) {
+    Account.getAccountById(id, ep.done(function (account) {
+        if (!account) {
             return ep.emit('error', tools.reqError(config.code.err_account_not_exist, 'account_not_exist'));
         }
-        res.json(tools.reqDone(accounts[0]));
+        res.json(tools.reqDone(account));
     }));
 };
 

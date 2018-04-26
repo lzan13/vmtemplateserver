@@ -36,7 +36,7 @@ router.put('/accounts/info', auth.authToken, account.updateAccountInfo); // 更�
 router.put('/accounts/password', auth.authToken, account.changePassword); // 修改密码
 router.post('/accounts/auth', account.authAccount); // token 认证
 router.get('/accounts/activate', account.activateAccount); // 账户激活
-router.get('/accounts/:name/info', account.getAccount); // 获取账户信息
+router.get('/accounts/:id/info', account.getAccount); // 获取账户信息
 router.get('/accounts/search', auth.authToken, account.searchAccounts);
 
 /**

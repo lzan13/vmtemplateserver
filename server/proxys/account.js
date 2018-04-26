@@ -28,7 +28,7 @@ exports.createAndSaveAccount = function (id, name, email, password, code, callba
  * 根据账户Id获取账户信息
  */
 exports.getAccountById = function (id, callback) {
-    Account.findById(id, callback);
+    Account.findById(id, selected, callback);
 };
 
 /**
