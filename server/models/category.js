@@ -1,24 +1,19 @@
 /**
- * Created by lzan13 on 2017/11/11.
+ * Created by lzan13 on 2018/4/25.
  */
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 /**
- * 构建笔记数据信息结构
- * 主要包含字段: id, author_id, content, tags, pinup, blog, deleted, create_at, update_at
+ * 构建笔记 Category 数据结构
+ * 主要包含字段: _id, author_id, title, create_at, update_at
  * @type {mongoose.Schema}
  */
-var NoteSchema = new Schema({
+var CategorySchema = new Schema({
     _id: {type: Schema.Types.ObjectId, index: true, unique: true, required: true},
     author_id: {type: String, index: true, required: true},
-    category_id: {type: String, index: true},
-    content: {type: String},
-    tags: {type: Array},
-    pinup: {type: Boolean, default: false},
-    blog: {type: Boolean, default: false},
-    deleted: {type: Boolean, default: false},
+    title: {type: String, required: true},
     create_at: {type: Date, default: Date.now},
     update_at: {type: Date, default: Date.now}
 }, {autoIndex: false});
@@ -29,10 +24,10 @@ var NoteSchema = new Schema({
 // NoteSchema.index({_id: -1}, {unique: true});
 
 // 每次调用 save 方法，更新数据的 update_at 值为当前时间
-NoteSchema.pre('save', function (next) {
+CategorySchema.pre('save', function (next) {
     var now = new Date();
     this.update_at = now;
     next();
 });
 
-mongoose.model('note', NoteSchema);
+mongoose.model('category', CategorySchema);

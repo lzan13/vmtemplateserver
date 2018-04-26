@@ -9,6 +9,7 @@ var router = express.Router();
 var admin = require('./api/v1/admin');
 var auth = require('./common/auth');
 var account = require('./api/v1/account');
+var category = require('./api/v1/category');
 var note = require('./api/v1/note');
 var tag = require('./api/v1/tag');
 
@@ -25,7 +26,7 @@ router.post('/test', test.testFormatStr);
 router.get('/accounts', auth.authAdmin, admin.getAllAccounts); // 查询所有账户
 
 /**
- * 账户相关路由配置
+ * Account 路由配置
  */
 router.post('/accounts', account.createAccountByEmail); // 创建账户
 router.put('/accounts/name', auth.authToken, account.updateAccountName); // 更新账户名称
@@ -39,7 +40,7 @@ router.get('/accounts/:name/info', account.getAccount); // 获取账户信息
 router.get('/accounts/search', auth.authToken, account.searchAccounts);
 
 /**
- * 文章相关路由配置
+ * Note 路由配置
  */
 router.post('/notes', auth.authToken, note.createNote); // 创建笔记
 router.put('/notes/:id', auth.authToken, note.updateNote); // 更新笔记
@@ -53,6 +54,15 @@ router.get('/notes/count', auth.authToken, note.getNotesCount); // 符合条件�
 router.get('/notes/sync', auth.authToken, note.syncNotes); // 增量同步数据
 router.get('/notes/search', auth.authToken, note.searchNotes); // 搜索笔记
 router.get('/notes/tags', auth.authToken, tag.getAllTags); // 获取全部笔记标签
+
+/**
+ * Category 路由配置
+ */
+router.post('/categorys', auth.authToken, category.createCategory); // Create Category
+router.post('/categorys/:id', auth.authToken, category.updateCategory); // Update Category
+router.delete('/categorys/:id', auth.authToken, category.removeCategory); // Remove Category
+router.get('/categorys/:id', auth.authToken, category.getCategoryById); // Get Category
+router.get('/categorys', auth.authToken, category.getAllCategory); // Get All Category
 
 /**
  * 回收站

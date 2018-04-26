@@ -8,13 +8,14 @@ var Note = require('../models').Note;
 /**
  * 创建并保存笔记
  */
-exports.createAndSaveNote = function (id, author_id, content, tags, callback) {
+exports.createAndSaveNote = function (id, author_id, category_id, content, tags, callback) {
     var note = new Note();
     if (id === '') {
         id = mongoose.Types.ObjectId();
     }
     note._id = id;
     note.author_id = author_id;
+    note.category_id = category_id;
     note.content = content;
     note.tags = tags;
     note.save(callback);
@@ -24,7 +25,7 @@ exports.createAndSaveNote = function (id, author_id, content, tags, callback) {
  * 删除笔记
  */
 exports.removeNoteById = function (id, callback) {
-    Note.deleteOne({id: id}, callback)
+    Note.deleteOne({_id: id}, callback)
 };
 
 /**
