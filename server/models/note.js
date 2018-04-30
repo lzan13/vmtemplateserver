@@ -12,8 +12,8 @@ var Schema = mongoose.Schema;
  */
 var NoteSchema = new Schema({
     _id: {type: Schema.Types.ObjectId, index: true, unique: true, required: true},
-    author_id: {type: String, index: true, required: true},
-    category_id: {type: String, index: true},
+    author_id: {type: Schema.Types.ObjectId, index: true, required: true},
+    category_id: {type: Schema.Types.ObjectId, index: true},
     content: {type: String},
     tags: {type: Array},
     pinup: {type: Boolean, default: false},

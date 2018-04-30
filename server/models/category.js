@@ -12,7 +12,7 @@ var Schema = mongoose.Schema;
  */
 var CategorySchema = new Schema({
     _id: {type: Schema.Types.ObjectId, index: true, unique: true, required: true},
-    author_id: {type: String, index: true, required: true},
+    author_id: {type: Schema.Types.ObjectId, index: true, required: true},
     title: {type: String, required: true},
     create_at: {type: Date, default: Date.now},
     update_at: {type: Date, default: Date.now}

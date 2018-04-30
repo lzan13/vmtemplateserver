@@ -85,11 +85,13 @@ exports.createNote = function (req, res, next) {
 exports.updateNote = function (req, res, next) {
     var account = req.account;
     var id = req.params.id || '';
+    var category_id = req.body.category_id || '';
     var content = req.body.content || '';
     var tags = req.body.tags || '';
     var pinup = req.body.pinup;
     var blog = req.body.blog;
     var deleted = req.body.delete;
+    logger.d(req.body);
 
     var ep = new EventProxy();
     ep.fail(next);
@@ -111,10 +113,12 @@ exports.updateNote = function (req, res, next) {
         if (!note) {
             return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
         }
-        if (note.author_id !== account._id) {
+        if (!note.author_id.equals(account._id)) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
-
+        if (category_id !== '') {
+            note.category_id = category_id;
+        }
         if (tags !== '') {
             var tagArr = tags.split(',');
             note.tags = tagArr;
@@ -150,7 +154,7 @@ exports.addNoteToTrash = function (req, res, next) {
         if (!note) {
             return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
         }
-        if (note.author_id !== account._id) {
+        if (!note.author_id.equals(account._id)) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
         note.deleted = true;
@@ -175,7 +179,7 @@ exports.restoreNoteForTrash = function (req, res, next) {
         if (!note) {
             return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
         }
-        if (note.author_id !== account._id) {
+        if (!note.author_id.equals(account._id)) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
         note.deleted = false;
@@ -199,7 +203,7 @@ exports.removeNoteForever = function (req, res, next) {
         if (!note) {
             return ep.emit('error', tools.reqError(config.code.err_note_not_exist, 'note_not_exist'));
         }
-        if (note.author_id !== account._id) {
+        if (!note.author_id.equals(account._id)) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
         Note.removeNoteById(id, ep.done(function (removeResult) {
