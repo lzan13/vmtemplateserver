@@ -3,6 +3,9 @@
  * 账户相关 api 接口实现类
  */
 
+var Formidable = require("formidable");
+var fs = require("fs");
+var path = require("path");
 var EventProxy = require('eventproxy');
 var Account = require('../../proxys').Account;
 var auth = require('../../common/auth');
@@ -127,13 +130,24 @@ exports.updateAccountPassword = function (req, res, next) {
  */
 exports.updateAccountAvatar = function (req, res, next) {
     var account = req.account;
-    var avatar = req.body.avatar;
+
     var ep = new EventProxy();
     ep.fail(next);
-    account.avatar = avatar;
-    account.save(ep.done(function (account) {
-        res.json(tools.reqDone(account));
-    }));
+
+    var form = new Formidable.IncomingForm();
+    form.parse(req, function (error, faileds, files) {
+        if (error) {
+            return ep.emit('error', tools.reqError(config.code.err_upload_avatar_failed, '更新头像失败' + faileds));
+        }
+        logger.i('解析文件完成 path:%s, name:%s', files.upload.path, files.upload.name);
+        var extname = path.extname(files.upload.name);
+        var avatar = './data/upload/images/' + account.id + '_avatar' + extname;
+        fs.writeFileSync(avatar, fs.readFileSync(files.upload.path));
+        account.avatar = avatar;
+        account.save(ep.done(function (account) {
+            return res.json(tools.reqDone(account));
+        }));
+    });
 };
 
 /**
