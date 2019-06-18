@@ -17,9 +17,5 @@ mongoose.connect(
     });
 
 require('./account');
-require('./category');
-require('./note');
 
 exports.Account = mongoose.model('account');
-exports.Category = mongoose.model('category');
-exports.Note = mongoose.model('note');

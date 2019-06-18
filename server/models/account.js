@@ -9,39 +9,56 @@ var Schema = mongoose.Schema;
 
 /**
  * 构建用户数据信息结构
- * 主要包含字段: _id, name, email, phone, password, avatar, cover, gender, address, nickname, description, note_count, create_at, update_at, token, activated, deleted, admin
+ * 主要包含字段: 
+ * _id
+ * username
+ * email
+ * phone
+ * password
+ * avatar
+ * cover
+ * gender
+ * nickname
+ * signature
+ * address
+ * token
+ * code
+ * activated
+ * deleted
+ * admin
+ * create_at
+ * update_at
  * @type {mongoose.Schema}
  */
 var AccountSchema = new Schema({
-    _id: {type: Schema.Types.ObjectId, index: true, unique: true, required: true},
-    name: {type: String, index: true, unique: true},
-    email: {type: String, unique: true, required: true},
-    phone: {type: String},
-    password: {type: String},
-    avatar: {type: String},
-    cover: {type: String},
-    // 性别，0 女，1 男，2 中性
+    _id: { type: Schema.Types.ObjectId, index: true, unique: true, required: true },
+    username: { type: String, index: true, unique: true },
+    email: { type: String, unique: true, required: true },
+    phone: { type: String },
+    password: { type: String },
+    avatar: { type: String },
+    cover: { type: String },
+    // 性别，0 女，1 男，2 神秘
     gender: {
         type: Number,
         enum: [0, 1, 2],
         default: 2
     },
-    address: {type: String},
-    nickname: {type: String},
-    description: {type: String},
-    note_count: {type: Number, default: 0},
-    create_at: {type: Date, default: Date.now},
-    update_at: {type: Date, default: Date.now},
-    // token，用于认证登录，新注册账户这里会保存激活字符串，用来邮箱激活
-    token: {type: String},
-    code: {type: String},
-    // 账户激活状态 刚注册为未激活
-    activated: {type: Boolean, default: false},
+    nickname: { type: String },
+    signature: { type: String },
+    address: { type: String },
+    // 账户 token，记录账户登录认证信息
+    token: { type: String },
+    code: { type: String },
+    // 账户认证状态 刚注册为未认证
+    verified: { type: Boolean, default: false },
     // 是否被删除
-    deleted: {type: Boolean, default: false},
+    deleted: { type: Boolean, default: false },
     // 管理员身份
-    admin: {type: Boolean, default: false}
-}, {autoIndex: false});
+    admin: { type: Boolean, default: false },
+    create_at: { type: Date, default: Date.now },
+    update_at: { type: Date, default: Date.now }
+}, { autoIndex: false });
 
 // 设置方式好像无效
 // AccountSchema.set('_id', false);

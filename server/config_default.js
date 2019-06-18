@@ -28,10 +28,9 @@ module.exports = {
     /**
      * 数据库配置
      */
-    // mongodb_uri: 'mongodb://localhost:27017/vmnote',
-    mongodb_uri: 'mongodb://vmnote:vmdbDlove13@localhost:27017/vmnote',
+    // mongodb_uri: 'mongodb://localhost:27017/vmserver',
+    mongodb_uri: 'mongodb://localhost:27017/vmserver',
     mongodb_opts: {
-        useMongoClient: true,
         autoIndex: false, // Don't build indexes
         reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
         reconnectInterval: 500, // Reconnect every 500ms
@@ -57,13 +56,6 @@ module.exports = {
     mail_content_authcode: '<div style="width:100%; background-color:#f8f8f8; margin: 0; padding: 0; font-family: Roboto-Regular,Helvetica,Arial,sans-serif; font-size: 13px;"><div style="width: 100%; height: 36px;"></div><div style="min-width: 360px; max-width: 600px; margin: 20px auto; box-shadow: 0px 1px 2px #a8a8a8; border-radius:4px;"><div style="width:100%; color: #ffffff; background-color: #298afe; border-top-left-radius: 4px; border-top-right-radius: 4px; font-size: 22px; text-align:center;"><div style="padding: 20px;">VMLoft 验证码</div></div><div style="width: 100%; text-align: left;  background-color: #ffffff; "><div style="min-width: 320px; max-width: 500px; margin: auto; color: #232323; line-height: 1.5; padding: 4px 0;"><div style="font-size: 18px; padding: 20px 10px;">尊敬的{0}，您好！</div><div style="padding: 10px;">您现在正在进行敏感操作，下边是您这次操作的验证码</div><div style="padding: 5px 10px;"><strong style="color: #ff7138; font-size: 20px">{1}</strong></div><div style="padding: 10px;">如果你并没进行此类操作请忽略此邮件！</div><div style="padding: 24px 10px;">By-VMLoft团队</div></div></div><div style="min-width: 360px; max-width: 600px; padding: 5px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; background-color: #f8f8f8; color: #898989">©️2017 VMLoft.</div></div><div style="width: 100%; height: 36px;"></div></div>',
 
     /**
-     * 七牛相关配置
-     */
-    qn_access_key: 'access key',
-    qn_secret_key: 'secret key',
-    qn_bucket_name: 'bucket name',
-
-    /**
      * 请求结果状态码
      */
     code: {
@@ -76,26 +68,20 @@ module.exports = {
         // permission error code
         err_token_invalid: 2000,
         err_token_expired: 2001,
-        err_not_permission: 2002,
 
         // account error code
         err_account_exist: 3000,
         err_account_name_exist: 3001,
         err_account_not_exist: 3002,
         err_account_deleted: 3003,
-        err_account_no_activated: 3004,
-        err_invalid_activate_link: 3005,
+        err_account_no_verified: 3004,
+        err_invalid_verify_link: 3005,
         err_invalid_password: 3006,
 
-        // note error code
-        err_note_not_exist: 4001
     },
 
-    /**
-     * 默认参数
-     */
     // 分页大小
-    default_limit: 10,
+    limit_default: 20,
 
     /**
      * 构建响应体，并将响应结果返回给接口调用者，结果包含状态以及请求得到的数据
@@ -105,5 +91,5 @@ module.exports = {
      *    "data": {}
      * }
      */
-    result: {code: 0, msg: 'success', total_count: 0, data: {}}
+    result: { code: 0, msg: 'success', total_count: 0, data: {} }
 };

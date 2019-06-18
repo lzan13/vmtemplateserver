@@ -3,5 +3,3 @@
  */
 
 exports.Account = require('./account');
-exports.Category = require('./category');
-exports.Note = require('./note');

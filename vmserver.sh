@@ -9,5 +9,5 @@
 cat ./data/files/shell_logo
 echo ""
 
-pm2 stop ecosystem.json
-pm2 start ecosystem.json --env production
+pm2 stop vmconfig.json
+pm2 start vmconfig.json --env production
