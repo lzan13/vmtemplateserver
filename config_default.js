@@ -5,7 +5,8 @@ module.exports = {
     // 端口
     port: 8899,
     // 部署请求地址
-    site_url: 'http://localhost:8899',
+    url: 'http://localhost:8899',
+    upload_url: 'http://localhost:8899/upload/',
     public_dir: './data/public',
     upload_dir: './data/public/upload/',
 

@@ -22,10 +22,19 @@ var storage = multer.diskStorage({
     }
 });
 
+/**
+ * 上传头像
+ */
 exports.uploadAvatar = multer({
     storage: storage
 }).single('avatar');
 
+/**
+ * 上传封面
+ */
+exports.uploadCover = multer({
+    storage: storage
+}).single('cover');
 
 /**
  * 同步检查并创建文件夹

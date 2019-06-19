@@ -32,7 +32,7 @@ exports.sendActivateMail = function (email, code) {
         from: config.mail_from,
         to: email,
         subject: config.mail_subject_activate,
-        html: tools.formatStrs(config.mail_content_activate, email, config.site_url, email, code)
+        html: tools.formatStrs(config.mail_content_activate, email, config.url, email, code)
     };
     this.sendMail(mailData);
 };

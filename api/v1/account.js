@@ -153,13 +153,23 @@ exports.updateAccountAvatar = function (req, res, next) {
  */
 exports.updateAccountCover = function (req, res, next) {
     let account = req.account;
-    let cover = req.body.cover;
+
     let ep = new EventProxy();
     ep.fail(next);
-    account.cover = cover;
-    account.save(ep.done(function (account) {
-        res.json(tools.reqDone(account));
-    }));
+
+    // 检查路径是否存在，不存在则创建
+    storage.syncMkdirs(config.upload_dir)
+    // 保存图片
+    storage.uploadCover(req, res, (error) => {
+        if (error) {
+            return ep.emit('error', tools.reqError(config.code.err_upload_cover, '保存封面失败 ' + error));
+        }
+        var file = req.file;
+        account.cover = file.path;
+        account.save(ep.done(function (account) {
+            return res.json(tools.reqDone(account));
+        }));
+    });
 };
 
 /**
