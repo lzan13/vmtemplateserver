@@ -6,8 +6,8 @@ module.exports = {
     port: 8899,
     // 部署请求地址
     site_url: 'http://localhost:8899',
-    public_dir: './public/',
-    upload_dir: './public/upload/',
+    public_dir: './data/public',
+    upload_dir: './data/public/upload/',
 
     /**
      * session 配置
@@ -23,8 +23,8 @@ module.exports = {
      */
     token: {
         secret: 'vTokenSecret13', // 修改为自己独有的 secret 字符串
-        expires: 60 * 60 // 测试过期用60秒
-        // expires: 30 * 24 * 60 * 60
+        // expires: 60 * 60 // 测试过期用60秒
+        expires: 30 * 24 * 60 * 60
     },
 
     /**

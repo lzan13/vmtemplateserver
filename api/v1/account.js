@@ -135,46 +135,17 @@ exports.updateAccountAvatar = function (req, res, next) {
 
     // 检查路径是否存在，不存在则创建
     storage.syncMkdirs(config.upload_dir)
-
+    // 保存图片
     storage.uploadAvatar(req, res, (error) => {
         if (error) {
             return ep.emit('error', tools.reqError(config.code.err_upload_avatar, '保存头像失败 ' + error));
         }
         var file = req.file;
-        fs.readdir(config.upload_dir, function (err, files) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            var result = files.reverse().map(function (file) {
-                console.log(file);
-                logger.i(config.site_url + file);
-            })
-        })
         account.avatar = file.path;
         account.save(ep.done(function (account) {
             return res.json(tools.reqDone(account));
         }));
     });
-
-
-
-    // let form = new Formidable.IncomingForm();
-    // // 设置上传路径
-    // // form.uploadDir = path.join(__dirname, config.upload_dir);
-    // form.parse(req, function (error, faileds, files) {
-    //     if (error) {
-    //         return ep.emit('error', tools.reqError(config.code.err_upload_avatar_failed, '更新头像失败' + faileds));
-    //     }
-    //     logger.i('解析文件完成 path:%s, name:%s', files.upload.path, files.upload.name);
-    //     let extname = path.extname(files.upload.name);
-    //     let avatar = config.upload_dir + account.id + '_avatar' + extname;
-    //     fs.writeFileSync(avatar, fs.readFileSync(files.upload.path));
-    //     account.avatar = avatar;
-    //     account.save(ep.done(function (account) {
-    //         return res.json(tools.reqDone(account));
-    //     }));
-    // });
 };
 
 /**

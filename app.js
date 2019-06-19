@@ -21,7 +21,6 @@ logger.use(app);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, config.public_dir)));
-app.use(express.static(path.join(__dirname, config.upload_dir)));
 /**
  * 设置 api 路由，因为要前后端分离，所以服务器这边指提供 api 路由
  */

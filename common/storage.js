@@ -11,13 +11,14 @@ var config = require('../config');
 
 // 定义 multer 配置
 var storage = multer.diskStorage({
-    destination: function (reg, file, callback) {
+    destination: function (req, file, callback) {
         callback(null, config.upload_dir);
     },
 
     filename: function (req, file, callback) {
         let extname = path.extname(file.originalname);
-        callback(null, file.fieldname + '_' + Date.now() + extname);
+        let account = req.account;
+        callback(null, file.fieldname + '_' + account._id + extname);
     }
 });
 
