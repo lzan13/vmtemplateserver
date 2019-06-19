@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "VMServer",
-      "script": "server/bin/www",
+      "script": "bin/www",
       "env": {
         "NODE_ENV": "development",
         "AWESOME_SERVICE_API_TOKEN": "xxx"
