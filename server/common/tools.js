@@ -5,6 +5,10 @@
 
 var crypto = require('crypto');
 var util = require('util');
+var fs = require("fs");
+var path = require("path");
+
+var logger = require('../log/logger');
 
 var formatRegExp = /%[sdj]/g;
 
@@ -86,6 +90,34 @@ exports.formatStrs = function (objs) {
         return args[i];
     });
 };
+
+/**
+ * 同步检查并创建文件夹
+ */
+exports.syncMkdirs = function (paths) {
+    try {
+        if (!fs.existsSync(paths)) {
+            let tempPath;
+            // 这里指用'/'or'\'分隔目录  如 Linux 的 /var/www/xxx 和 Windows 的 D:\workspace\xxx
+            paths.split(/[/\\]/).forEach(function (dirName) {
+                if (tempPath) {
+                    tempPath = path.join(tempPath, dirName);
+                } else {
+                    tempPath = dirName;
+                }
+                if (!fs.existsSync(tempPath)) {
+                    if (!fs.mkdirSync(tempPath)) {
+                        return false;
+                    }
+                }
+            });
+        }
+        return true;
+    } catch (e) {
+        logger.e("创建目录失败 path:%s, msg:%s", paths, e);
+        return false;
+    }
+}
 
 /**
  * 成功的请求结果

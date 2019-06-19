@@ -6,6 +6,8 @@ module.exports = {
     port: 8899,
     // 部署请求地址
     site_url: 'http://localhost:8899',
+    public_dir: './public/',
+    upload_dir: './public/upload/',
 
     /**
      * session 配置
@@ -77,6 +79,10 @@ module.exports = {
         err_account_no_verified: 3004,
         err_invalid_verify_link: 3005,
         err_invalid_password: 3006,
+
+        err_upload_avatar: 4000,
+        err_upload_cover: 4001,
+        err_upload_picture: 4002,
 
     },
 

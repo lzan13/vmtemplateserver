@@ -3,6 +3,8 @@
  */
 var express = require('express');
 var bodyParser = require('body-parser');
+var path = require("path");
+
 var logger = require('./log/logger.js');
 
 var config = require('./config');
@@ -18,11 +20,12 @@ logger.use(app);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(express.static(path.join(__dirname, config.public_dir)));
+app.use(express.static(path.join(__dirname, config.upload_dir)));
 /**
  * 设置 api 路由，因为要前后端分离，所以服务器这边指提供 api 路由
  */
-app.use('/api/v1', apiRouter);
+app.use('/', apiRouter);
 
 /**
  * 错误处理程序，捕捉项目开发中未处理的错误，并进行简单的处理
