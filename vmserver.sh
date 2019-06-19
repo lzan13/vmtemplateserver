@@ -6,7 +6,7 @@
 # WebSite: http://melove.net
 # -------------------------------------
 
-cat ./data/files/shell_logo
+cat ./data/res/slogo
 echo ""
 
 pm2 stop vmconfig.json

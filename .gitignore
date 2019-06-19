@@ -36,6 +36,6 @@ config.js
 config_online.js
 
 data/logs
+data/public/upload
 
-*/upload
 *package-lock.json
