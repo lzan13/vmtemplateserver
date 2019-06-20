@@ -3,3 +3,4 @@
  */
 
 exports.Account = require('./account');
+exports.Match = require('./match');

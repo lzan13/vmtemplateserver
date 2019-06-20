@@ -7,8 +7,9 @@ var express = require('express');
 var router = express.Router();
 
 var auth = require('./common/auth');
-var storage = require('./common/storage');
+
 var account = require('./api/v1/account');
+var match = require('./api/v1/match');
 
 var test = require('./api/v1/test');
 
@@ -41,5 +42,12 @@ router.get('/accounts/verify', account.verifyAccountEmail);
 router.get('/accounts/detail/:id', account.getAccountDetail);
 // 搜索账户
 router.get('/accounts/search', auth.authToken, account.searchAccounts);
+
+// 提交匹配信息
+router.post('/matchs/create', auth.authToken, match.createMatch);
+// 移除匹配信息
+router.delete('/matchs/remove/:id', auth.authToken, match.removeMatch);
+// 查询全部匹配信息，可分页
+router.get('/matchs/all', auth.authToken, match.getMatchAll);
 
 module.exports = router;

@@ -17,5 +17,7 @@ mongoose.connect(
     });
 
 require('./account');
+require('./match');
 
 exports.Account = mongoose.model('account');
+exports.Match = mongoose.model('match');

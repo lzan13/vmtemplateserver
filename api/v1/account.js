@@ -3,16 +3,17 @@
  * 账户相关 api 接口实现类
  */
 
-var EventProxy = require('eventproxy');
-var fs = require("fs");
+let EventProxy = require('eventproxy');
+let fs = require('fs');
+let path = require('path');
 
-var config = require('../../config');
-var Account = require('../../proxys').Account;
-var auth = require('../../common/auth');
-var mail = require('../../common/mail');
-var storage = require('../../common/storage');
-var tools = require('../../common/tools');
-var logger = require('../../log/logger');
+let config = require('../../config');
+let Account = require('../../proxys').Account;
+let auth = require('../../common/auth');
+let mail = require('../../common/mail');
+let storage = require('../../common/storage');
+let tools = require('../../common/tools');
+let logger = require('../../log/logger');
 
 /**
  * 通过邮箱创建新账户
@@ -141,8 +142,8 @@ exports.updateAccountAvatar = function (req, res, next) {
         if (error) {
             return ep.emit('error', tools.reqError(config.code.err_upload_avatar, '保存头像失败 ' + error));
         }
-        var file = req.file;
-        account.avatar = file.path;
+        let file = req.file;
+        account.avatar = path.basename(file.path);
         account.save(ep.done(function (account) {
             return res.json(tools.reqDone(account));
         }));
@@ -165,8 +166,8 @@ exports.updateAccountCover = function (req, res, next) {
         if (error) {
             return ep.emit('error', tools.reqError(config.code.err_upload_cover, '保存封面失败 ' + error));
         }
-        var file = req.file;
-        account.cover = file.path;
+        let file = req.file;
+        account.cover = path.basename(file.path);
         account.save(ep.done(function (account) {
             return res.json(tools.reqDone(account));
         }));
@@ -232,6 +233,7 @@ exports.searchAccounts = function (req, res, next) {
     let q = req.query.q;
     query = { '$or': [{ username: q }, { email: q }, { phone: q }] };
     query.deleted = false;
+
     // 分页
     let page = parseInt(req.query.page, 10) || 1;
     page = page > 0 ? page : 1;
