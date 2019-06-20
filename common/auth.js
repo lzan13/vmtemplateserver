@@ -2,11 +2,11 @@
  * Created by lzan13 on 2017/11/10.
  */
 
-var jwt = require('jsonwebtoken');
-var EventProxy = require('eventproxy');
-var config = require('../config');
-var Account = require('../proxys').Account;
-var tools = require('./tools');
+let jwt = require('jsonwebtoken');
+let EventProxy = require('eventproxy');
+let config = require('../config');
+let Account = require('../proxys').Account;
+let tools = require('./tools');
 
 /**
  * 验证管理员
@@ -16,9 +16,9 @@ var tools = require('./tools');
  * @returns {*}
  */
 exports.authAdmin = function (req, res, next) {
-    var ep = new EventProxy();
+    let ep = new EventProxy();
     ep.fail(next);
-    var token = req.header('Authorization');
+    let token = req.header('Authorization');
     if (!token) {
         return ep.emit('error', tools.reqError(config.code.err_token_invalid, 'token_invalid'));
     }
@@ -31,7 +31,7 @@ exports.authAdmin = function (req, res, next) {
                 return ep.emit('error', tools.reqError(config.code.err_token_invalid, 'token_invalid'));
             }
         }
-        var decoded = jwt.decode(token);
+        let decoded = jwt.decode(token);
         if (!decoded.adm) {
             return ep.emit('error', tools.reqError(config.code.err_not_permission, 'not_permission'));
         }
@@ -53,10 +53,10 @@ exports.authAdmin = function (req, res, next) {
  * token 认证
  */
 exports.authToken = function (req, res, next) {
-    var ep = new EventProxy();
+    let ep = new EventProxy();
     ep.fail(next);
 
-    var token = req.header('Authorization');
+    let token = req.header('Authorization');
     if (!token) {
         return ep.emit('error', tools.reqError(config.code.err_token_invalid, '无效的 Token'));
     }
@@ -95,8 +95,8 @@ exports.createToken = function (email, admin) {
     // exp(expires): token什么时候过期 Expiration Time, token 过期时间(Unix 时间戳格式)
     // nbf(not before)：token在此时间之前不能被接收处理(Unix 时间戳格式)
     // jti(jwtid)：JWT ID为web token提供唯一标识
-    var createAt = Math.trunc(Date.now() / 1000);
-    var token = jwt.sign({
+    let createAt = Math.trunc(Date.now() / 1000);
+    let token = jwt.sign({
         sub: email,
         adm: admin,
         iat: createAt,

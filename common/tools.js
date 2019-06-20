@@ -3,21 +3,21 @@
  * 自己封装的工具类，实现一些可供公共调用的方法
  */
 
-var crypto = require('crypto');
-var util = require('util');
-var fs = require("fs");
-var path = require("path");
+let crypto = require('crypto');
+let util = require('util');
+let fs = require("fs");
+let path = require("path");
 
-var logger = require('../log/logger');
+let logger = require('../log/logger');
 
-var formatRegExp = /%[sdj]/g;
+let formatRegExp = /%[sdj]/g;
 
 /**
  * 数据数据 MD5 加密
  * @param data 加密数据
  */
 exports.cryptoMD5 = function (data) {
-    var md5 = crypto.createHash('md5');
+    let md5 = crypto.createHash('md5');
     md5.update(data);
     return md5.digest('hex');
 };
@@ -27,7 +27,7 @@ exports.cryptoMD5 = function (data) {
  * @param data 加密数据
  */
 exports.cryptoSHA1 = function (data) {
-    var sha1 = crypto.createHash('sha1');
+    let sha1 = crypto.createHash('sha1');
     sha1.update(data);
     return sha1.digest('hex');
 };
@@ -45,10 +45,10 @@ exports.authCode = function () {
  * @param obj
  */
 exports.formatStr = function (obj) {
-    var args = arguments;
-    var i = 0;
+    let args = arguments;
+    let i = 0;
     if (typeof obj !== 'string') {
-        var objects = [];
+        let objects = [];
         for (; i < args.length; i++) {
             objects.push(util.inspect(args[i]));
         }
@@ -56,7 +56,7 @@ exports.formatStr = function (obj) {
     }
 
     i = 1;
-    var str = String(obj).replace(formatRegExp, function (x) {
+    let str = String(obj).replace(formatRegExp, function (x) {
         switch (x) {
             case '%s':
                 return String(args[i++]);
@@ -68,7 +68,7 @@ exports.formatStr = function (obj) {
                 return x;
         }
     });
-    for (var len = args.length, x = args[i]; i < len; x = args[++i]) {
+    for (let len = args.length, x = args[i]; i < len; x = args[++i]) {
         if (x === null || typeof x !== 'object') {
             str += ' ' + x;
         } else {
@@ -85,7 +85,7 @@ exports.formatStrs = function (objs) {
     if (objs.length == 0) {
         return null;
     }
-    var args = Array.prototype.slice.call(arguments, 1);
+    let args = Array.prototype.slice.call(arguments, 1);
     return objs.replace(/\{(\d+)\}/g, function (m, i) {
         return args[i];
     });
@@ -98,7 +98,7 @@ exports.syncMkdirs = function (paths) {
     try {
         if (!fs.existsSync(paths)) {
             let tempPath;
-            // 这里指用'/'or'\'分隔目录  如 Linux 的 /var/www/xxx 和 Windows 的 D:\workspace\xxx
+            // 这里指用'/'or'\'分隔目录  如 Linux 的 /let/www/xxx 和 Windows 的 D:\workspace\xxx
             paths.split(/[/\\]/).forEach(function (dirName) {
                 if (tempPath) {
                     tempPath = path.join(tempPath, dirName);
@@ -123,7 +123,7 @@ exports.syncMkdirs = function (paths) {
  * 成功的请求结果
  */
 exports.reqDone = function (data, totalCount) {
-    var result = {
+    let result = {
         code: 0,
         message: 'success'
     };

@@ -2,17 +2,17 @@
  * Created by lzan13 on 2017/11/9.
  */
 
-var mongoose = require('mongoose');
-var Account = require('../models').Account;
+let mongoose = require('mongoose');
+let Account = require('../models').Account;
 
 // 进行查询时需要的列，这里只是包含可对外暴露信息
-var expr = '_id username email phone avatar cover gender nickname signature address create_at update_at'
+let expr = '_id username email phone avatar cover gender nickname signature address create_at update_at'
 
 /**
  * 创建账户并保存
  */
 exports.createAndSaveAccount = function (email, password, code, callback) {
-    var account = new Account();
+    let account = new Account();
     account._id = mongoose.Types.ObjectId();
     account.username = email;
     account.email = email;

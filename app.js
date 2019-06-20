@@ -1,19 +1,19 @@
 /**
  * 程序入口
  */
-var express = require('express');
-var bodyParser = require('body-parser');
-var path = require("path");
+let express = require('express');
+let bodyParser = require('body-parser');
+let path = require("path");
 
-var logger = require('./log/logger.js');
+let logger = require('./log/logger.js');
 
-var config = require('./config');
+let config = require('./config');
 
 // 引入 api 路由
-var apiRouter = require('./api_router_v1');
+let apiRouter = require('./api_router_v1');
 
 // 实例化 express 对象
-var app = express();
+let app = express();
 
 // 设置日志中间件
 logger.use(app);
@@ -31,7 +31,7 @@ app.use('/', apiRouter);
  * 首先是捕获错误，设置错误信息和错误状态之后，将事件向下传递，由后边的程序进行处理
  */
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    let err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
@@ -41,7 +41,7 @@ app.use(function (req, res, next) {
  */
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
-    var result = { code: err.code || err.status, status: err.status, message: err.message };
+    let result = { code: err.code || err.status, status: err.status, message: err.message };
     if (app.get('env') === 'development') {
         result.error = err.stack;
     }

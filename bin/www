@@ -3,22 +3,22 @@
 /**
  * Module dependencies.
  */
-var app = require('../app');
-var http = require('http');
+let app = require('../app');
+let http = require('http');
 
-var config = require('../config');
-var logger = require('../log/logger');
+let config = require('../config');
+let logger = require('../log/logger');
 
 /**
  * 从外部获取端口号，并设置给 express
  */
-var port = normalizePort(process.env.PORT || config.port);
+let port = normalizePort(process.env.PORT || config.port);
 app.set('port', port);
 
 /**
  *  创建 Http server
  */
-var server = http.createServer(app);
+let server = http.createServer(app);
 
 /**
  * 从所有的网络端口中监听当前项目所提供的端口
@@ -31,7 +31,7 @@ server.on('listening', onListening);
  * 将端口标准化为 数字 字符串或者 boolean 类型
  */
 function normalizePort (val) {
-    var port = parseInt(val, 10);
+    let port = parseInt(val, 10);
 
     if (isNaN(port)) {
         // named pipe
@@ -54,7 +54,7 @@ function onError (error) {
         throw error;
     }
 
-    var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+    let bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
     switch (error.code) {
         case 'EACCES':
@@ -74,7 +74,7 @@ function onError (error) {
  * HTTP 服务器监听事件监听器
  */
 function onListening () {
-    var addr = server.address();
-    var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+    let addr = server.address();
+    let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     logger.i("server is running, listener port: %s, env: %s", bind, app.get('env'));
 }

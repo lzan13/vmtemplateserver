@@ -1,12 +1,12 @@
 /**
  * Created by lzan13 on 2018/1/8.
  */
-var log4js = require('log4js');
-var tools = require('../common/tools');
-var config = require('./config.json');
+let log4js = require('log4js');
+let tools = require('../common/tools');
+let config = require('./config.json');
 
-var env;
-var logger;
+let env;
+let logger;
 
 levels = {
     'trace': log4js.levels.TRACE,
@@ -17,8 +17,8 @@ levels = {
     'fatal': log4js.levels.FATAL
 };
 
-var stackReg = /at\s+(.*)\s+\((.*):(\d*):(\d*)\)/i;
-var stackReg2 = /at\s+()(.*):(\d*):(\d*)/i;
+let stackReg = /at\s+(.*)\s+\((.*):(\d*):(\d*)\)/i;
+let stackReg2 = /at\s+()(.*):(\d*):(\d*)/i;
 
 /**
  * 配置 log4js
@@ -29,7 +29,7 @@ log4js.configure(config);
  */
 exports.use = function (app) {
     env = app.get('env');
-    app.use(log4js.connectLogger(log4js.getLogger('http'), {level: 'auto'}));
+    app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'auto' }));
     logger = log4js.getLogger('default');
 };
 
@@ -40,9 +40,9 @@ exports.d = function () {
     if (env !== 'development') {
         return;
     }
-    var stack = getStackTrace();
-    var msg = tools.formatStr.apply(null, arguments);
-    var logMsg = '[' + stack.path + ':' + stack.line + '] ' + msg;
+    let stack = getStackTrace();
+    let msg = tools.formatStr.apply(null, arguments);
+    let logMsg = '[' + stack.path + ':' + stack.line + '] ' + msg;
     logger.debug(logMsg);
 };
 
@@ -50,9 +50,9 @@ exports.d = function () {
  * 正常日志
  */
 exports.i = function () {
-    var stack = getStackTrace();
-    var msg = tools.formatStr.apply(null, arguments);
-    var logMsg = '[' + stack.path + ':' + stack.line + '] ' + msg;
+    let stack = getStackTrace();
+    let msg = tools.formatStr.apply(null, arguments);
+    let logMsg = '[' + stack.path + ':' + stack.line + '] ' + msg;
     logger.info(logMsg);
 };
 
@@ -60,9 +60,9 @@ exports.i = function () {
  * 警告日志
  */
 exports.w = function () {
-    var stack = getStackTrace();
-    var msg = tools.formatStr.apply(null, arguments);
-    var logMsg = '[' + stack.path + ':' + stack.line + '] ' + msg;
+    let stack = getStackTrace();
+    let msg = tools.formatStr.apply(null, arguments);
+    let logMsg = '[' + stack.path + ':' + stack.line + '] ' + msg;
     logger.warn(logMsg);
 };
 
@@ -70,9 +70,9 @@ exports.w = function () {
  * 错误日志
  */
 exports.e = function () {
-    var stack = getStackTrace();
-    var msg = tools.formatStr.apply(null, arguments);
-    var logMsg = '[' + stack.path + ':' + stack.line + '] ' + msg;
+    let stack = getStackTrace();
+    let msg = tools.formatStr.apply(null, arguments);
+    let logMsg = '[' + stack.path + ':' + stack.line + '] ' + msg;
     logger = log4js.getLogger('error');
     logger.error(logMsg);
 };
@@ -81,13 +81,13 @@ exports.e = function () {
  * 获取堆栈踪迹
  * @returns {*|Array}
  */
-var getStackTrace = function () {
+let getStackTrace = function () {
     // 剔除当前类封装的几层，直接获取到方法调用点
-    var stacks = (new Error()).stack.split('\n').slice(3);
+    let stacks = (new Error()).stack.split('\n').slice(3);
     // 获取剔除其他干扰项之后的第一个堆栈信息
-    var s = stacks[0];
-    var sp = stackReg.exec(s) || stackReg2.exec(s);
-    var data = {};
+    let s = stacks[0];
+    let sp = stackReg.exec(s) || stackReg2.exec(s);
+    let data = {};
     if (sp && sp.length === 5) {
         data.method = sp[1];
         data.path = sp[2];

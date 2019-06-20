@@ -3,9 +3,9 @@
  * 用户数据模型
  */
 
-var tools = require('../common/tools');
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+let tools = require('../common/tools');
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 
 /**
  * 构建用户数据信息结构
@@ -30,7 +30,7 @@ var Schema = mongoose.Schema;
  * update_at
  * @type {mongoose.Schema}
  */
-var AccountSchema = new Schema({
+let AccountSchema = new Schema({
     _id: { type: Schema.Types.ObjectId, index: true, unique: true, required: true },
     username: { type: String, index: true, unique: true },
     email: { type: String, unique: true, required: true },
@@ -68,10 +68,10 @@ var AccountSchema = new Schema({
 
 // 每次调用 save 方法，都检查密码是否修改，然后将密码加密处理，同时数据的 update_at 值为当前时间
 AccountSchema.pre('save', function (next) {
-    var now = new Date();
+    let now = new Date();
     this.update_at = now;
     if (this.isModified('password') || this.isNew) {
-        var hash = tools.cryptoSHA1(this.password);
+        let hash = tools.cryptoSHA1(this.password);
         this.password = hash;
         next();
     } else {

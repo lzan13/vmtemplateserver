@@ -3,14 +3,14 @@
  * 处理文件相关存储操作
  */
 
-var fs = require("fs");
-var path = require("path");
-var multer = require("multer");
+let fs = require("fs");
+let path = require("path");
+let multer = require("multer");
 
-var config = require('../config');
+let config = require('../config');
 
 // 定义 multer 配置
-var storage = multer.diskStorage({
+let storage = multer.diskStorage({
     destination: function (req, file, callback) {
         callback(null, config.upload_dir);
     },
@@ -43,7 +43,7 @@ exports.syncMkdirs = function (paths) {
     try {
         if (!fs.existsSync(paths)) {
             let tempPath;
-            // 这里指用'/'or'\'分隔目录  如 Linux 的 /var/www/xxx 和 Windows 的 D:\workspace\xxx
+            // 这里指用'/'or'\'分隔目录  如 Linux 的 /let/www/xxx 和 Windows 的 D:\workspace\xxx
             paths.split(/[/\\]/).forEach(function (dirName) {
                 if (tempPath) {
                     tempPath = path.join(tempPath, dirName);

@@ -2,8 +2,8 @@
  * Created by lzan13 on 2017/11/9.
  */
 
-var mongoose = require('mongoose');
-var config = require('../config');
+let mongoose = require('mongoose');
+let config = require('../config');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(
