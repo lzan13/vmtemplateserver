@@ -125,11 +125,11 @@ exports.syncMkdirs = function (paths) {
 exports.reqDone = function (data, totalCount) {
     var result = {
         code: 0,
-        message: 'success'
+        msg: 'success'
     };
     if (totalCount) {
-        result.totalCount = totalCount;
-        result.resultCount = data.length;
+        result.total_count = totalCount;
+        result.result_count = data.length;
     }
     result.data = data;
     return result
@@ -141,7 +141,7 @@ exports.reqDone = function (data, totalCount) {
 exports.reqError = function (code, msg) {
     return {
         code: code,
-        message: msg,
+        msg: msg,
         status: 200
     }
 };

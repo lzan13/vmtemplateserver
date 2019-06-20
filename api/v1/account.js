@@ -91,10 +91,10 @@ exports.updateAccountInfo = function (req, res, next) {
     let ep = new EventProxy();
     ep.fail(next);
 
-    account.gender = req.body.gender;
-    account.nickname = req.body.nickname;
-    account.signature = req.body.signature;
-    account.address = req.body.address;
+    account.gender = req.body.gender || account.gender;
+    account.nickname = req.body.nickname || account.nickname;
+    account.signature = req.body.signature || account.signature;
+    account.address = req.body.address || account.address;
 
     account.save(ep.done(function (account) {
         res.json(tools.reqDone(account));

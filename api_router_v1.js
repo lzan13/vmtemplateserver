@@ -26,13 +26,13 @@ router.post('/accounts/create', account.createAccountByEmail);
 router.post('/accounts/login', account.loginAccount);
 
 // 更新账户信息
-router.put('/accounts/info', auth.authToken, account.updateAccountInfo);
+router.put('/accounts/detail', auth.authToken, account.updateAccountInfo);
 // 更新账户密码 
 router.put('/accounts/password', auth.authToken, account.updateAccountPassword);
 // 更新账户头像
-router.post('/accounts/avatar', auth.authToken, account.updateAccountAvatar);
+router.put('/accounts/avatar', auth.authToken, account.updateAccountAvatar);
 // 更新账户封面
-router.post('/accounts/cover', auth.authToken, account.updateAccountCover);
+router.put('/accounts/cover', auth.authToken, account.updateAccountCover);
 
 // 认证账户邮箱
 router.get('/accounts/verify', account.verifyAccountEmail);
