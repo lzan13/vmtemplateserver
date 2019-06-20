@@ -14,10 +14,10 @@
         "NODE_ENV": "staging",
         "TEST": true
       },
-      "max_memory_restart": "256M",
+      "max_memory_restart": "300M",
       "restart_delay": 5000,
       "min_uptime": 1000,
-      "max_restarts": 15,
+      "max_restarts": 10,
       "merge_logs": true,
       "error_file": "./data/logs/pm2-err.log",
       "out_file": "./data/logs/pm2-out.log",
