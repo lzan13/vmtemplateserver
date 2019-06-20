@@ -3,15 +3,15 @@
  * api 路由类
  */
 
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
-var auth = require('./common/auth');
+let auth = require('./common/auth');
 
-var account = require('./api/v1/account');
-var match = require('./api/v1/match');
+let account = require('./api/v1/account');
+let match = require('./api/v1/match');
 
-var test = require('./api/v1/test');
+let test = require('./api/v1/test');
 
 /**
  * 测试接口
@@ -40,6 +40,8 @@ router.get('/accounts/verify', account.verifyAccountEmail);
 
 // 获取账户信息
 router.get('/accounts/detail/:id', account.getAccountDetail);
+// 获取所有账户，可分页
+router.get('/accounts/all', account.getAccountAll);
 // 搜索账户
 router.get('/accounts/search', auth.authToken, account.searchAccounts);
 

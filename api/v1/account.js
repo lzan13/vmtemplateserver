@@ -227,6 +227,29 @@ exports.getAccountDetail = function (req, res, next) {
 };
 
 /**
+ * 获取全部 Match 可分页
+ */
+exports.getAccountAll = function (req, res, next) {
+    let account = req.account;
+    let query = {};
+
+    // 分页
+    let page = parseInt(req.query.page, 10) || 1;
+    page = page > 0 ? page : 1;
+    let limit = Number(req.query.limit) || config.limit_default;
+    let skipCount = (page - 1) * limit;
+    // 按照更新时间排序
+    let options = { skip: skipCount, limit: limit, sort: '-update_at' };
+
+    let ep = new EventProxy();
+    ep.fail(next);
+
+    Account.getAccountByQuery(query, options, ep.done(function (accounts) {
+        res.json(tools.reqDone(accounts));
+    }));
+};
+
+/**
  * 搜索账户
  */
 exports.searchAccounts = function (req, res, next) {
