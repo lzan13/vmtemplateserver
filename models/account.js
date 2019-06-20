@@ -23,7 +23,7 @@ var Schema = mongoose.Schema;
  * address
  * token
  * code
- * activated
+ * verified
  * deleted
  * admin
  * create_at

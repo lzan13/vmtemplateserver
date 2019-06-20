@@ -69,9 +69,10 @@ exports.loginAccount = function (req, res, next) {
         if (account.password !== tools.cryptoSHA1(password)) {
             return ep.emit('error', tools.reqError(config.code.err_invalid_password, '密码错误'));
         }
-        if (!account.verified) {
-            return ep.emit('error', tools.reqError(config.code.err_account_no_verified, '账户未认证'));
-        }
+        // 暂时去掉认证限制
+        // if (!account.verified) {
+        //     return ep.emit('error', tools.reqError(config.code.err_account_no_verified, '账户未认证'));
+        // }
         if (account.deleted) {
             return ep.emit('error', tools.reqError(config.code.err_account_deleted, '账户已被删除'));
         }
