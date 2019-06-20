@@ -18,7 +18,7 @@ let storage = multer.diskStorage({
     filename: function (req, file, callback) {
         let extname = path.extname(file.originalname);
         let account = req.account;
-        callback(null, file.fieldname + '_' + account._id + extname);
+        callback(null, file.fieldname + '_' + account._id + Date.now() + extname);
     }
 });
 
