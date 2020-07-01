@@ -3,10 +3,10 @@
 # VMServer 运行脚本
 #
 # Author: lzan13
-# WebSite: http://melove.net
+# WebSite: https://melove.net
 # -------------------------------------
 
-cat ./data/res/slogo
+cat ./data/res/vmloft
 echo ""
 
 pm2 stop vmconfig.json
