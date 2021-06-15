@@ -1,52 +1,77 @@
 /**
- * 程序入口
+ * Create by lzan13 2021/01/16
+ * （可选创建）项目入口文件
  */
-let express = require('express');
-let bodyParser = require('body-parser');
-let path = require("path");
+'use strict';
+const path = require('path');
+module.exports = app => {
 
-let logger = require('./log/logger.js');
+  // 加载自定义参数校验规则
+  const directory = path.join(app.config.baseDir, 'app/validator');
+  app.loader.loadToContext(directory, 'validator');
 
-let config = require('./config');
+};
 
-// 引入 api 路由
-let apiRouter = require('./api_router_v1');
-
-// 实例化 express 对象
-let app = express();
-
-// 设置日志中间件
-logger.use(app);
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, config.public_dir)));
-/**
- * 设置 api 路由，因为要前后端分离，所以服务器这边指提供 api 路由
- */
-app.use('/api/v1', apiRouter);
-
-/**
- * 错误处理程序，捕捉项目开发中未处理的错误，并进行简单的处理
- * 首先是捕获错误，设置错误信息和错误状态之后，将事件向下传递，由后边的程序进行处理
- */
-app.use(function (req, res, next) {
-    let err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-/**
- * 错误处理
- */
-app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    let result = { code: err.code || err.status, status: err.status, message: err.message };
-    if (app.get('env') === 'development') {
-        result.error = err.stack;
-    }
-    result.status = undefined;
-    res.json(result);
-});
-
-module.exports = app;
+//
+// class AppBootHook {
+//   constructor(app) {
+//     this.app = app;
+//   }
+//
+//   configWillLoad() {
+//     // 此时 config 文件已经被读取并合并，但是还并未生效
+//     // 这是应用层修改配置的最后时机
+//     // 注意：此函数只支持同步调用
+//
+//     // 例如：参数中的密码是加密的，在此处进行解密
+//     // this.app.config.mysql.password = decrypt(this.app.config.mysql.password);
+//     // 例如：插入一个中间件到框架的 coreMiddleware 之间
+//     // const statusIdx = this.app.config.coreMiddleware.indexOf('status');
+//     // this.app.config.coreMiddleware.splice(statusIdx + 1, 0, 'limit');
+//
+//     // 加载自定义参数校验规则
+//     const directory = path.join(this.app.config.baseDir, 'app/validator');
+//     this.app.loader.loadToContext(directory, 'validator');
+//   }
+//
+//   async didLoad() {
+//     // 所有的配置已经加载完毕
+//     // 可以用来加载应用自定义的文件，启动自定义的服务
+//
+//     // 例如：创建自定义应用的示例
+//     // this.app.queue = new Queue(this.app.config.queue);
+//     // await this.app.queue.init();
+//
+//     // 例如：加载自定义的目录
+//     // this.app.loader.loadToContext(path.join(__dirname, 'app/tasks'), 'tasks', {
+//     //   fieldClass: 'tasksClasses',
+//     // });
+//
+//   }
+//
+//   async willReady() {
+//     // 所有的插件都已启动完毕，但是应用整体还未 ready
+//     // 可以做一些数据初始化等操作，这些操作成功才会启动应用
+//
+//     // 例如：从数据库加载数据到内存缓存
+//     // this.app.cacheData = await this.app.model.query(QUERY_CACHE_SQL);
+//   }
+//
+//   async didReady() {
+//     // 应用已经启动完毕
+//
+//     // const ctx = await this.app.createAnonymousContext();
+//     // await ctx.service.Biz.request();
+//   }
+//
+//   async serverDidReady() {
+//     // http / https server 已启动，开始接受外部请求
+//     // 此时可以从 app.server 拿到 server 的实例
+//
+//     // this.app.server.on('timeout', socket => {
+//     // handle socket timeout
+//     // });
+//   }
+// }
+//
+// module.exports = AppBootHook;
