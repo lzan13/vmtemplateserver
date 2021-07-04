@@ -93,6 +93,23 @@ class SignController extends Controller {
   }
 
   /**
+   * 设备 Id 登录
+   */
+  async signInByDevicesId() {
+    const { ctx, service } = this;
+
+    // 组装参数
+    const params = ctx.params.permit('devicesId', 'password');
+    // 校验参数
+    ctx.validate({ devicesId: 'devicesId', password: 'password' }, params);
+
+    // 调用 Service 进行业务处理
+    const user = await service.sign.signInByDevicesId(params);
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '登录成功', data: user });
+  }
+
+  /**
    * 用户登出
    */
   async signOut() {

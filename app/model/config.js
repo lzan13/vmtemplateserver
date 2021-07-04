@@ -1,6 +1,6 @@
 /**
  * Create by lzan13 2020/7/7
- * 描述：配置数据模型
+ * 描述：配置数据模型，这里保存配置相关数据，通过包括但不限于站点配置，客户端所需配置等
  */
 'use strict';
 module.exports = app => {
@@ -13,8 +13,8 @@ module.exports = app => {
     title: { type: String, required: true },
     // 描述
     desc: { type: String },
-    // 开放
-    open: { type: Boolean, default: true },
+    // 配置内容，这里偷懒了，内容可以传 json 传，可以扩展
+    content: { type: String },
   },
   // schema 的选项options
   {

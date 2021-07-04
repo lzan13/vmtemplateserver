@@ -50,7 +50,7 @@ class SignService extends Service {
     // 更新下用户信息，主要是把用户 token 保存到数据库
     await service.user.findByIdAndUpdate(user.id, user);
 
-    // TODO 邮箱注册成功，发送验证邮件，需要新建验证码表存储验证码信息
+    // 邮箱注册成功，发送验证邮件，需要新建验证码表存储验证码信息
     if (app.config.isNeedActivate) {
       const code = ctx.helper.authCode();
       await service.mail.sendVerify(params.email, code);
@@ -87,9 +87,10 @@ class SignService extends Service {
    */
   async signIn(params) {
     const { ctx, service } = this;
+    // TODO 这种方式后续会吧 devicesId 删除，设备登录方式调用下边单独方法
     const user = await service.user.findByQuery({ $or: [{ devicesId: params.account }, { username: params.account }, { email: params.account }, { phone: params.account }] });
     if (!user) {
-      ctx.throw(404, `用户不存在 ${params.account}`);
+      ctx.throw(404, '用户不存在');
     }
     // 校验密码
     if (user.password !== ctx.helper.cryptoMD5(params.password)) {
@@ -135,6 +136,33 @@ class SignService extends Service {
   }
 
   /**
+   * 设备 Id 登录
+   */
+  async signInByDevicesId(params) {
+    const { ctx, service } = this;
+    const user = await service.user.findByDevicesId(params.devicesId);
+    if (!user) {
+      ctx.throw(404, '用户不存在');
+    }
+    // 校验密码
+    if (user.password !== ctx.helper.cryptoMD5(params.password)) {
+      ctx.throw(412, '设备已绑定邮箱或用户名并设置密码，请使用其他方式登录');
+    }
+    // 校验账户状态
+    if (user.deleted > 0) {
+      ctx.throw(410, user.deletedReason);
+    }
+    // if (params.account === user.email && !user.emailVerify) {
+    //   ctx.throw(533, '邮箱还未认证，无法登陆');
+    // }
+    // 生成Token令牌
+    user.token = await service.token.create(user);
+    // 更新下用户信息，主要是把用户 token 保存到数据库
+    await service.user.findByIdAndUpdate(user.id, user);
+    return user;
+  }
+
+  /**
    * 发送激活邮件
    */
   async sendVerifyEmail(email) {
@@ -144,8 +172,6 @@ class SignService extends Service {
       ctx.throw(404, `用户不存在 ${email}`);
     }
     const code = ctx.helper.authCode();
-    await service.user.findByIdAndUpdate(user.id, { code });
-
     return service.mail.sendVerify(email, code);
   }
 
@@ -154,13 +180,7 @@ class SignService extends Service {
    */
   async sendCodeEmail(email) {
     const { ctx, service } = this;
-    const user = await service.user.findByEmail(email);
-    if (!user) {
-      ctx.throw(404, `用户不存在 ${email}`);
-    }
     const code = ctx.helper.authCode();
-    await service.user.findByIdAndUpdate(user.id, { code });
-
     return service.mail.sendCode(email, code);
   }
 

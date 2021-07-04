@@ -88,6 +88,24 @@ class SignService extends Service {
   }
 
   /**
+   * 绑定邮箱
+   */
+  async bindEmail(params) {
+    const { ctx, service } = this;
+    const id = ctx.state.user.id;
+    const user = await service.user.find(id);
+    if (!user) {
+      ctx.throw(404, `用户不存在 ${id}`);
+    }
+    const code = service.code.findByEmail(params.email);
+    if (!code) {
+      ctx.throw(404, `验证码不存在或已失效 ${code}`);
+    }
+
+    return service.user.findByIdAndUpdate(id, { email: params.email, emailVerify: true });
+  }
+
+  /**
    * 重置密码
    * @param params
    */

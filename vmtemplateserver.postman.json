@@ -1,0 +1,3508 @@
+{
+	"info": {
+		"_postman_id": "122ad2e6-1a23-4fb3-8a15-de689267a8bc",
+		"name": "vmtemplateserver",
+		"description": "vmtemplateserver 模板项目调试服务器接口",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "管理接口",
+			"item": [
+				{
+					"name": "角色接口",
+					"item": [
+						{
+							"name": "创建角色",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"管理员\",\n    \"identity\": 1,\n    \"desc\": \"拥有管理普通用户及部分系统功能的人员\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/role",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除角色",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ids\":\"5f0837c0397dc076329f82de,5f083a72b7fc317651887ab6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/role",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "批量删除角色",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ids\": \"5f0837c0397dc076329f82de,5f083a72b7fc317651887ab6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/role",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新角色",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\":\"普通用户\",\n    \"identity\":2,\n    \"desc\": \"享有使用系统及分享内容的权利，受到系统保护\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/role/5f1812079a2fde42931804af",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"role",
+										"5f1812079a2fde42931804af"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询角色",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/role?page=0&limit=10",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"role"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取指定角色",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/role/5f0446eee4cc1e2a128495a3",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"role",
+										"5f0446eee4cc1e2a128495a3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "用户接口",
+					"item": [
+						{
+							"name": "创建用户",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"lzan14\",\n    \"email\": \"lzan14@sina.com\",\n    \"phone\": \"15617021614\",\n    \"password\": \"123123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "软删除用户",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"5f0c2e5b3657e112c494f76d\",\n    \"reason\": \"删除理由\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user/delete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user",
+										"delete"
+									]
+								},
+								"description": "只是修改删除状态，依然存在数据库中"
+							},
+							"response": []
+						},
+						{
+							"name": "删除用户",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user/60a4d0e115c1798a82706577",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user",
+										"60a4d0e115c1798a82706577"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "批量删除用户",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ids\": \"5f0c2cd68cd7521299b3c8e5,5f0c2ce28cd7521299b3c8e6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新用户",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"lzan13\",\n    \"email\": \"lzan13@sina.com\",\n    \"phone\": \"15617021612\",\n    \"gender\": 1,\n    \"nickname\": \"风中小裤衩\",\n    \"signature\": \"慢慢来，一步一个脚印👣\",\n    \"address\": \"北京市朝阳区朝阳北路36号\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user/5f168fc61d6d84e14b0ca67c",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user",
+										"5f168fc61d6d84e14b0ca67c"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新用户角色",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"role\": \"5f1a98245b66092afcd8c4b6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user/5f1a982b5b66092afcd8c4ba/role",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user",
+										"5f1a982b5b66092afcd8c4ba",
+										"role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询用户",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user?page=0&limit=10",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取指定用户",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/user/5f1e9899d0fa77e4309a531a",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user",
+										"5f1e9899d0fa77e4309a531a"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "职业接口",
+					"item": [
+						{
+							"name": "创建",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"测试职业\",\n    \"desc\": \"测试职业描述\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profession",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profession"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profession/5f1ea85bc96e49ee6ac5505f",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profession",
+										"5f1ea85bc96e49ee6ac5505f"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "批量删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ids\": \"5f1ea65fe9d6ceed2f53f5e1,5f1ea860c96e49ee6ac55060\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profession",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profession"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\":\"测试分类\",\n    \"description\": \"享有使用系统及分享内容的权利，受到系统保护\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profession/5f1ea85bc96e49ee6ac5505f",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profession",
+										"5f1ea85bc96e49ee6ac5505f"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profession?page=0&limit=10",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profession"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取指定",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/profession/5f1e9846d0fa77e4309a5318",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profession",
+										"5f1e9846d0fa77e4309a5318"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "分类接口",
+					"item": [
+						{
+							"name": "创建",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"测试分类\",\n    \"desc\": \"测试分类描述\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/category",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/category/5f1ea621e9d6ceed2f53f5e0",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"category",
+										"5f1ea621e9d6ceed2f53f5e0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "批量删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ids\": \"5f1ea65fe9d6ceed2f53f5e1,5f083a72b7fc317651887ab6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/category",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\":\"测试分类\",\n    \"desc\": \"享有使用系统及分享内容的权利，受到系统保护\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/category/5f1ea66ae9d6ceed2f53f5e2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"category",
+										"5f1ea66ae9d6ceed2f53f5e2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/category?page=0&limit=10",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"category"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/category/5f1ea66ae9d6ceed2f53f5e2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"category",
+										"5f1ea66ae9d6ceed2f53f5e2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "配置接口",
+					"item": [
+						{
+							"name": "创建",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"alias\": \"test\",\n    \"title\": \"测试配置\",\n    \"desc\": \"测试配置描述\",\n    \"content\": \"{'key':'测试配置内容'}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/config",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/config/5f1ea621e9d6ceed2f53f5e0",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"config",
+										"5f1ea621e9d6ceed2f53f5e0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"content\": \"{'key':'ddddd'}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/config/60dedee9d206649092a6c81f",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"config",
+										"60dedee9d206649092a6c81f"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/config?page=0&limit=10",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"config"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/config/60dedee9d206649092a6c81f",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"config",
+										"60dedee9d206649092a6c81f"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "版本接口",
+					"item": [
+						{
+							"name": "创建",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"platform\": \"android\",\n    \"title\": \"版本升级\",\n    \"desc\": \"重大更新\",\n    \"url\": \"http://app.melove.net/squx\",\n    \"versionCode\": 2,\n    \"versionName\": \"0.0.2\",\n    \"force\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/version",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"version"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/version/5f1ea621e9d6ceed2f53f5e0",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"version",
+										"5f1ea621e9d6ceed2f53f5e0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"platform\": \"android\",\n    \"title\": \"版本升级\",\n    \"desc\": \"重大更新，添加检查省级功能，完善邮箱注册与绑定逻辑\",\n    \"url\": \"http://app.melove.net/squx\",\n    \"versionCode\": 3,\n    \"versionName\": \"0.0.3\",\n    \"force\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/version/60dedfc6b037bd9b8e9877d0",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"version",
+										"60dedfc6b037bd9b8e9877d0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/version?page=0&limit=10&platform=android",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"version"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "platform",
+											"value": "android"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/version/5f1ea66ae9d6ceed2f53f5e2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"version",
+										"5f1ea66ae9d6ceed2f53f5e2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "管理初始化",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/init",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"init"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "注册登录",
+			"item": [
+				{
+					"name": "设备Id注册",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"devicesId\": \"4d5251616c7945e8\",\n    \"password\": \"123123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sign/upByDevicesId",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"upByDevicesId"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "邮箱注册",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"lzan13\",\n    \"email\": \"lzan13@sina.com\",\n    \"password\": \"123123\",\n    \"devicesId\": \"123123123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sign/upByEmail",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"upByEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "手机号注册",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"deviceId\": \"222222\",\n    \"phone\": \"17601623827\",\n    \"password\": \"123123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sign/upByPhone",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"upByPhone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "通用登录",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account\": \"template\",\n    \"password\": \"123123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sign/in",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"in"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "设备 Id 登录",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\": \"1561702162\",\n    \"code\": 123456\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sign/inByCode",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"inByCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "设备 Id 登录",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"devicesId\": \"123123123\",\n    \"password\": \"123123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sign/inByDevicesId",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"inByDevicesId"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "发送激活邮件",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"lzan13@sina.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sign/sendVerifyEmail",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"sendVerifyEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "发送验证码邮件",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"lzan13@sina.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sign/sendCodeEmail",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"sendCodeEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "账户激活",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}/sign/activate?email=lzan13@sina.com&code=123123",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"activate"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "lzan13@sina.com"
+								},
+								{
+									"key": "code",
+									"value": "123123"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "退出登录",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/sign/activate",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"sign",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "信息处理",
+			"item": [
+				{
+					"name": "设置用户名",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"lzan13\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/info/username",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"username"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新当前用户信息",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"birthday\": \"1990-09-27\",\n    \"nickname\": \"穿裤衩闯天下\",\n    \"signature\": \"慢慢来，一步一个脚印👣\",\n    \"address\": \"北京市-朝阳区\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新当前用户头像",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/Users/lzan13/Pictures/avatar_me.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/info/avatar",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新当前用户封面",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/Users/lzan13/Downloads/res/img_default.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/info/cover",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"cover"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新当前用户邮箱绑定",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"email\": \"lzan13@sina.com\",\n   \"code\": \"122542\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/info/bindEmail",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"bindEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新当前用户密码",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oldPassword\": \"123123\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/info/password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "当前用户签到",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/info/clock",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"clock"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "当前用户信息",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/info/current",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"current"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "其他用户信息",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/info/other/60404e66c220733e746af20c",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"other",
+								"60404e66c220733e746af20c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "指定集合用户信息",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\":[\"60a52db6b96edda05292ca3e\",\"60a52e13b96edda05292ca40\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/info/ids",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"ids"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "职业信息",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}/info/checkVersion?platform=android",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"checkVersion"
+							],
+							"query": [
+								{
+									"key": "platform",
+									"value": "android"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "分类信息",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "page",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/info/category",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"info",
+								"category"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "附件接口",
+			"item": [
+				{
+					"name": "上传附件",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "picture",
+									"type": "file",
+									"src": "/Users/lzan13/Pictures/avatar_me.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/attachment",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"attachment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "上传附件通过网络",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\":\"https://tvax1.sinaimg.cn/mw1024/9d52c073gy1gppztdpnq8j21ln24ux4n.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/attachment/url",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"attachment",
+								"url"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "上传多个附件",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "key1",
+									"value": "value1",
+									"type": "text"
+								},
+								{
+									"key": "key2",
+									"value": "value2",
+									"type": "text"
+								},
+								{
+									"key": "file1",
+									"type": "file",
+									"src": "/Users/lzan13/Pictures/Pictures/壁纸/bz4.jpg"
+								},
+								{
+									"key": "file2",
+									"type": "file",
+									"src": "/Users/lzan13/Pictures/img_preview_promotion.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/attachments",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"attachments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除附件",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/attachment/5f2279cdb4d5d110b257c642",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"attachment",
+								"5f2279cdb4d5d110b257c642"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量删除附件",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\":\"5f1aa95ecd164e36bf25587a,5f1aa83fd5d5af35d07d5042\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/attachment",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"attachment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新附件",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/lzan13/Pictures/avatar_me.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/attachment/5f1e3c8446da8fa0c6e91d6e",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"attachment",
+								"5f1e3c8446da8fa0c6e91d6e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新附件扩展",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"extra\":\"这是作为我的头像的图片\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/attachment/5f195e8d2dc8acfe6051d169/extra",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"attachment",
+								"5f195e8d2dc8acfe6051d169",
+								"extra"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询附件",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/attachment?page=0&limit=10&kind=image",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"attachment"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "kind",
+									"value": "image"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "匹配接口",
+			"item": [
+				{
+					"name": "提交匹配信息",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emotion\":0,\n    \"content\": \"晚上好，你也在啊！\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/match/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"match",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除匹配信息",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/match/60404e46c220733e746af20b",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"match",
+								"60404e46c220733e746af20b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/match?page=0&limit=20",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"match"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "随机获取一个",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/match/one",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"match",
+								"one"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "房间接口",
+			"item": [
+				{
+					"name": "创建",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"测试房间2\",\n    \"desc\": \"这是测试房间描述内容，哈哈哈😁哈哈哈\",\n    \"owner\":\"60a4d756dc602c8e0fd6ac92\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/room",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/room/149483234066434",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"room",
+								"149483234066434"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": \"149474265595905,149474273984513\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/room",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\":\"忘忧茶室\",\n    \"desc\": \"测试内容修改测试内容修改测试内容修改测试内容修改测试内容修改\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/room/149474332704770",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"room",
+								"149474332704770"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/room?page=0&limit=10",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"room"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "deleted",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取指定",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/room/149474332704770",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"room",
+								"149474332704770"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "帖子接口",
+			"item": [
+				{
+					"name": "创建",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"这是第3条帖子标题哈\",\n    \"content\": \"这是帖子测试内容，哈哈哈😁哈哈哈\",\n    \"category\":\"6007f7953e07176fc0afbd5f\",\n    \"stick\":0,\n    \"attachments\": [\"60ad0be1a983e3e979e706e6\"],\n    \"extension\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/post",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/post/60b6418f871e8a5fa9d77e90",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"post",
+								"60b6418f871e8a5fa9d77e90"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": \"5f1ea65fe9d6ceed2f53f5e1,5f1eaa169a3327ef93613867\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/post",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "软删除",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/post/delete/6007fc98f16e0c707913248e",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"post",
+								"delete",
+								"6007fc98f16e0c707913248e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\":\"测试内容修改\",\n    \"content\": \"测试内容修改测试内容修改测试内容修改测试内容修改测试内容修改\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/post/6007a23cbc9df15ab9e70677",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"post",
+								"6007a23cbc9df15ab9e70677"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/post?page=0&limit=10&owner=60b6406e871e8a5fa9d77e8d",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"post"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "deleted",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "owner",
+									"value": "60b6406e871e8a5fa9d77e8d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取指定",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/post/6007a78ba3b5ff5c7af5a971",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"post",
+								"6007a78ba3b5ff5c7af5a971"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "评论接口",
+			"item": [
+				{
+					"name": "创建",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"post\": \"60598750614e985b4b2594ce\",\n    \"content\": \"这是第2条帖子第2个测试评论内容\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/comment",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/comment/6007aa07bc8c9b5d1289cc9e",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"comment",
+								"6007aa07bc8c9b5d1289cc9e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": \"5f1fea4da385261f3f53b3cc\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/comment",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/comment?page=0&limit=20&post=60598750614e985b4b2594ce",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"comment"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "post",
+									"value": "60598750614e985b4b2594ce"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取指定",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/post/5f1ead7239995af2588f9ae0",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"post",
+								"5f1ead7239995af2588f9ae0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "关注接口",
+			"item": [
+				{
+					"name": "关注",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/follow/60404e71c220733e746af20d",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"follow",
+								"60404e71c220733e746af20d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "取消关注",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/follow/60404e46c220733e746af20b",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"follow",
+								"60404e46c220733e746af20b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/follow?page=0&limit=20&type=1&userId=60404e46c220733e746af20b",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"follow"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "type",
+									"value": "1"
+								},
+								{
+									"key": "userId",
+									"value": "60404e46c220733e746af20b"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "喜欢接口",
+			"item": [
+				{
+					"name": "喜欢人/帖子/评论",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": 1,\n\t\"id\": \"60ae56b70ca2905693de28c7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "取消喜欢",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": 2,\n\t\"id\": \"6007f8db3e07176fc0afbd6e\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like/60af61fe9aecc732fce47e08",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like",
+								"60af61fe9aecc732fce47e08"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "反馈接口",
+			"item": [
+				{
+					"name": "创建反馈",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"owner\": \"60404e71c220733e746af20d\",\n    \"content\": \"测试反馈内容\",\n    \"attachments\": [\"605c3e0b64b90eaea2807e0f\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/feedback",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除反馈",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\":\"5f0837c0397dc076329f82de,5f083a72b7fc317651887ab6\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/feedback",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量删除反馈",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": \"5f0837c0397dc076329f82de,5f083a72b7fc317651887ab6\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/feedback",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询反馈",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/feedback?page=0&limit=10",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"feedback"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取指定反馈",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/feedback/6059bdea548e4961480ed58d",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"feedback",
+								"6059bdea548e4961480ed58d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "测试接口",
+			"item": [
+				{
+					"name": "发送邮件",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"VMLoft<notify@vmloft.com>\",\n  \"to\": \"lzan13@sina.com\",\n  \"subject\": \"邮件主题\",\n  \"html\": \"邮件内容（二选一）\",\n  \"text\": \"邮件内容（二选一）\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/test/sendMail",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"test",
+								"sendMail"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

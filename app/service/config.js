@@ -14,7 +14,7 @@ class ConfigService extends Service {
    */
   async create(params) {
     const { ctx, service } = this;
-    const config = await service.config.findByAlias(params.alais);
+    const config = await service.config.findByAlias(params.alias);
     if (config) {
       ctx.throw(409, '配置已存在，请通过更新接口设置内容');
     }
@@ -45,7 +45,7 @@ class ConfigService extends Service {
     if (!config) {
       ctx.throw(404, `配置信息不存在 ${id}`);
     }
-    const temp = await service.config.findByAlias(params.title);
+    const temp = await service.config.findByAlias(params.alias);
     // 修改时依然要保持不能和现有的数据重复
     if (temp && temp.id !== config.id) {
       if (temp.title === params.title) {
@@ -126,7 +126,7 @@ class ConfigService extends Service {
 
   /**
    * 更新配置信息
-   * @param id 用户 Id
+   * @param id
    * @param params 需要更新的信息
    */
   async findByIdAndUpdate(id, params) {

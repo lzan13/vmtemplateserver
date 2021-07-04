@@ -33,8 +33,10 @@ class UserService extends Service {
     if (result) {
       return user;
     }
-    // 删除用户并返回
-    return ctx.model.User.findByIdAndRemove(user.id);
+    // 删除用户
+    ctx.model.User.findByIdAndRemove(user.id);
+
+    ctx.throw(412, '创建 IM 账户失败，请联系管理员解决');
   }
 
   /**
@@ -51,7 +53,7 @@ class UserService extends Service {
     await ctx.model.Post.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
 
     // 删除环信账户
-    const result = await service.easemob.delUser(user.id);
+    await service.easemob.delUser(user.id);
 
     // 删除用户并返回
     return ctx.model.User.findByIdAndRemove(id);
@@ -192,7 +194,10 @@ class UserService extends Service {
    * @param devicesId 设备 Id
    */
   async findByDevicesId(devicesId) {
-    return this.ctx.model.User.findOne({ devicesId });
+    return this.ctx.model.User.findOne({ devicesId })
+      .populate('profession', professionSelect)
+      .populate('role', roleSelect)
+      .exec();
   }
 
   /**

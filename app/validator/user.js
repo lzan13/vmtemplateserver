@@ -58,7 +58,7 @@ module.exports = app => {
    * 校验验证码
    */
   validator.addRule('code', (rule, value) => {
-    if (!/^[0-9]{6}$/.test(value)) {
+    if (!/^[0-9]{4,6}$/.test(value)) {
       return '验证码格式错误';
     }
   });

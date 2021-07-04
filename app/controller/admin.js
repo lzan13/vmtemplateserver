@@ -12,8 +12,8 @@ class AdminController extends Controller {
    * 管理员主页
    */
   async index() {
-    const { ctx, service } = this;
-    const config = await service.config.findByAlias('default');
+    const { app, ctx, service } = this;
+    const config = await service.config.findByAlias(app.config.server.alias);
     if (!config) {
       ctx.throw(404, '服务器未初始化，请联系管理员操作');
     }
@@ -25,25 +25,19 @@ class AdminController extends Controller {
    */
   async init() {
     const { app, ctx, service } = this;
-    let config = await service.config.findByAlias('default');
+    let config = await service.config.findByAlias(app.config.server.alias);
     if (config) {
       ctx.helper.success({ ctx, msg: '服务器已初始化', data: config });
       return;
     }
-    // 组装参数
-    let params = {
-      alias: 'default',
-      title: app.config.title,
-      desc: app.config.desc,
-      open: true,
-    };
     // 1 创建配置
-    config = await service.config.create(params);
+    config = await service.config.create(app.config.server);
     if (config) {
       app.logger.debug('║ 创建配置 - 成功');
     } else {
       app.logger.debug('║ 创建配置 - 失败');
     }
+
     // 2 创建角色信息
     let superRole;
     for (const item of app.config.roleList) {
@@ -79,7 +73,7 @@ class AdminController extends Controller {
     }
 
     // 5 创建超管账户
-    params = { username: app.config.username, email: app.config.email, password: app.config.password, roleId: superRole.id };
+    const params = { username: app.config.username, email: app.config.email, password: app.config.password, roleId: superRole.id };
     const user = await service.user.create(params);
     if (user) {
       app.logger.debug('║ 创建超管账户 - 成功');

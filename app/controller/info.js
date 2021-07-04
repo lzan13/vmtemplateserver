@@ -108,6 +108,26 @@ class SignController extends Controller {
   }
 
   /**
+   * 绑定邮箱
+   */
+  async bindEmail() {
+    const { ctx, service } = this;
+    // 组装参数
+    const params = ctx.params.permit('email', 'code');
+    // 校验参数
+    ctx.validate({ email: 'email', code: 'code' }, params);
+
+    // 调用 Service 进行业务处理
+    await service.info.bindEmail(params);
+
+    // 查询最新数据
+    const id = ctx.state.user.id;
+    const user = await service.user.find(id, { password: 0 });
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '邮箱绑定成功', data: user });
+  }
+
+  /**
    * 重置密码
    */
   async updatePassword() {
@@ -172,6 +192,17 @@ class SignController extends Controller {
     const users = await service.info.userList(ids, userSelect);
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '获取用户成功', data: users });
+  }
+
+  /**
+   * 检查版本信息
+   */
+  async checkVersion() {
+    const { ctx, service } = this;
+    const { platform } = ctx.params.permit('platform');
+    const version = await service.version.findByPlatform(platform);
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '检查结果', data: version });
   }
 
   /**

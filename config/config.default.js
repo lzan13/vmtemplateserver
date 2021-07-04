@@ -1,4 +1,6 @@
-/* eslint valid-jsdoc: "off" */
+/**
+ * 项目默认配置项，如有需要改动的，不要在这里直接改动，复制对应项到相对应的环境配置文件进行修改
+ */
 
 'use strict';
 
@@ -38,7 +40,8 @@ module.exports = appInfo => {
     // 是否启用中间件，默认为 false
     enable: true,
     // 设置符合某些规则的请求不经过这个中间件，和 match 互斥，同时只能配置一个
-    ignore: [ '/api/admin/init', /^\/api\/sign\/(in|up|activate)/, '/public/uploads', '/api/test/' ],
+    // [ '/v1/init', /^\/v1\/(sign\/(in|up|activate))/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
+    ignore: /\/v1\/(init|feedback|sign\/(in|up|activate)|test)/,
     // 设置只有符合某些规则的请求才会经过这个中间件。
     // match: [ '' ],
     // 这里配置的是对应角色无权限访问的接口正则匹配
@@ -46,8 +49,8 @@ module.exports = appInfo => {
       god: '',
       admin: '',
       operation: '',
-      // 普通用户不允许操作管理员接口，以及不能直接操作：类别、职业、角色、用户、签到相关数据，可通过对外暴露的对应接口操作，比如更新用户资料等
-      user: /^\/api\/(admin|category|clock|profession|role|user)/,
+      // 普通用户不允许操作管理员接口，以及不能直接操作：类别、配置、签到、职业、角色、用户相关数据，可通过对外暴露的对应接口操作，比如更新用户资料等
+      user: /\/v1\/(init|category|config|clock|profession|role|user)/,
       lock: '',
     },
   };
@@ -61,7 +64,8 @@ module.exports = appInfo => {
     // 自定义 JWT 加密 token 需要的 secret
     secret: 'vm_server_123456',
     // 设置符合某些规则的请求不经过这个中间件，和 match 互斥，同时只能配置一个
-    ignore: [ '/api/admin/init', /^\/api\/sign\/(in|up|activate)/, '/public/uploads', '/api/test/' ],
+    // [ '/v1/admin/init', /^\/api\/sign\/(in|up|activate)/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
+    ignore: '',
     // match: '/jwt',
   };
 
@@ -125,8 +129,8 @@ module.exports = appInfo => {
    */
   config.easemob = {
     host: 'http://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
-    orgName: 'orgName', // 环信 appKey 前半段
-    appName: 'appName', // 环信 appkey 后半段
+    orgName: 'orgName', // 环信 appKey # 前半段
+    appName: 'appName', // 环信 appkey # 后半段
     clientId: 'client id', // 替换环信后台 clientId
     clientSecret: 'client secret', // 替换环信后台 clientSecret
   };
@@ -146,7 +150,7 @@ module.exports = appInfo => {
     },
     from: 'VMLoft<notify@vmloft.com>', // from 表示邮件发送者，必须与认证账户相同
     activateSubject: '【社交系统】验证电子邮件地址',
-    activateContent: '<div style="width:100%; background-color:#f6f7f8; margin: 0; padding: 0; font-family: Roboto-Regular,Helvetica,Arial,sans-serif; font-size: 14px;"><div style="width: 100%; height: 36px;"></div><div style="min-width: 360px; max-width: 600px; margin: 20px auto; background-color: #fff; box-shadow: 0px 5px 15px #f8f8f8"><div style="font-size: 22px; text-align:center; border-bottom: #eee 1px solid; margin: 0 16px"><div style="padding: 24px;">【社交系统】验证电子邮件地址</div></div><div style="width: 100%; text-align: left;  background-color: #ffffff;"><div style="min-width: 320px; max-width: 500px; margin: auto; color: #232323; line-height: 1.5; padding: 8px 0;"><div style="font-size: 18px; font-weight: bold; padding: 24px 16px;">尊敬的{0}您好！</div><div style="padding: 16px;">感谢您使用我们的服务，这里需要验证下您的电子邮件地址，点击下方的按钮以验证电子邮箱：</div><div style="padding: 8px 16px;"><a href="{1}/sign/activate?verify={2}">验证电子邮件地址</a></div><div style="padding: 16px;">如果您并没进行此类操作请忽略此邮件！</div><div style="color:#999999; padding: 24px 16px; text-align: end">社交系统团队</div></div></div><div style="margin:0 16px; padding: 16px; color: #999999; text-align:center; border-top: #eee 1px solid">©️2021社交系统.</div></div><div style="width: 100%; height: 36px;"></div></div>',
+    activateContent: '<div style="width:100%; background-color:#f6f7f8; margin: 0; padding: 0; font-family: Roboto-Regular,Helvetica,Arial,sans-serif; font-size: 14px;"><div style="width: 100%; height: 36px;"></div><div style="min-width: 360px; max-width: 600px; margin: 20px auto; background-color: #fff; box-shadow: 0px 5px 15px #f8f8f8"><div style="font-size: 22px; text-align:center; border-bottom: #eee 1px solid; margin: 0 16px"><div style="padding: 24px;">【社交系统】验证电子邮件地址</div></div><div style="width: 100%; text-align: left;  background-color: #ffffff;"><div style="min-width: 320px; max-width: 500px; margin: auto; color: #232323; line-height: 1.5; padding: 8px 0;"><div style="font-size: 18px; font-weight: bold; padding: 24px 16px;">尊敬的{0}您好！</div><div style="padding: 16px;">感谢您使用我们的服务，这里需要验证下您的电子邮件地址，点击下方的按钮以验证电子邮箱：</div><div style="padding: 8px 16px;"><a href="{1}/account/activate?verify={2}">验证电子邮件地址</a></div><div style="padding: 16px;">如果您并没进行此类操作请忽略此邮件！</div><div style="color:#999999; padding: 24px 16px; text-align: end">社交系统团队</div></div></div><div style="margin:0 16px; padding: 16px; color: #999999; text-align:center; border-top: #eee 1px solid">©️2021社交系统.</div></div><div style="width: 100%; height: 36px;"></div></div>',
     codeSubject: '【社交系统】验证码',
     codeContent: '<div style="width:100%; background-color:#f6f7f8; margin: 0; padding: 0; font-family: Roboto-Regular,Helvetica,Arial,sans-serif; font-size: 14px;"><div style="width: 100%; height: 36px;"></div><div style="min-width: 360px; max-width: 600px; margin: 20px auto; background-color: #fff; box-shadow: 0px 5px 15px #f8f8f8"><div style="font-size: 22px; text-align:center; border-bottom: #eee 1px solid; margin: 0 16px"><div style="padding: 24px;">【社交系统】验证码</div></div><div style="width: 100%; text-align: left;  background-color: #ffffff;"><div style="min-width: 320px; max-width: 500px; margin: auto; color: #232323; line-height: 1.5; padding: 8px 0;"><div style="font-size: 18px; font-weight: bold; padding: 24px 16px;">尊敬的{0}您好！</div><div style="padding: 16px;">感谢您使用我们的服务，您正在进行敏感操作，下边是您请求的验证码</div><div style="padding: 8px 16px;"><strong style="color: #ff7138; font-size: 20px;font-weight: bold;">{1}</strong></div><div style="padding: 16px;">如果您并没进行此类操作请忽略此邮件！</div><div style="color:#999999; padding: 24px 16px; text-align: end">社交系统团队</div></div></div><div style="margin:0 16px; padding: 16px; color: #999999; text-align:center; border-top: #eee 1px solid">©️2021社交系统.</div></div><div style="width: 100%; height: 36px;"></div></div>',
   };
@@ -168,7 +172,7 @@ module.exports = appInfo => {
 
   // 数据配置
   const dataConfig = {
-    // 部署服务地址，TODO 正式发布时需要改成你的域名地址
+    // 部署服务地址，正式发布时需要改成你的域名地址
     host: 'http://localhost:5920',
     // 配置邮箱注册账户是否需要激活
     isNeedActivate: false,
@@ -178,9 +182,12 @@ module.exports = appInfo => {
     username: 'template',
     email: 'template@vmloft.com',
     password: '123123',
-    // 系统信息
-    title: '模板服务器',
-    desc: '使用 Eggjs 实现自定义模板服务器',
+    // 系统配置信息
+    server: {
+      alias: 'server',
+      title: '模板服务器',
+      desc: '使用 Eggjs 实现自定义模板服务器',
+    },
     // 角色身份配置
     roleList: [
       {

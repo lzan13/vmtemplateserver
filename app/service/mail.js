@@ -41,12 +41,15 @@ class EmailService extends Service {
   }
 
   /**
-   * 发送验证邮件
+   * 发送验证邮件，TODO 这个发出去的认证邮件内部跳转链接需要 web 实现落地页 {1}/account/activate?verify={2}
    * @param email 邮件地址
    * @param code 验证码
    */
   async sendVerify(email, code) {
-    const { app, ctx } = this;
+    const { app, ctx, service } = this;
+    // 保存验证码
+    await service.code.create({ email, code });
+
     const verify = ctx.helper.strToBase64(JSON.stringify({ email, code }));
     const html = ctx.helper.formatStrs(app.config.mail.activateContent, email, app.config.host, verify);
     const mailData = {
@@ -63,7 +66,10 @@ class EmailService extends Service {
    * @param code 验证码
    */
   async sendCode(email, code) {
-    const { app, ctx } = this;
+    const { app, ctx, service } = this;
+    // 保存验证码
+    await service.code.create({ email, code });
+
     const html = ctx.helper.formatStrs(app.config.mail.codeContent, email, code);
     const mailData = {
       from: app.config.mail.from,

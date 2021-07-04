@@ -3,7 +3,7 @@
  */
 'use strict';
 module.exports = app => {
-  const { router, controller, io } = app;
+  const { router, controller } = app;
 
   /**
    * RESTful 风格接口与方法对应关系
@@ -21,241 +21,239 @@ module.exports = app => {
    * ----------------------------------------------------------
    */
   /**
-   * View 路由
-   */
-  // router.get('/', controller.home.index);
-  // router.get('/admin', controller.admin.index);
-
-
-  /**
-   * ----------------------------------------------------------
-   */
-  /**
-   * 测试接口
-   */
-  router.post('/api/test/sendMail', controller.test.sendMail);
-
-  /**
    * 管理员相关路由
    */
-  router.get('/api/admin/init', controller.admin.init);
+  router.get('/v1/init', controller.admin.init);
+
+  /**
+   * 配置相关路由
+   */
+  router.resources('config', '/v1/config', controller.config);
+
+  /**
+   * 版本相关路由
+   */
+  router.resources('version', '/v1/version', controller.version);
 
 
   /**
    * --------------------------------------------------
    * 登录注册路由
    */
-  router.post('/api/sign/in', controller.sign.signIn);
-  router.post('/api/sign/upByEmail', controller.sign.signUpByEmail);
-  router.post('/api/sign/upByPhone', controller.sign.signUpByPhone);
-  router.post('/api/sign/upByDevicesId', controller.sign.signUpByDevicesId);
-  router.post('/api/sign/in', controller.sign.signIn);
-  router.post('/api/sign/inByCode', controller.sign.signInByCode);
-  router.post('/api/sign/sendVerifyEmail', controller.sign.sendVerifyEmail);
-  router.post('/api/sign/sendCodeEmail', controller.sign.sendCodeEmail);
-  router.get('/api/sign/activate', controller.sign.activate);
-  router.get('/api/sign/out', controller.sign.signOut);
+  router.post('/v1/sign/in', controller.sign.signIn);
+  router.post('/v1/sign/upByEmail', controller.sign.signUpByEmail);
+  router.post('/v1/sign/upByPhone', controller.sign.signUpByPhone);
+  router.post('/v1/sign/upByDevicesId', controller.sign.signUpByDevicesId);
+  router.post('/v1/sign/in', controller.sign.signIn);
+  router.post('/v1/sign/inByCode', controller.sign.signInByCode);
+  router.post('/v1/sign/inByDevicesId', controller.sign.signInByDevicesId);
+  router.get('/v1/sign/sendVerifyEmail', controller.sign.sendVerifyEmail);
+  router.get('/v1/sign/sendCodeEmail', controller.sign.sendCodeEmail);
+  router.get('/v1/sign/activate', controller.sign.activate);
+  router.get('/v1/sign/out', controller.sign.signOut);
 
 
   /**
    * --------------------------------------------------
    * 用户相关路由，管理调用
    */
-  // router.post('/api/user', controller.user.create);
-  // router.delete('/api/user/:id', controller.user.destroy);
-  // router.put('/api/user/:id', controller.user.update);
-  // router.get('/api/user/:id', controller.user.show);
-  // router.get('/api/user', controller.user.index);
+  // router.post('/v1/user', controller.user.create);
+  // router.delete('/v1/user/:id', controller.user.destroy);
+  // router.put('/v1/user/:id', controller.user.update);
+  // router.get('/v1/user/:id', controller.user.show);
+  // router.get('/v1/user', controller.user.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('user', '/api/user', controller.user);
+  router.resources('user', '/v1/user', controller.user);
   // 更新用户角色信息
-  router.put('/api/user/:id/role', controller.user.updateRole);
+  router.put('/v1/user/:id/role', controller.user.updateRole);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
-  router.delete('/api/user/destroyList', controller.user.destroyList);
+  router.delete('/v1/user/destroyList', controller.user.destroyList);
   // 删除，这里是软删除，将用户状态改为删除
-  router.put('/api/user/delete', controller.user.delete);
+  router.put('/v1/user/delete', controller.user.delete);
   // 批量删除，这里是软删除，将用户状态改为删除
-  router.put('/api/user/deleteList', controller.user.deleteList);
+  router.put('/v1/user/deleteList', controller.user.deleteList);
 
   /**
    * --------------------------------------------------
    * 签到相关路由，管理调用
    */
-  // router.post('/api/clock', controller.clock.create);
-  // router.delete('/api/clock/:id', controller.clock.destroy);
-  // router.get('/api/clock', controller.clock.index);
+  // router.post('/v1/clock', controller.clock.create);
+  // router.delete('/v1/clock/:id', controller.clock.destroy);
+  // router.get('/v1/clock', controller.clock.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('clock', '/api/clock', controller.clock);
+  router.resources('clock', '/v1/clock', controller.clock);
 
   /**
    * --------------------------------------------------
    * 用户信息操作
    */
-  router.put('/api/info', controller.info.updateInfo);
-  router.put('/api/info/username', controller.info.updateUsername);
-  router.put('/api/info/avatar', controller.info.updateAvatar);
-  router.put('/api/info/cover', controller.info.updateCover);
-  router.put('/api/info/password', controller.info.updatePassword);
-  router.put('/api/info/personalAuth', controller.info.personalAuth);
-  router.get('/api/info/current', controller.info.current);
-  router.get('/api/info/other/:id', controller.info.other);
-  router.post('/api/info/ids', controller.info.userList);
-  router.get('/api/info/category', controller.info.category);
-  router.get('/api/info/clock', controller.info.clock);
-  router.get('/api/info/profession', controller.info.profession);
+  router.put('/v1/info', controller.info.updateInfo); // 更新用户信息
+  router.put('/v1/info/username', controller.info.updateUsername); // 更新用户名
+  router.put('/v1/info/avatar', controller.info.updateAvatar); // 更新头像
+  router.put('/v1/info/cover', controller.info.updateCover); // 更新背景
+  router.put('/v1/info/bindEmail', controller.info.bindEmail); // 绑定邮箱
+  router.put('/v1/info/password', controller.info.updatePassword); // 更新密码
+  router.put('/v1/info/personalAuth', controller.info.personalAuth); // 认证
+  router.get('/v1/info/current', controller.info.current); // 查询自己的信息
+  router.get('/v1/info/other/:id', controller.info.other); // 查询指定用户信息
+  router.post('/v1/info/ids', controller.info.userList); // 获取指定用户集合
+  router.get('/v1/info/category', controller.info.category); // 获取分类列表
+  router.get('/v1/info/clock', controller.info.clock); // 签到
+  router.get('/v1/info/checkVersion', controller.info.checkVersion); // 检查版本信息
+  router.get('/v1/info/profession', controller.info.profession); // 获取职业列表
 
 
   /**
    * --------------------------------------------------
    * 附件相关路由
    */
-  // router.post('/api/attachment', controller.attachment.create);
-  // router.delete('/api/attachment/:id', controller.attachment.destroy);
-  // router.put('/api/attachment/:id', controller.attachment.update)
-  // router.get('/api/attachment/:id', controller.attachment.show);
-  // router.get('/api/attachment', controller.attachment.index);
+  // router.post('/v1/attachment', controller.attachment.create);
+  // router.delete('/v1/attachment/:id', controller.attachment.destroy);
+  // router.put('/v1/attachment/:id', controller.attachment.update)
+  // router.get('/v1/attachment/:id', controller.attachment.show);
+  // router.get('/v1/attachment', controller.attachment.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('attachment', '/api/attachment', controller.attachment);
+  router.resources('attachment', '/v1/attachment', controller.attachment);
   // 通过远程 url 上传附件
-  router.post('/api/attachment/url', controller.attachment.createByUrl);
+  router.post('/v1/attachment/url', controller.attachment.createByUrl);
   // 上传多个附件
-  router.post('/api/attachments', controller.attachment.multiple);
+  router.post('/v1/attachments', controller.attachment.multiple);
   // 修改扩展信息
-  router.put('/api/attachment/:id/extra', controller.attachment.extra);
+  router.put('/v1/attachment/:id/extra', controller.attachment.extra);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
-  router.delete('/api/attachment', controller.attachment.destroyList);
+  router.delete('/v1/attachment', controller.attachment.destroyList);
 
 
   /**
    * --------------------------------------------------
    * 角色相关路由
    */
-  // router.post('/api/role', controller.role.create);
-  // router.delete('/api/role/:id', controller.role.destroy);
-  // router.put('/api/role/:id', controller.role.update);
-  // router.get('/api/role/:id', controller.role.show);
-  // router.get('/api/role', controller.role.index);
+  // router.post('/v1/role', controller.role.create);
+  // router.delete('/v1/role/:id', controller.role.destroy);
+  // router.put('/v1/role/:id', controller.role.update);
+  // router.get('/v1/role/:id', controller.role.show);
+  // router.get('/v1/role', controller.role.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('role', '/api/role', controller.role);
+  router.resources('role', '/v1/role', controller.role);
   // 批量删除，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
-  router.delete('/api/role', controller.role.destroyList);
+  router.delete('/v1/role', controller.role.destroyList);
 
 
   /**
    * --------------------------------------------------
    * 分类相关路由
    */
-  // router.post('/api/category', controller.category.create);
-  // router.delete('/api/category/:id', controller.category.destroy);
-  // router.put('/api/category/:id', controller.category.update)
-  // router.get('/api/category/:id', controller.category.show);
-  // router.get('/api/category', controller.category.index);
+  // router.post('/v1/category', controller.category.create);
+  // router.delete('/v1/category/:id', controller.category.destroy);
+  // router.put('/v1/category/:id', controller.category.update)
+  // router.get('/v1/category/:id', controller.category.show);
+  // router.get('/v1/category', controller.category.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('category', '/api/category', controller.category);
+  router.resources('category', '/v1/category', controller.category);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
-  router.delete('/api/category', controller.category.destroyList);
+  router.delete('/v1/category', controller.category.destroyList);
 
   /**
    * --------------------------------------------------
    * 职业相关路由
    */
-  // router.post('/api/profession', controller.profession.create);
-  // router.delete('/api/profession/:id', controller.profession.destroy);
-  // router.put('/api/profession/:id', controller.profession.update)
-  // router.get('/api/profession/:id', controller.profession.show);
-  // router.get('/api/profession', controller.profession.index);
+  // router.post('/v1/profession', controller.profession.create);
+  // router.delete('/v1/profession/:id', controller.profession.destroy);
+  // router.put('/v1/profession/:id', controller.profession.update)
+  // router.get('/v1/profession/:id', controller.profession.show);
+  // router.get('/v1/profession', controller.profession.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('profession', '/api/profession', controller.profession);
+  router.resources('profession', '/v1/profession', controller.profession);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
-  router.delete('/api/profession', controller.profession.destroyList);
+  router.delete('/v1/profession', controller.profession.destroyList);
 
   /**
    * --------------------------------------------------
    * 匹配相关路由
    */
-  // router.match('/api/match', controller.match.create);
+  // router.match('/v1/match', controller.match.create);
   // router.delete(
-  // '/api/match/:id', controller.match.destroy);
-  // router.put('/api/match/:id', controller.match.update)
-  // router.get('/api/match/:id', controller.match.show);
-  // router.get('/api/match', controller.match.index);
+  // '/v1/match/:id', controller.match.destroy);
+  // router.put('/v1/match/:id', controller.match.update)
+  // router.get('/v1/match/:id', controller.match.show);
+  // router.get('/v1/match', controller.match.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('match', '/api/match', controller.match);
-  router.get('/api/match/one', controller.match.one);
+  router.resources('match', '/v1/match', controller.match);
+  router.get('/v1/match/one', controller.match.one);
 
   /**
    * --------------------------------------------------
    * 内容相关路由
    */
-  // router.post('/api/post', controller.post.create);
-  // router.delete('/api/post/:id', controller.post.destroy);
-  // router.put('/api/post/:id', controller.post.update)
-  // router.get('/api/post/:id', controller.post.show);
-  // router.get('/api/post', controller.post.index);
+  // router.post('/v1/post', controller.post.create);
+  // router.delete('/v1/post/:id', controller.post.destroy);
+  // router.put('/v1/post/:id', controller.post.update)
+  // router.get('/v1/post/:id', controller.post.show);
+  // router.get('/v1/post', controller.post.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('post', '/api/post', controller.post);
+  router.resources('post', '/v1/post', controller.post);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
-  router.delete('/api/post', controller.post.destroyList);
+  router.delete('/v1/post', controller.post.destroyList);
   // 删除，这里是软删除，将用户状态改为删除
-  router.put('/api/post/delete/:id', controller.post.delete);
+  router.put('/v1/post/delete/:id', controller.post.delete);
   // 批量删除，这里是软删除，将用户状态改为删除
-  router.put('/api/post/deleteList', controller.post.deleteList);
+  router.put('/v1/post/deleteList', controller.post.deleteList);
 
   /**
    * --------------------------------------------------
    * 房间相关路由
    */
-  // router.post('/api/post', controller.post.create);
-  // router.delete('/api/post/:id', controller.post.destroy);
-  // router.put('/api/post/:id', controller.post.update)
-  // router.get('/api/post/:id', controller.post.show);
-  // router.get('/api/post', controller.post.index);
+  // router.post('/v1/post', controller.post.create);
+  // router.delete('/v1/post/:id', controller.post.destroy);
+  // router.put('/v1/post/:id', controller.post.update)
+  // router.get('/v1/post/:id', controller.post.show);
+  // router.get('/v1/post', controller.post.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('room', '/api/room', controller.room);
+  router.resources('room', '/v1/room', controller.room);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
-  router.delete('/api/room', controller.room.destroyList);
+  router.delete('/v1/room', controller.room.destroyList);
 
   /**
    * --------------------------------------------------
    * 评论相关路由
    */
-  // router.post('/api/comment', controller.comment.create);
-  // router.delete('/api/comment/:id', controller.comment.destroy);
-  // router.put('/api/comment/:id', controller.comment.update)
-  // router.get('/api/comment/:id', controller.comment.show);
-  // router.get('/api/comment', controller.comment.index);
+  // router.post('/v1/comment', controller.comment.create);
+  // router.delete('/v1/comment/:id', controller.comment.destroy);
+  // router.put('/v1/comment/:id', controller.comment.update)
+  // router.get('/v1/comment/:id', controller.comment.show);
+  // router.get('/v1/comment', controller.comment.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('comment', '/api/comment', controller.comment);
+  router.resources('comment', '/v1/comment', controller.comment);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
-  router.delete('/api/comment', controller.comment.destroyList);
+  router.delete('/v1/comment', controller.comment.destroyList);
 
   /**
    * --------------------------------------------------
    * 关注相关路由
    */
-  router.post('/api/follow/:id', controller.follow.create);
-  router.delete('/api/follow/:id', controller.follow.destroy);
-  router.delete('/api/follow', controller.follow.destroyList);
-  router.get('/api/follow', controller.follow.index);
+  router.post('/v1/follow/:id', controller.follow.create);
+  router.delete('/v1/follow/:id', controller.follow.destroy);
+  router.delete('/v1/follow', controller.follow.destroyList);
+  router.get('/v1/follow', controller.follow.index);
 
   /**
    * --------------------------------------------------
    * 喜欢相关路由
    */
-  router.post('/api/like', controller.like.create);
-  router.delete('/api/like', controller.like.destroy);
-  router.get('/api/like', controller.like.index);
+  router.post('/v1/like', controller.like.create);
+  router.delete('/v1/like', controller.like.destroy);
+  router.get('/v1/like', controller.like.index);
 
   /**
    * --------------------------------------------------
    * 反馈路由
    */
-  // router.post('/api/feedback', controller.comment.create);
-  // router.delete('/api/feedback/:id', controller.comment.destroy);
-  // router.put('/api/feedback/:id', controller.comment.update)
-  // router.get('/api/feedback/:id', controller.comment.show);
-  // router.get('/api/feedback', controller.comment.index);
+  // router.post('/v1/feedback', controller.comment.create);
+  // router.delete('/v1/feedback/:id', controller.comment.destroy);
+  // router.put('/v1/feedback/:id', controller.comment.update)
+  // router.get('/v1/feedback/:id', controller.comment.show);
+  // router.get('/v1/feedback', controller.comment.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
-  router.resources('feedback', '/api/feedback', controller.feedback);
+  router.resources('feedback', '/v1/feedback', controller.feedback);
 
 };
