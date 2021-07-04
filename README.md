@@ -105,7 +105,7 @@ QQ群: 901211985  个人QQ: 1565176197
 </div>
 
 
-## [支持赞助]:[aaa]
+## 支持赞助
 如果你觉得当前项目帮你节省了开发时间，想要支持赞助我的话👍，可以扫描下方的二维码打赏请我吃个鸡腿🍗，你的支持将鼓励我继续创作👨‍💻‍，感谢☺️ [赞助列表](./sponsor.md)
 <div align="center">
     <img src="https://gitee.com/lzan13/VMPictureBed/raw/master/images/social/payQRAli.jpg" width="256px" height="316.5px" alt="支付宝捐赠"/>
