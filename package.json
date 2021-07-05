@@ -15,6 +15,7 @@
     "egg-jwt": "^3.1.7",
     "egg-mongoose": "^3.2.0",
     "egg-parameters": "^1.1.2",
+    "egg-router-plus": "^1.3.1",
     "egg-scripts": "^2.11.0",
     "egg-validate": "^2.0.2",
     "image-downloader": "^4.0.1",

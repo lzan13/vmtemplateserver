@@ -70,6 +70,10 @@ module.exports = appInfo => {
   const dataConfig = {
     // 部署服务地址
     host: '自己的服务器域名地址',
+    // 是否配置站点二级目录下，默认关闭，这个只有你需要配置二级站点时才开启
+    subSite: false,
+    // 启用二级站点后，二级站点目录路径，这里需要和你站点代理配置一致
+    subSitePath: '/api',
     // 配置邮箱注册账户是否需要激活
     isNeedActivate: false,
   };

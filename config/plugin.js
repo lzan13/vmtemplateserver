@@ -54,6 +54,14 @@ exports.parameters = {
 };
 
 /**
+ * 启用路由插件 egg-router-plus 配置，可配置二级路由
+ */
+exports.routerPlus = {
+  enable: true,
+  package: 'egg-router-plus',
+};
+
+/**
  * 启用插件 egg-static，访问静态数据
  */
 // exports.static = {

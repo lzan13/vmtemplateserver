@@ -26,9 +26,9 @@ $ open http://localhost:5920/
 # 创建发布运行配置文件 config.prod.js 修改配置文件内相关信息为自己的
 $ cp config.prod.template.js config.prod.js
 # 安装发布依赖
-$ npm install --production
+$ npm i --production
 # 打包发布代码
-$ tar -czvf vmtemplateserver.tgz .
+$ tar -czvf ../vmtemplateserver.tgz .
 
 # 将打包的代码上传到要发布的服务器上，解包，运行
 $ tar -xzvf vmtemplateserver.tgz .

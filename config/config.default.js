@@ -41,7 +41,7 @@ module.exports = appInfo => {
     enable: true,
     // 设置符合某些规则的请求不经过这个中间件，和 match 互斥，同时只能配置一个
     // [ '/v1/init', /^\/v1\/(sign\/(in|up|activate))/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
-    ignore: /\/v1\/(init|feedback|sign\/(in|up|activate)|test)/,
+    ignore: /(\/v1\/(init|feedback|sign\/(in|up|activate)|test)|\/public\/uploads)/,
     // 设置只有符合某些规则的请求才会经过这个中间件。
     // match: [ '' ],
     // 这里配置的是对应角色无权限访问的接口正则匹配
@@ -174,6 +174,10 @@ module.exports = appInfo => {
   const dataConfig = {
     // 部署服务地址，正式发布时需要改成你的域名地址
     host: 'http://localhost:5920',
+    // 是否配置站点二级目录下，默认关闭，这个只有你需要配置二级站点时才开启
+    subSite: false,
+    // 启用二级站点后，二级站点目录路径，这里需要和你站点代理配置一致
+    subSitePath: '/api',
     // 配置邮箱注册账户是否需要激活
     isNeedActivate: false,
     // 上传文件夹
