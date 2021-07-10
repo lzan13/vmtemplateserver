@@ -43,6 +43,13 @@ module.exports = app => {
    */
   apiRouter.resources('version', '/v1/version', controller.version);
 
+  /**
+   * 三方服务回调接口
+   */
+  // UCloud 文件操作签名
+  apiRouter.post('/v1/third/ucloud/callbackObj', controller.thirdUCloud.callbackObj);
+  apiRouter.post('/v1/third/ucloud/signatureObj', controller.thirdUCloud.signatureObj);
+
 
   /**
    * --------------------------------------------------
@@ -97,8 +104,6 @@ module.exports = app => {
    */
   apiRouter.put('/v1/info', controller.info.updateInfo); // 更新用户信息
   apiRouter.put('/v1/info/username', controller.info.updateUsername); // 更新用户名
-  apiRouter.put('/v1/info/avatar', controller.info.updateAvatar); // 更新头像
-  apiRouter.put('/v1/info/cover', controller.info.updateCover); // 更新背景
   apiRouter.put('/v1/info/bindEmail', controller.info.bindEmail); // 绑定邮箱
   apiRouter.put('/v1/info/password', controller.info.updatePassword); // 更新密码
   apiRouter.put('/v1/info/personalAuth', controller.info.personalAuth); // 认证
@@ -124,10 +129,6 @@ module.exports = app => {
   apiRouter.resources('attachment', '/v1/attachment', controller.attachment);
   // 通过远程 url 上传附件
   apiRouter.post('/v1/attachment/url', controller.attachment.createByUrl);
-  // 上传多个附件
-  apiRouter.post('/v1/attachments', controller.attachment.multiple);
-  // 修改扩展信息
-  apiRouter.put('/v1/attachment/:id/extra', controller.attachment.extra);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
   apiRouter.delete('/v1/attachment', controller.attachment.destroyList);
 

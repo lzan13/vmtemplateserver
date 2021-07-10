@@ -7,7 +7,7 @@
     "declarations": true
   },
   "dependencies": {
-    "await-stream-ready": "^1.0.1",
+    "crypto-js": "^4.0.0",
     "egg": "^2.29.1",
     "egg-alinode": "^2.0.1",
     "egg-bcrypt": "^1.1.0",
@@ -18,12 +18,9 @@
     "egg-router-plus": "^1.3.1",
     "egg-scripts": "^2.11.0",
     "egg-validate": "^2.0.2",
-    "image-downloader": "^4.0.1",
     "mocha": "^8.0.1",
     "moment": "^2.27.0",
-    "nodemailer": "^6.4.17",
-    "stream-to-array": "^2.3.0",
-    "stream-wormhole": "^1.1.0"
+    "nodemailer": "^6.4.17"
   },
   "devDependencies": {
     "autod": "^3.0.1",
@@ -38,8 +35,8 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmtemplateserver",
-    "stop": "egg-scripts stop --title=vmtemplateserver",
+    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmmatchserver",
+    "stop": "egg-scripts stop --title=vmmatchserver",
     "dev": "EGG_SERVER_ENV=local egg-bin dev --sticky",
     "debug": "EGG_SERVER_ENV=local egg-bin debug --sticky",
     "test": "npm run lint -- --fix && npm run test-local",

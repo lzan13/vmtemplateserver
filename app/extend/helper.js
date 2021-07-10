@@ -4,6 +4,8 @@
  */
 'use strict';
 const crypto = require('crypto');
+const hmacSHA1 = require('crypto-js/hmac-sha1');
+const Base64 = require('crypto-js/enc-base64');
 const moment = require('moment');
 const fs = require('fs');
 const path = require('path');
@@ -29,6 +31,24 @@ exports.cryptoSHA1 = function(data) {
 };
 
 /**
+ * qi 加密
+ * @param data 加密数据
+ */
+exports.cryptoHMACSHA1 = function(data, secret) {
+  const sha1 = crypto.createHmac('sha1', secret);
+  sha1.update(data);
+  return sha1.digest('hex');
+};
+
+/**
+ * qi 加密
+ * @param data 加密数据
+ */
+exports.cryptoSignature = function(data, secret) {
+  return Base64.stringify(hmacSHA1(data, secret));
+};
+
+/**
  * 字符串 -> base64
  * @param data 原始数据
  */
@@ -49,11 +69,14 @@ exports.base64ToStr = function(data) {
  * @return {string}
  */
 exports.authCode = function() {
-  return Math.random().toString().slice(-6);
+  return Math.random()
+    .toString()
+    .slice(-6);
 };
 
 // 格式化时间
-exports.formatTime = time => moment(time).format('YYYY-MM-DD HH:mm:ss');
+exports.formatTime = time => moment(time)
+  .format('YYYY-MM-DD HH:mm:ss');
 
 /**
  * 格式化占位符字符串
@@ -73,18 +96,19 @@ exports.syncCreateDirs = function(paths) {
     if (!fs.existsSync(paths)) {
       let tempPath;
       // 这里指用'/'or'\'分隔目录 如 Linux 的 /let/www/xxx 和 Windows 的 D:\workspace\xxx
-      paths.split(/[/\\]/).forEach(function(dirName) {
-        if (tempPath) {
-          tempPath = path.join(tempPath, dirName);
-        } else {
-          tempPath = dirName;
-        }
-        if (!fs.existsSync(tempPath)) {
-          if (!fs.mkdirSync(tempPath)) {
-            return false;
+      paths.split(/[/\\]/)
+        .forEach(function(dirName) {
+          if (tempPath) {
+            tempPath = path.join(tempPath, dirName);
+          } else {
+            tempPath = dirName;
           }
-        }
-      });
+          if (!fs.existsSync(tempPath)) {
+            if (!fs.mkdirSync(tempPath)) {
+              return false;
+            }
+          }
+        });
     }
     return true;
   } catch (e) {
@@ -93,6 +117,15 @@ exports.syncCreateDirs = function(paths) {
   }
 };
 
+/**
+ * ------------------------------------------------------------------
+ * 处理响应结果
+ */
+// 处理成功响应，这里是直接返回结果，为了给签名认证服务器调用
+exports.result = ({ ctx, content = '' }) => {
+  ctx.body = content;
+  ctx.status = 200;
+};
 
 // 处理成功响应
 exports.success = ({ ctx, msg = '请求成功', data = undefined }) => {

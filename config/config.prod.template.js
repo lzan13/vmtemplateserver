@@ -32,6 +32,14 @@ module.exports = appInfo => {
   };
 
   /**
+   * UCloud 配置，后台地址 https://console.ucloud.cn/ufile/token
+   */
+  config.ucloud = {
+    publicKey: '公钥', // UCloud 对象存储 US3 令牌公钥
+    privateKey: '私钥', // UCloud 对象存储 US3 令牌私钥
+  };
+
+  /**
    * 邮箱配置
    */
   config.mail = {

@@ -31,7 +31,7 @@ class SignController extends Controller {
   async updateInfo() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('birthday', 'gender', 'nickname', 'signature', 'address', 'hobby', 'profession');
+    const params = ctx.params.permit('avatar', 'cover', 'birthday', 'gender', 'nickname', 'signature', 'address', 'hobby', 'profession');
     // 参数校验
     ctx.validate({
       birthday: 'birthday?',
@@ -69,42 +69,6 @@ class SignController extends Controller {
 
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '信息更新成功', data: user });
-  }
-
-  /**
-   * 修改头像
-   */
-  async updateAvatar() {
-    const { ctx, service } = this;
-    // 通过 ctx.getFileStream 获取用户上传的文件
-    const stream = await ctx.getFileStream();
-    // 所有表单字段都能通过 `stream.fields` 获取到
-    const filename = path.basename(stream.filename); // 文件名称
-    const extname = path.extname(stream.filename).toLowerCase(); // 文件扩展名称
-    await service.info.updateAvatar(stream, filename, extname);
-    // 查询最新数据
-    const id = ctx.state.user.id;
-    const user = await service.user.find(id, { password: 0 });
-    // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '更新头像成功', data: user });
-  }
-
-  /**
-   * 修改封面
-   */
-  async updateCover() {
-    const { ctx, service } = this;
-    // 通过 ctx.getFileStream 获取用户上传的文件
-    const stream = await ctx.getFileStream();
-    // 所有表单字段都能通过 `stream.fields` 获取到
-    const filename = path.basename(stream.filename); // 文件名称
-    const extname = path.extname(stream.filename).toLowerCase(); // 文件扩展名称
-    await service.info.updateCover(stream, filename, extname);
-    // 查询最新数据
-    const id = ctx.state.user.id;
-    const user = await service.user.find(id, { password: 0 });
-    // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '更新封面成功', data: user });
   }
 
   /**

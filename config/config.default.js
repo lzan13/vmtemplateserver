@@ -41,7 +41,7 @@ module.exports = appInfo => {
     enable: true,
     // 设置符合某些规则的请求不经过这个中间件，和 match 互斥，同时只能配置一个
     // [ '/v1/init', /^\/v1\/(sign\/(in|up|activate))/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
-    ignore: /(\/v1\/(init|feedback|sign\/(in|up|activate)|test)|\/public\/uploads)/,
+    ignore: /\/(v1\/(init|feedback|sign\/(in|up|activate)|test|third\/ucloud)|public\/uploads)/,
     // 设置只有符合某些规则的请求才会经过这个中间件。
     // match: [ '' ],
     // 这里配置的是对应角色无权限访问的接口正则匹配
@@ -50,7 +50,7 @@ module.exports = appInfo => {
       admin: '',
       operation: '',
       // 普通用户不允许操作管理员接口，以及不能直接操作：类别、配置、签到、职业、角色、用户相关数据，可通过对外暴露的对应接口操作，比如更新用户资料等
-      user: /\/v1\/(init|category|config|clock|profession|role|user)/,
+      user: /\/v1\/(init|attachment|category|clock|config|profession|role|user)/,
       lock: '',
     },
   };
@@ -136,6 +136,14 @@ module.exports = appInfo => {
   };
 
   /**
+   * UCloud 配置，后台地址 https://console.ucloud.cn/ufile/token
+   */
+  config.ucloud = {
+    publicKey: '公钥', // UCloud 对象存储 US3 令牌公钥
+    privateKey: '私钥', // UCloud 对象存储 US3 令牌私钥
+  };
+
+  /**
    * 邮箱配置
    */
   config.mail = {
@@ -180,17 +188,15 @@ module.exports = appInfo => {
     subSitePath: '/api',
     // 配置邮箱注册账户是否需要激活
     isNeedActivate: false,
-    // 上传文件夹
-    uploadDir: 'app/public/uploads',
     // 配置超管账户
-    username: 'template',
-    email: 'template@vmloft.com',
+    username: 'admin',
+    email: 'admin@vmloft.com',
     password: '123123',
     // 系统配置信息
     server: {
       alias: 'server',
-      title: '模板服务器',
-      desc: '使用 Eggjs 实现自定义模板服务器',
+      title: '忘忧服务端',
+      desc: '使用 Eggjs 实现自定义忘忧服务接口',
     },
     // 角色身份配置
     roleList: [

@@ -7,13 +7,11 @@ module.exports = app => {
   const mongoose = app.mongoose;
 
   const AttachmentSchema = new mongoose.Schema({
-    // 上传者
-    owner: { type: String, required: true },
     // 扩展名
     extname: { type: String },
     // 文件名
     filename: { type: String },
-    // 文件存放路径
+    // 文件路径
     path: { type: String },
     // 扩展信息
     extra: { type: String },
