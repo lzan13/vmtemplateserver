@@ -9,8 +9,8 @@ module.exports = app => {
    * 校验标题
    */
   app.validator.addRule('title', (rule, value) => {
-    if (!/^[\s\S]{1,24}$/.test(value)) {
-      return '标题长度必须在 1-24 之间';
+    if (!/^[\s\S]{0,24}$/.test(value)) {
+      return '标题长度必须在 0-24 之间';
     }
   });
 

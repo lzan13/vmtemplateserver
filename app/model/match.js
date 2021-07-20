@@ -13,10 +13,10 @@ module.exports = app => {
     content: { type: String },
     // 可供匹配次数
     count: { type: Number, default: 5 },
-    // 匹配时心情 0-开心 1-平淡 2-难过
+    // 匹配时心情 0-开心 1-平淡 2-难过 3-愤怒
     emotion: {
       type: Number,
-      enum: [ 0, 1, 2 ],
+      enum: [ 0, 1, 2, 3 ],
       default: 2,
     },
     // 匹配类型 0-普通 1-实时

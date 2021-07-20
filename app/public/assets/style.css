@@ -1,0 +1,278 @@
+@import "../assets/css/reset.css";
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px
+}
+@media (min-width:768px) {
+    .container {
+        width: 750px
+    }
+}
+@media (min-width:992px) {
+    .container {
+        width: 970px
+    }
+}
+@media (min-width:1200px) {
+    .container {
+        width: 1170px
+    }
+}
+.row {
+    margin-left: -15px;
+    margin-right: -15px
+}
+.col-md-12 {
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px
+}
+@media (min-width:992px) {
+    .col-md-12 {
+        float: left
+    }
+    .col-md-12 {
+        width: 100%
+    }
+}
+.nav {
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none
+}
+.nav>li {
+    position: relative;
+    display: block
+}
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px
+}
+.nav>li>a:focus,
+.nav>li>a:hover {
+    text-decoration: none;
+    background-color: #eee
+}
+.nav-tabs {
+    color: #cacaca;
+    border-bottom: 1px solid #ddd
+}
+.nav-tabs>li {
+    float: left;
+    margin-bottom: -1px
+}
+.nav-tabs>li>a {
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0
+}
+.nav-tabs>li>a:hover {
+    border-color: #eee #eee #ddd
+}
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    cursor: default
+}
+.tab-content>.tab-pane {
+    display: none
+}
+.tab-content>.active {
+    display: block
+}
+.container:after,
+.container:before,
+.nav:after,
+.nav:before,
+.row:after,
+.row:before {
+    content: " ";
+    display: table
+}
+.container:after,
+.nav:after,
+.row:after {
+    clear: both
+}
+@-ms-viewport {
+    width: device-width
+}
+.view-pages {
+    background: #FFF;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 24px
+}
+.view-pages .languages {
+    background: #212020
+}
+.view-pages .languages .nav-tabs {
+    border: 0
+}
+.view-pages .languages .nav-tabs li {
+    font-size: 14px
+}
+.view-pages .languages .nav-tabs li a {
+    padding: 10px 15px;
+    border: 0;
+    border-radius: 0
+}
+.view-pages .languages .nav-tabs li.active {
+    background: #3c3c3c;
+    color: #FFF
+}
+.view-pages .header {
+    margin: 0;
+    padding: 16px 0;
+    background: #3c3c3c;
+    color: #FFF
+}
+.view-pages .header h1 {
+    font-size: 25px;
+    line-height: 35px;
+    margin: 0
+}
+.view-pages .policy {
+    padding: 0;
+    background: #FFF
+}
+.view-pages .content {
+    font-size: 16px;
+    line-height: 22px;
+    word-wrap: break-word;
+    color: #333;
+    padding: 30px 0;
+    background: #FFF
+}
+.view-pages .content h3 {
+    font-size: 20px;
+    margin: 0 0 30px 0
+}
+.view-pages .content h4 {
+    font-size: 16px;
+    margin: 0 0 30px 0
+}
+.view-pages .content p {
+    margin: 0 0 30px 0;
+    color: #333
+}
+.view-pages .content a {
+    color: #333
+}
+/*.. new */
+.title-l1 {
+    font-size: 20px;
+    line-height: 2;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #666
+}
+.title-l2 {
+    font-size: 18px;
+    line-height: 2.5;
+    margin-bottom: 10px;
+    color: #666
+}
+.title-l3 {
+    font-size: 16px;
+    line-height: 2;
+    margin-bottom: 10px;
+    color: #333
+}
+.title-l4 {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.7
+}
+.para {
+    text-indent: 2em;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 15px
+}
+p.g-para {
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    width: 100%
+}
+h1,
+h3,
+h4,
+h5 {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit
+}
+h1,
+h3 {
+    margin-top: 20px;
+    margin-bottom: 10px
+}
+h4,
+h5 {
+    margin-top: 10px;
+    margin-bottom: 10px
+}
+h1 {
+    font-size: 36px
+}
+h3 {
+    font-size: 24px
+}
+h4 {
+    font-size: 18px
+}
+h5 {
+    font-size: 14px
+}
+h1,
+h3,
+h4,
+h5 {
+    margin: 0 0 18px 0;
+    font-weight: bold
+}
+h1,
+h3 {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit
+}
+h1,
+h3 {
+    margin-top: 20px;
+    margin-bottom: 10px
+}
+h1 {
+    font-size: 36px
+}
+h3 {
+    font-size: 24px
+}
+h1,
+h3 {
+    margin: 0 0 18px 0;
+    font-weight: bold
+}
+p {
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    width: 100%
+}
+strong {
+    font-weight: bold
+}

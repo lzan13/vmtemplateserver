@@ -98,6 +98,17 @@ module.exports = app => {
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
   apiRouter.resources('clock', '/v1/clock', controller.clock);
 
+
+  /**
+   * 公共接口
+   */
+  apiRouter.get('/v1/common/category', controller.common.category); // 获取分类列表
+  apiRouter.get('/v1/common/profession', controller.common.profession); // 获取职业列表
+  apiRouter.get('/v1/common/checkVersion', controller.common.checkVersion); // 检查版本信息
+  apiRouter.get('/v1/common/clientConfig', controller.common.getClientConfig); // 检查版本信息
+  apiRouter.get('/v1/common/privacyPolicy', controller.common.getPrivacyPolicy); // 检查版本信息
+  apiRouter.get('/v1/common/userAgreement', controller.common.getUserAgreement); // 检查版本信息
+
   /**
    * --------------------------------------------------
    * 用户信息操作
@@ -110,10 +121,7 @@ module.exports = app => {
   apiRouter.get('/v1/info/current', controller.info.current); // 查询自己的信息
   apiRouter.get('/v1/info/other/:id', controller.info.other); // 查询指定用户信息
   apiRouter.post('/v1/info/ids', controller.info.userList); // 获取指定用户集合
-  apiRouter.get('/v1/info/category', controller.info.category); // 获取分类列表
   apiRouter.get('/v1/info/clock', controller.info.clock); // 签到
-  apiRouter.get('/v1/info/checkVersion', controller.info.checkVersion); // 检查版本信息
-  apiRouter.get('/v1/info/profession', controller.info.profession); // 获取职业列表
 
 
   /**

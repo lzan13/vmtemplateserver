@@ -10,7 +10,7 @@ module.exports = app => {
     // 发布者
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
     // 标题
-    title: { type: String, required: true },
+    title: { type: String },
     // 内容
     content: { type: String },
     // 置顶状态 0-不置顶 1-个人置顶 2-全局置顶

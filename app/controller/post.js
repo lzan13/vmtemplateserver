@@ -16,7 +16,7 @@ class PostController extends Controller {
     // 组装参数
     const params = ctx.params.permit('title', 'content', 'category', 'attachments', 'stick', 'extension');
     // 校验参数
-    ctx.validate({ title: 'title', content: 'content', extension: 'string?' }, params);
+    ctx.validate({ title: 'title?', content: 'content', extension: 'string?' }, params);
 
     // 调用 Service 进行业务处理
     await service.post.create(params);
@@ -95,7 +95,7 @@ class PostController extends Controller {
     // 组装参数
     const params = ctx.params.permit('title', 'content', 'stick', 'category', 'extension');
     // 校验参数
-    ctx.validate({ title: 'title', content: 'content', stick: 'int?', extension: 'string?' }, params);
+    ctx.validate({ title: 'title?', content: 'content', stick: 'int?', extension: 'string?' }, params);
 
     // 调用 Service 进行业务处理
     await service.post.update(id, params);

@@ -41,7 +41,7 @@ module.exports = appInfo => {
     enable: true,
     // 设置符合某些规则的请求不经过这个中间件，和 match 互斥，同时只能配置一个
     // [ '/v1/init', /^\/v1\/(sign\/(in|up|activate))/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
-    ignore: /\/(v1\/(init|feedback|sign\/(in|up|activate)|test|third\/ucloud)|public\/uploads)/,
+    ignore: /\/v1\/(init|common|feedback|sign\/(in|up|activate)|test|third\/ucloud)/,
     // 设置只有符合某些规则的请求才会经过这个中间件。
     // match: [ '' ],
     // 这里配置的是对应角色无权限访问的接口正则匹配
@@ -195,8 +195,8 @@ module.exports = appInfo => {
     // 系统配置信息
     server: {
       alias: 'server',
-      title: '忘忧服务端',
-      desc: '使用 Eggjs 实现自定义忘忧服务接口',
+      title: '社交模板服务端',
+      desc: '使用 Eggjs 实现自定义社交模板服务接口',
     },
     // 角色身份配置
     roleList: [
