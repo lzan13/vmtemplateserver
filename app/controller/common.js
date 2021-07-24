@@ -58,9 +58,9 @@ class CommonController extends Controller {
   /**
    * 获取隐私政策
    */
-  async getPrivacyPolicy() {
+  async getPrivatePolicy() {
     const { ctx, service } = this;
-    const config = await service.config.findByAlias('privacyPolicy');
+    const config = await service.config.findByAlias('privatePolicy');
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '获取配置成功', data: config });
   }

@@ -30,7 +30,6 @@ class ThirdUCloudService extends Service {
      *    "date": "20210707163950"
      * }
      */
-    console.log(params);
     const content = `${params.method}\n${params.content_md5}\n${params.content_type}\n${params.date}\n/${params.bucket}/${params.key}`;
     const signature = ctx.helper.cryptoSignature(content, app.config.ucloud.privateKey);
     return `UCloud ${app.config.ucloud.publicKey}:${signature}`;

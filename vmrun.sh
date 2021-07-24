@@ -1,6 +1,6 @@
 #! /bin/bash
 # -------------------------------------
-# vmtemplateserver 运行脚本
+# 服务器运行脚本
 #
 # Author: lzan13
 # WebSite: https://melove.net

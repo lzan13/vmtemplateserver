@@ -106,7 +106,7 @@ module.exports = app => {
   apiRouter.get('/v1/common/profession', controller.common.profession); // 获取职业列表
   apiRouter.get('/v1/common/checkVersion', controller.common.checkVersion); // 检查版本信息
   apiRouter.get('/v1/common/clientConfig', controller.common.getClientConfig); // 检查版本信息
-  apiRouter.get('/v1/common/privacyPolicy', controller.common.getPrivacyPolicy); // 检查版本信息
+  apiRouter.get('/v1/common/privatePolicy', controller.common.getPrivatePolicy); // 检查版本信息
   apiRouter.get('/v1/common/userAgreement', controller.common.getUserAgreement); // 检查版本信息
 
   /**
