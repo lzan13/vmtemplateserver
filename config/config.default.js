@@ -195,8 +195,8 @@ module.exports = appInfo => {
     // 系统配置信息
     server: {
       alias: 'server',
-      title: '忘忧服务端',
-      desc: '使用 Eggjs 实现自定义忘忧服务接口',
+      title: '社交模板服务端',
+      desc: '使用 Eggjs 实现自定义社交模板服务接口',
     },
     // 角色身份配置
     roleList: [

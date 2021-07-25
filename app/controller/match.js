@@ -13,7 +13,7 @@ class MatchController extends Controller {
    */
   async create() {
     const { ctx, service } = this;
-    const params = ctx.params.permit('content', 'emotion', 'type');
+    const params = ctx.params.permit('content', 'emotion', 'gender');
     // 调用 Service 进行业务处理
     let match = await service.match.create(params);
     // 这里查询下包括用户信息
@@ -40,8 +40,8 @@ class MatchController extends Controller {
    */
   async one() {
     const { ctx, service } = this;
-    const { type } = ctx.params;
-    const match = await service.match.match(type);
+    const params = ctx.params.permit('gender');
+    const match = await service.match.match(params);
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '获取成功', data: match });
   }
@@ -52,7 +52,7 @@ class MatchController extends Controller {
   async index() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('page', 'limit', 'type');
+    const params = ctx.params.permit('page', 'limit', 'gender');
     // 调用 Service 进行业务处理
     const likes = await service.match.index(params);
     // 设置响应内容和响应状态码

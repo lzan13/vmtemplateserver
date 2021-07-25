@@ -19,11 +19,11 @@ module.exports = app => {
       enum: [ 0, 1, 2, 3 ],
       default: 2,
     },
-    // 匹配类型 0-普通 1-实时
-    type: {
+    // 性别，对应用户自身性别：0-女，1-男，2-神秘
+    gender: {
       type: Number,
-      enum: [ 0, 1 ],
-      default: 0,
+      enum: [ 0, 1, 2 ],
+      default: 2,
     },
   },
   // schema 的选项options

@@ -60,7 +60,7 @@ class MatchService extends Service {
    * 随机获取一条数据
    * @return {Promise<void>}
    */
-  async match(type) {
+  async match(params) {
     const { ctx } = this;
     let result = [];
     const limit = 50;
@@ -68,9 +68,10 @@ class MatchService extends Service {
     const currId = ctx.state.user.id;
     const query = {
       user: { $ne: currId },
-      type: Number(type) || 0,
     };
-
+    if (params.gender) {
+      query.gender = { $gte: Number(params.gender) };
+    }
     // 查询最近的指定条数数据，然后在结果中随机选择一条返回
     result = await ctx.model.Match.find(query)
       .populate('user', userSelect)
@@ -101,7 +102,7 @@ class MatchService extends Service {
    */
   async index(params) {
     const { ctx } = this;
-    const { page, limit, type } = params;
+    const { page, limit, gender } = params;
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
@@ -111,11 +112,10 @@ class MatchService extends Service {
     // 过滤掉自己
     const currId = ctx.state.user.id;
     // 组装查询参数
-    const query = {
-      user: { $ne: currId },
-      type: Number(type) || 0,
-    };
-
+    const query = { user: { $ne: currId } };
+    if (gender) {
+      query.gender = { $gte: Number(gender) };
+    }
     result = await ctx.model.Match.find(query)
       .populate('user', userSelect)
       .skip(skip)
