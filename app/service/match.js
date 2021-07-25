@@ -69,8 +69,10 @@ class MatchService extends Service {
     const query = {
       user: { $ne: currId },
     };
-    if (params.gender) {
-      query.gender = { $gte: Number(params.gender) };
+    if (params.gender === '0') {
+      query.gender = { $ne: 1 };
+    } else if (params.gender === '1') {
+      query.gender = { $ne: 0 };
     }
     // 查询最近的指定条数数据，然后在结果中随机选择一条返回
     result = await ctx.model.Match.find(query)
@@ -113,8 +115,10 @@ class MatchService extends Service {
     const currId = ctx.state.user.id;
     // 组装查询参数
     const query = { user: { $ne: currId } };
-    if (gender) {
-      query.gender = { $gte: Number(gender) };
+    if (gender === '0') {
+      query.gender = { $ne: 1 };
+    } else if (params.gender === '1') {
+      query.gender = { $ne: 0 };
     }
     result = await ctx.model.Match.find(query)
       .populate('user', userSelect)
