@@ -86,7 +86,7 @@ class MatchService extends Service {
     }
     const match = result[Math.floor(Math.random() * result.length)];
 
-    if (match.type === 0 && match.count > 1) {
+    if (match.count > 1) {
       // 获取到的匹配数据最大可供匹配次数-1
       const update = { $inc: { count: -1 } };
       await ctx.model.Match.findOneAndUpdate({ user: match.user.id }, update);
