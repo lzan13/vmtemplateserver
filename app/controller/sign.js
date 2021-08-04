@@ -121,6 +121,17 @@ class SignController extends Controller {
   }
 
   /**
+   * 删除账户
+   */
+  async destroy() {
+    const { ctx, service } = this;
+    // 调用 Service 进行业务处理
+    await service.sign.destroy();
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '注销账户成功' });
+  }
+
+  /**
    * 激活
    */
   async activate() {
@@ -133,18 +144,6 @@ class SignController extends Controller {
   }
 
   /**
-   * 发送激活邮件
-   */
-  async sendVerifyEmail() {
-    const { ctx, service } = this;
-    const { email } = ctx.params;
-    // 调用 Service 进行业务处理
-    const result = await service.sign.sendVerifyEmail(email);
-    // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: result ? '邮件发送成功' : '邮件发送失败' });
-  }
-
-  /**
    * 发送验证码邮件
    */
   async sendCodeEmail() {
@@ -152,6 +151,18 @@ class SignController extends Controller {
     const { email } = ctx.params;
     // 调用 Service 进行业务处理
     const result = await service.sign.sendCodeEmail(email);
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: result ? '邮件发送成功' : '邮件发送失败' });
+  }
+
+  /**
+   * 发送激活邮件
+   */
+  async sendVerifyEmail() {
+    const { ctx, service } = this;
+    const { email } = ctx.params;
+    // 调用 Service 进行业务处理
+    const result = await service.sign.sendVerifyEmail(email);
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: result ? '邮件发送成功' : '邮件发送失败' });
   }

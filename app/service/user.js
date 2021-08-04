@@ -49,6 +49,16 @@ class UserService extends Service {
     if (!user) {
       ctx.throw(404, `用户不存在 ${id}`);
     }
+
+    // 删除用户的签到
+    await ctx.model.Clock.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
+
+    // 删除用户的喜欢
+    await ctx.model.Like.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
+
+    // 删除用户的评论
+    await ctx.model.Comment.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
+
     // 删除用户名下的帖子
     await ctx.model.Post.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
 
@@ -60,7 +70,7 @@ class UserService extends Service {
   }
 
   /**
-   * 删除单个用户，这里的销毁是软删除，将用户状态改为删除
+   * 删除单个用户，这里是软删除，将用户状态改为删除
    * @param params
    */
   async delete(id, reason) {

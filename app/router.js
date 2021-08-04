@@ -62,10 +62,11 @@ module.exports = app => {
   apiRouter.post('/v1/sign/in', controller.sign.signIn);
   apiRouter.post('/v1/sign/inByCode', controller.sign.signInByCode);
   apiRouter.post('/v1/sign/inByDevicesId', controller.sign.signInByDevicesId);
-  apiRouter.get('/v1/sign/sendVerifyEmail', controller.sign.sendVerifyEmail);
-  apiRouter.get('/v1/sign/sendCodeEmail', controller.sign.sendCodeEmail);
-  apiRouter.get('/v1/sign/activate', controller.sign.activate);
   apiRouter.get('/v1/sign/out', controller.sign.signOut);
+  apiRouter.get('/v1/sign/destroy', controller.sign.destroy);
+  apiRouter.get('/v1/sign/activate', controller.sign.activate);
+  apiRouter.get('/v1/sign/sendCodeEmail', controller.sign.sendCodeEmail);
+  apiRouter.get('/v1/sign/sendVerifyEmail', controller.sign.sendVerifyEmail);
 
 
   /**

@@ -163,25 +163,21 @@ class SignService extends Service {
   }
 
   /**
-   * 发送激活邮件
+   * 退出登录
    */
-  async sendVerifyEmail(email) {
+  async signOut() {
     const { ctx, service } = this;
-    const user = await service.user.findByEmail(email);
-    if (!user) {
-      ctx.throw(404, `用户不存在 ${email}`);
-    }
-    const code = ctx.helper.authCode();
-    return service.mail.sendVerify(email, code);
+    const id = ctx.state.user.data.id;
+    return service.user.findByIdAndUpdate(id, { token: '' });
   }
 
   /**
-   * 发送验证码邮件
+   * 主动注销账户
    */
-  async sendCodeEmail(email) {
+  async destroy() {
     const { ctx, service } = this;
-    const code = ctx.helper.authCode();
-    return service.mail.sendCode(email, code);
+    const id = ctx.state.user.id;
+    return service.user.destroy(id);
   }
 
   /**
@@ -205,22 +201,27 @@ class SignService extends Service {
   }
 
   /**
-   * 退出登录
+   * 发送验证码邮件
    */
-  async signOut() {
+  async sendCodeEmail(email) {
     const { ctx, service } = this;
-    const id = ctx.state.user.data.id;
-    return service.user.findByIdAndUpdate(id, { token: '' });
+    const code = ctx.helper.authCode();
+    return service.mail.sendCode(email, code);
   }
 
   /**
-   * 销毁账户
+   * 发送激活邮件
    */
-  async destroy() {
+  async sendVerifyEmail(email) {
     const { ctx, service } = this;
-    const id = ctx.state.user.data.id;
-    return service.user.findByIdAndUpdate(id, { deleted: 0, deletedReason: '用户主动销户' });
+    const user = await service.user.findByEmail(email);
+    if (!user) {
+      ctx.throw(404, `用户不存在 ${email}`);
+    }
+    const code = ctx.helper.authCode();
+    return service.mail.sendVerify(email, code);
   }
+
 }
 
 module.exports = SignService;
