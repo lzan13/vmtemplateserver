@@ -41,7 +41,7 @@ module.exports = appInfo => {
     enable: true,
     // 设置符合某些规则的请求不经过这个中间件，和 match 互斥，同时只能配置一个
     // [ '/v1/init', /^\/v1\/(sign\/(in|up|activate))/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
-    ignore: /\/v1\/(init|common|feedback|sign\/(in|up|activate)|test|third\/ucloud)/,
+    ignore: /\/v1\/(common|sign\/(in|up|activate)|test|third)/,
     // 设置只有符合某些规则的请求才会经过这个中间件。
     // match: [ '' ],
     // 这里配置的是对应角色无权限访问的接口正则匹配
@@ -49,10 +49,39 @@ module.exports = appInfo => {
       god: '',
       admin: '',
       operation: '',
-      // 普通用户不允许操作管理员接口，以及不能直接操作：类别、配置、签到、职业、角色、用户相关数据，可通过对外暴露的对应接口操作，比如更新用户资料等
-      user: /\/v1\/(init|attachment|category|clock|config|profession|role|user)/,
+      /**
+       * 普通用户不允许操作管理员接口，以及不能直接操作：
+       * 类别、签到、验证码、商品、配置、订单、职业、角色、用户、版本 等相关接口，
+       * 可通过对外暴露的对应接口操作，比如更新用户资料等
+       */
+      user: /\/v1\/(category|clock|code|commodity|config|order|profession|role|user|version)/,
       lock: '',
     },
+  };
+
+  /**
+   * 上传文件支持配置，下便是默认支持的格式
+   * // images
+   * '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.wbmp', '.webp', '.tif', '.psd',
+   * // text
+   * '.svg', '.js', '.jsx', '.json', '.css', '.less', '.html', '.htm', '.xml',
+   * // tar
+   * '.zip', '.gz', '.tgz', '.gzip',
+   * // voice
+   * '.mp3',
+   * // video
+   * '.mp4', '.avi',
+   * binary: [ '.7z', '.apk', '.gz', '.gzip', '.rar', '.tgz', '.zip' ],
+   * document: [ '.csv', '.doc', '.docx', '.pdf', '.ppt', '.pptx', '.xls', '.xlsx', '.key', '.numbers', '.pages', '.json', '.txt' ],
+   * image: [ '.gif', '.ico', '.jpg', '.jpeg', '.png', 'svg', '.webp' ],
+   * voice: [ '.amr', '.mp3', '.ogg' ],
+   * video: [ '.avi', '.mp4' ],
+   */
+  config.multipart = {
+    // 增加对 apk 扩展名的文件支持
+    fileExtensions: [ '.7z', '.apk', '.rar', '.doc', '.docx', '.pdf', '.ppt', '.pptx', '.xls', '.xlsx', '.key', '.numbers', '.pages', '.txt', '.ico', '.amr', '.ogg' ],
+    // 覆盖整个白名单，只允许上传 '.png' 格式，注意：当重写了 whitelist 时，fileExtensions 不生效。
+    // whitelist: [ '.png' ],
   };
 
   /**
@@ -136,11 +165,24 @@ module.exports = appInfo => {
   };
 
   /**
-   * UCloud 配置，后台地址 https://console.ucloud.cn/ufile/token
+   * 云服务相关配置
    */
-  config.ucloud = {
-    publicKey: '公钥', // UCloud 对象存储 US3 令牌公钥
-    privateKey: '私钥', // UCloud 对象存储 US3 令牌私钥
+  config.upyun = {
+    bucket: '', // 又拍云服务名，即存储空间名，其他平台也叫存储桶
+    operator: '', // 又拍云对象存储操作员名称
+    password: '', // 又拍云对象存储操作员密码
+  };
+
+  /**
+   * 支付相关配置
+   */
+  config.pay = {
+    alipayAppId: 'APP Id', // alipay app Id
+    alipayEncryptKey: 'AES 秘钥', // alipay AES 秘钥
+    alipayPrivateKey: '私钥', // alipay 私钥
+    alipayPublicKey: '公钥', // alipay 公钥
+    alipayGateway: '网关', // alipay 网关
+
   };
 
   /**
@@ -188,103 +230,286 @@ module.exports = appInfo => {
     subSitePath: '/api',
     // 配置邮箱注册账户是否需要激活
     isNeedActivate: false,
-    // 配置超管账户
-    username: 'admin',
-    email: 'admin@vmloft.com',
-    password: '123123',
-    // 系统配置信息
-    server: {
-      alias: 'server',
-      title: '社交模板服务端',
-      desc: '使用 Eggjs 实现自定义社交模板服务接口',
+    super: { // 配置超管账户
+      email: 'admin@vmloft.com',
+      username: 'admin',
+      password: '123123',
     },
+    siteList: [{ // 系统配置信息
+      alias: 'template',
+      title: '社交服务系统',
+      desc: '社交服务数据管理系统，包含完整的社交逻辑处理',
+    }, {
+      alias: 'agreement',
+      title: '用户协议',
+      desc: '用户协议配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
+      content: 'https://template.melove.net/#/agreement',
+    }, {
+      alias: 'policy',
+      title: '隐私政策',
+      desc: '隐私政策配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
+      content: 'https://template.melove.net/#/policy',
+    }, {
+      alias: 'client',
+      title: '客户端配置信息',
+      desc: '客户端所需配置信息，Json 格式，方便灵活配置',
+      content: '',
+    }],
+    categoryList: [{ // 分类配置
+      title: '吐槽广场',
+      desc: '这里有好多人，来一起吐槽吧',
+    }, {
+      title: '聊天交友',
+      desc: '嗨，我想和你做朋友，感兴趣的看过来',
+    }, {
+      title: '心情分享',
+      desc: '倾诉不快，分享快乐，一起哭，一起笑吧',
+    }, {
+      title: '无聊摸鱼',
+      desc: '闲的慌吗，来吹吹水、摸摸鱼啊',
+    }],
+    // 商品配置，这里主要是充值的虚拟商品
+    commodityList: [{ // 开通会员商品
+      title: '月度会员',
+      desc: '尊享多重会员独享服务',
+      price: '12',
+      currPrice: '11.11',
+      stockCount: '9999',
+      status: 1,
+      type: 1,
+      level: 0,
+      remarks: '订阅会员服务',
+    }, {
+      title: '季度会员',
+      desc: '尊享多重会员独享服务',
+      price: '36',
+      currPrice: '31.68',
+      stockCount: '9999',
+      status: 1,
+      type: 1,
+      level: 1,
+      remarks: '订阅会员服务',
+    }, {
+      title: '年度会员',
+      desc: '尊享多重会员独享服务',
+      price: '144',
+      currPrice: '115.20',
+      stockCount: '9999',
+      status: 1,
+      type: 1,
+      level: 2,
+      remarks: '订阅会员服务',
+    }, { // 金币充值商品
+      title: '充值 200 忘忧币',
+      desc: '首冲体验',
+      price: '1',
+      currPrice: '1.00',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 600 忘忧币',
+      desc: '限时9.2折',
+      price: '6',
+      currPrice: '5.52',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 1800 忘忧币',
+      desc: '限时9.0折',
+      price: '18',
+      currPrice: '16.20',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 3600 忘忧币',
+      desc: '限时8.8折',
+      price: '36',
+      currPrice: '31.68',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 7200 忘忧币',
+      desc: '限时7.9折',
+      price: '72',
+      currPrice: '56.88',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 12800 忘忧币',
+      desc: '限时7.5折',
+      price: '128',
+      currPrice: '96',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 25600 忘忧币',
+      desc: '限时7.3折',
+      price: '256',
+      currPrice: '186.88',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 51200 忘忧币',
+      desc: '限时7.1折',
+      price: '512',
+      currPrice: '363.52',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 102400 忘忧币',
+      desc: '限时6.9折',
+      price: '1024',
+      currPrice: '706.56',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 204800 忘忧币',
+      desc: '限时6.7折',
+      price: '2048',
+      currPrice: '1372.16',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }, {
+      title: '充值 409600 忘忧币',
+      desc: '限时6.5折',
+      price: '4096',
+      currPrice: '2662.40',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    },
+    {
+      title: '充值 819200 忘忧币',
+      desc: '限时6.3折',
+      price: '8192',
+      currPrice: '5160.96',
+      stockCount: '9999',
+      status: 1,
+      type: 0,
+      remarks: '忘忧币充值',
+    }],
+    // 系统配置信息
+    professionList: [{
+      title: '搬砖滴',
+      desc: '上学不努力，长大去搬砖',
+    }, {
+      title: '种田滴',
+      desc: '劳动者是最美滴人，是生活的基石',
+    }, {
+      title: '学生娃',
+      desc: '未来的花朵，要好好爱护，努力加油',
+    }, {
+      title: '家庭主妇/夫',
+      desc: '为家庭舍弃自己的梦想，嗯',
+    }, {
+      title: '上班族',
+      desc: '为生活不断努力打拼，面包会有的，房子车子都会有的',
+    }, {
+      title: '自由职业',
+      desc: '无忧无虑，自由工作',
+    }, {
+      title: '大老板',
+      desc: '成功人士，快要走向人生巅峰了',
+    }, {
+      title: '退休享福',
+      desc: '我还可以燃烧，为社会奉献余热',
+    }, {
+      title: '神秘职业',
+      desc: '你问我是做什么的，不可说！',
+    }],
     // 角色身份配置
-    roleList: [
-      {
-        title: '超级管理员',
-        desc: '掌控整个系统的生死',
-        identity: 999,
-      },
-      {
-        title: '管理员',
-        desc: '拥有管理普通用户及部分系统功能的人员',
-        identity: 888,
-      },
-      {
-        title: '运营',
-        desc: '负责站点运营管理',
-        identity: 777,
-      },
-      {
-        title: '普通账户',
-        desc: '享有使用系统及分享内容的权利，受到系统保护',
-        identity: 9,
-      },
-      {
-        title: '锁定用户',
-        desc: '因特殊原因被锁定账户，暂不可用系统服务',
-        identity: 2,
-      },
-      {
-        title: '永久删除用户',
-        desc: '因特殊原因被删除账户，永不解封',
-        identity: 1,
-      },
-    ],
-    // 分类配置
-    categoryList: [
-      {
-        title: '聊天交友',
-        desc: '嗨，我想和你做朋友，感兴趣的看过来',
-      },
-      {
-        title: '心情分享',
-        desc: '吐槽不快，分享快乐，一起哭，一起笑吧',
-      },
-      {
-        title: '无聊摸鱼',
-        desc: '闲的卵疼，来吹吹水、摸摸鱼啊',
-      },
-    ],
-    // 职业配置
-    professionList: [
-      {
-        title: '搬砖滴',
-        desc: '上学不努力，长大去搬砖',
-      },
-      {
-        title: '种田滴',
-        desc: '劳动者是最美滴人，是生活的基石',
-      },
-      {
-        title: '学生娃',
-        desc: '未来的花朵，要好好爱护，努力加油',
-      },
-      {
-        title: '家庭主妇/夫',
-        desc: '为家庭舍弃自己的梦想，嗯',
-      },
-      {
-        title: '上班族',
-        desc: '为生活不断努力打拼，面包会有的，房子车子都会有的',
-      },
-      {
-        title: '自由职业',
-        desc: '无忧无虑，自由工作',
-      },
-      {
-        title: '大老板',
-        desc: '成功人士，快要走向人生巅峰了',
-      },
-      {
-        title: '退休享福',
-        desc: '我还可以燃烧，为社会奉献余热',
-      },
-      {
-        title: '神秘职业',
-        desc: '你问我是做什么的，不可说！',
-      },
-    ],
+    roleList: [{
+      title: '超级管理员',
+      desc: '掌控整个系统的生死',
+      identity: 1000,
+    }, {
+      title: '管理员',
+      desc: '拥有管理普通用户及部分系统功能的人员',
+      identity: 900,
+    }, {
+      title: '运营者',
+      desc: '负责站点运营管理',
+      identity: 800,
+    }, {
+      title: '检查员',
+      desc: '负责站点输出内容审核',
+      identity: 700,
+    }, {
+      title: 'VIP账户',
+      desc: '享有使用系统及分享内容的权利，受到系统保护',
+      identity: 100,
+    }, {
+      title: '普通账户',
+      desc: '享有使用系统及分享内容的权利，受到系统保护',
+      identity: 9,
+    }, {
+      title: '待激活账户',
+      desc: '享有使用系统及分享内容的权利，受到系统保护',
+      identity: 8,
+    }, {
+      title: '锁定账户',
+      desc: '因特殊原因被锁定账户，暂不可用系统服务',
+      identity: 2,
+    }, {
+      title: '黑名单账户',
+      desc: '因特殊原因被删除账户，永不解封，设置为当前身份而不是删除，可以防止用户重复注册',
+      identity: 1,
+    }],
+    // 版本配置
+    versionList: [{
+      platform: 0,
+      title: '功能尝鲜',
+      desc: '新功能上线，快来尝鲜',
+      url: 'https://template.melove.net',
+      versionCode: 1,
+      versionName: '0.0.1',
+      force: false,
+    }, {
+      platform: 1,
+      title: '功能尝鲜',
+      desc: '新功能上线，快来尝鲜',
+      url: 'https://template.melove.net',
+      versionCode: 1,
+      versionName: '0.0.1',
+      force: false,
+    }, {
+      platform: 2,
+      title: '功能尝鲜',
+      desc: '新功能上线，快来尝鲜',
+      url: 'https://template.melove.net',
+      versionCode: 1,
+      versionName: '0.0.1',
+      force: false,
+    }, {
+      platform: 3,
+      title: '功能尝鲜',
+      desc: '新功能上线，快来尝鲜',
+      url: 'https://template.melove.net',
+      versionCode: 1,
+      versionName: '0.0.1',
+      force: false,
+    }],
   };
   return {
     ...config,

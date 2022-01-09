@@ -4,40 +4,66 @@
  */
 'use strict';
 const path = require('path');
+
 const Controller = require('egg').Controller;
 
 class AttachmentController extends Controller {
 
   /**
-   * 创建附件
+   * 上传附件内
+   * 要通过 ctx.getFileStream 便捷的获取到用户上传的文件，需要满足两个条件：
+   * 1.只支持上传一个文件。
+   * 2.上传文件必须在所有其他的 fields 后面，否则在拿到文件流时可能还获取不到 fields。
    */
   async create() {
     const { ctx, service } = this;
-    const params = ctx.params;
+    // 通过 ctx.getFileStream 获取用户上传的文件
+    const stream = await ctx.getFileStream();
+    // 调用通用上传方法
+    const params = await service.attachment.upload(stream);
     const attachment = await service.attachment.create(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '创建附件成功', data: attachment });
+    ctx.helper.success({ ctx, msg: '上传附件成功', data: attachment });
   }
-
   /**
-   * 通过网络地址创建附件: 如果网络地址不合法，EGG会返回500错误
+   * 上传多个附件
    */
-  async createByUrl() {
-    const { ctx, service } = this;
-    // 组装参数
-    let attachment = new this.ctx.model.Attachment();
-    const { url } = ctx.params;
-    const filename = path.basename(url)
-      .toLowerCase(); // 文件名称
-    const extname = path.extname(url)
-      .toLowerCase(); // 文件扩展名称
-    attachment.extname = extname;
-    attachment.filename = filename;
-    attachment.path = url;
+  async multipart() {
+    const { app, ctx, service } = this;
+    // 要获取同时上传的多个文件，需要通过 ctx.multipart() 来获取
+    const parts = ctx.multipart();
+    const result = [];
 
-    attachment = await service.attachment.create(attachment);
-    // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '保存网络资源成功', data: attachment });
+    let stream; // parts() return a promise
+    while ((stream = await parts()) != null) {
+      if (stream.length) {
+        // 如果是数组的话是 fields
+        app.logger.log('field: ' + stream[0]);
+        app.logger.log('value: ' + stream[1]);
+      } else {
+        if (!stream.filename) {
+          // 用户没有选择文件就点击了上传，这时 stream.filename 为空
+          ctx.throw(412, '未收到附件内容');
+        }
+        // part 是上传的文件流
+        // console.log('field: ' + stream.fieldname);
+        // console.log('filename: ' + stream.filename);
+        // console.log('extname: ' + stream.extname);
+        // console.log('encoding: ' + stream.encoding);
+        // console.log('mime: ' + stream.mime);
+
+        // 获取参数
+        const filename = path.basename(stream.filename).toLowerCase(); // 文件名称
+        const extname = path.extname(stream.filename).toLowerCase(); // 文件扩展名称
+
+        // 调用通用上传方法
+        const params = await service.attachment.upload(stream, filename, extname);
+        const attachment = await service.attachment.create(params);
+
+        result.push(attachment);
+      }
+    }
+    ctx.helper.success({ ctx, msg: '上传多个附件成功', data: result });
   }
 
   /**
@@ -76,16 +102,11 @@ class AttachmentController extends Controller {
   async update() {
     const { ctx, service } = this;
     // 组装参数
-    const { id } = ctx.params; // 传入要修改的文档 Id
-    const params = ctx.params.permit('filename', 'extname', 'path', 'extra');
-    // 先判断下权限
-    let attachment = await service.attachment.find(id);
-    if (!attachment) {
-      ctx.throw(404, '附件不存在');
-    }
+    const { id } = ctx.params; // 传入要修改的附件 Id
+    const params = ctx.params.permit('desc', 'duration', 'extname', 'path', 'width', 'height');
 
     // 调用Service 保持原图片 Id 不变，更新其他属性
-    attachment = await service.attachment.update(id, params);
+    const attachment = await service.attachment.update(id, params);
 
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '附件更新成功', data: attachment });

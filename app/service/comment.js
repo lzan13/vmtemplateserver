@@ -25,11 +25,11 @@ class CommentService extends Service {
     const { ctx } = this;
     // 设置评论发布者
     params.owner = ctx.state.user.id;
-    const comment = await ctx.model.Comment.create(params);
+    let comment = await ctx.model.Comment.create(params);
 
     // 修改评论评论数+1
     await ctx.model.Post.findByIdAndUpdate(params.post, { $inc: { commentCount: 1 } });
-
+    comment = await this.find(comment._id);
     return comment;
   }
 
@@ -46,7 +46,7 @@ class CommentService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity <= 9 && comment.owner.id !== userId) {
+      if (identity < 200 && comment.owner.id !== userId) {
         ctx.throw(403, '普通用户只能操作自己评论');
       }
     }
@@ -55,6 +55,20 @@ class CommentService extends Service {
     await ctx.model.Post.findByIdAndUpdate(comment.post, { $inc: { commentCount: -1 } });
 
     return ctx.model.Comment.findByIdAndRemove(id);
+  }
+
+  /**
+   * 更新评论
+   * @param id
+   * @param params
+   */
+  async update(id, params) {
+    const { ctx, service } = this;
+    const comment = await service.comment.find(id);
+    if (!comment) {
+      ctx.throw(404, `评论不存在 ${id}`);
+    }
+    return service.comment.findByIdAndUpdate(id, params);
   }
 
   /**
@@ -103,15 +117,15 @@ class CommentService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Comment.count(query).exec();
+    totalCount = await ctx.model.Comment.countDocuments(query).exec();
 
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {
-      const json = Object.assign({}, item._doc);
+      // const json =
       // 格式化一下返回给客户端的时间戳样式
       // json.createdAt = ctx.helper.formatTime(item.createdAt);
       // json.updatedAt = ctx.helper.formatTime(item.updatedAt);
-      return json;
+      return Object.assign({}, item._doc);
     });
 
     return { currentCount, totalCount, page: Number(page), limit: Number(limit), data };
@@ -132,6 +146,15 @@ class CommentService extends Service {
       .populate('user', userSelect)
       .populate('post', { title: 1 })
       .exec();
+  }
+
+  /**
+   * 更新内容信息
+   * @param id
+   * @param params 需要更新的信息
+   */
+  async findByIdAndUpdate(id, params) {
+    return this.ctx.model.Comment.findByIdAndUpdate(id, params);
   }
 }
 

@@ -3,9 +3,9 @@
 'use strict';
 
 /**
- * @param {Egg.EggAppInfo} appInfo app info
+ * 线上配置模板
  */
-module.exports = appInfo => {
+module.exports = () => {
   /**
    * built-in config
    * @type {Egg.EggAppConfig}
@@ -32,11 +32,23 @@ module.exports = appInfo => {
   };
 
   /**
-   * UCloud 配置，后台地址 https://console.ucloud.cn/ufile/token
+   * 云服务相关配置
    */
-  config.ucloud = {
-    publicKey: '公钥', // UCloud 对象存储 US3 令牌公钥
-    privateKey: '私钥', // UCloud 对象存储 US3 令牌私钥
+  config.upyun = {
+    bucket: '', // 又拍云服务名，即存储空间名，其他平台也叫存储桶
+    operator: '', // 又拍云对象存储操作员名称
+    password: '', // 又拍云对象存储操作员密码
+  };
+
+  /**
+   * 支付相关配置
+   */
+  config.pay = {
+    alipayAppId: 'APP Id', // alipay app Id
+    alipayEncryptKey: 'AES 秘钥', // alipay AES 秘钥
+    alipayPrivateKey: '私钥', // alipay 私钥
+    alipayPublicKey: '公钥', // alipay 公钥
+    alipayGateway: '网关', // alipay 网关
   };
 
   /**

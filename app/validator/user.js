@@ -12,7 +12,7 @@ module.exports = app => {
    */
   validator.addRule('account', (rule, value) => {
     if (!/^[a-zA-Z0-9_.@]{4,16}$/.test(value)) {
-      return '账户只能包含 a-z A-Z 0-9 _ . @ 且长度在 4-16 之间';
+      return '账户只能包含 a-z A-Z 0-9 _ . @ 且长度在 4-24 之间';
     }
   });
 
@@ -94,8 +94,8 @@ module.exports = app => {
    * 校验昵称
    */
   validator.addRule('nickname', (rule, value) => {
-    if (!/^\S{1,16}$/.test(value)) {
-      return '昵称必须为非空字符，长度在 1-16 之间';
+    if (!/^\S{1,12}$/.test(value)) {
+      return '昵称必须为非空字符，长度在 1-12 之间';
     }
   });
 

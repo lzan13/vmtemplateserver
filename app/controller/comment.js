@@ -19,9 +19,9 @@ class CommentController extends Controller {
     ctx.validate({ content: 'content', post: 'string?', user: 'string?' }, params);
 
     // 调用 Service 进行业务处理
-    await service.comment.create(params);
+    const comment = await service.comment.create(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '创建评论成功' });
+    ctx.helper.success({ ctx, msg: '创建评论成功', data: comment });
   }
 
   /**
@@ -53,6 +53,22 @@ class CommentController extends Controller {
     }
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '批量删除评论成功' });
+  }
+
+  /**
+   * 修改评论
+   */
+  async update() {
+    const { ctx, service } = this;
+    // 组装参数
+    const { id } = ctx.params;
+    const params = ctx.params.permit('content', 'status', 'likeCount');
+    // 校验参数
+    ctx.validate({ content: 'content', status: 'number', likeCount: 'number' }, params);
+    // 调用 Service 进行业务处理
+    const category = await service.comment.update(id, params);
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '更新评论成功', data: category });
   }
 
   /**

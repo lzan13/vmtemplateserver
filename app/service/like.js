@@ -65,9 +65,21 @@ class LikeService extends Service {
   }
 
   /**
-   * 删除一个喜欢
+   * 删除数据
    */
-  async destroy(type, id) {
+  async destroy(id) {
+    const { ctx, service } = this;
+    const like = await service.like.find(id);
+    if (!like) {
+      ctx.throw(404, `数据不存在 ${id}`);
+    }
+    return ctx.model.Like.findByIdAndRemove(id);
+  }
+
+  /**
+   * 取消喜欢
+   */
+  async cancelLike(type, id) {
     const { ctx, service } = this;
     const params = {
       owner: ctx.state.user.id,
@@ -106,6 +118,19 @@ class LikeService extends Service {
     return ctx.model.Like.findByIdAndRemove(like.id);
   }
 
+  /**
+   * 更新喜欢
+   * @param id
+   * @param params
+   */
+  async update(id, params) {
+    const { ctx, service } = this;
+    const category = await service.like.find(id);
+    if (!category) {
+      ctx.throw(404, `喜欢不存在 ${id}`);
+    }
+    return service.like.findByIdAndUpdate(id, params);
+  }
 
   /**
    * 获取喜欢列表，可根据参数判断是否分页，搜索
@@ -117,31 +142,36 @@ class LikeService extends Service {
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
-    const currentUserId = ctx.state.user.id;
+    const currUser = ctx.state.user;
     // 计算分页
     const skip = Number(page) * Number(limit || 20);
     // 组装查询参数
-    const query = { type: Number(type) };
+    const query = {};
+    if (type) {
+      query.type = Number(type);
+    }
     if (owner) {
       // 查询用户喜欢的
       query.owner = owner;
     } else {
       if (Number(type) === 0 && id) {
-        // 查询喜欢用户的用户集合
+        // 查询喜欢某用户的用户集合
         query.user = id;
       } else if (Number(type) === 1 && id) {
-        // 查询喜欢内容的用户集合
+        // 查询喜欢某帖子的用户集合
         query.post = id;
       } else if (Number(type) === 2 && id) {
         // 查询喜欢某评论的用户集合
         query.comment = id;
       } else {
-        // id 为空则查询我喜欢的
-        query.owner = currentUserId;
+        // id 为空则判断当前身份，管理员查询全部数据，自己查询我喜欢的
+        if (currUser.identity < 200) {
+          query.owner = currUser.id;
+        }
       }
     }
     if (id) {
-      // 查询喜欢的用户的用户集合
+      // 查询喜欢指定 Id 的用户/帖子/评论 的用户集合
       result = await ctx.model.Like.find(query)
         .populate('owner', userSelect)
         .skip(skip)
@@ -150,14 +180,16 @@ class LikeService extends Service {
         .exec();
     } else {
       // 查询用户喜欢集合
-      if (Number(type) === 0) {
+      if (type && Number(type) === 0) {
+        // 查询用户喜欢的用户集合
         result = await ctx.model.Like.find(query)
           .populate('user', userSelect)
           .skip(skip)
           .limit(Number(limit))
           .sort({ createdAt: -1 })
           .exec();
-      } else if (Number(type) === 1) {
+      } else if (type && Number(type) === 1) {
+        // 查询用户喜欢的帖子集合
         result = await ctx.model.Like.find(query)
           .populate({
             path: 'post',
@@ -165,16 +197,27 @@ class LikeService extends Service {
             populate: [
               { path: 'owner', select: userSelect },
               { path: 'category', select: { title: 1, desc: 1 } },
-              { path: 'attachments', select: { extname: 1, path: 1 } },
+              { path: 'attachments', select: { extname: 1, path: 1, width: 1, height: 1 } },
             ],
           })
           .skip(skip)
           .limit(Number(limit))
           .sort({ createdAt: -1 })
           .exec();
-      } else if (Number(type) === 2) {
+      } else if (type && Number(type) === 2) {
+        // 查询用户喜欢的评论集合
         result = await ctx.model.Like.find(query)
           .populate('comment')
+          .skip(skip)
+          .limit(Number(limit))
+          .sort({ createdAt: -1 })
+          .exec();
+      } else {
+        result = await ctx.model.Like.find(query)
+          .populate('owner', { nickname: 1 })
+          .populate('user', { nickname: 1 })
+          .populate('post', { title: 1 })
+          .populate('comment', { content: 1 })
           .skip(skip)
           .limit(Number(limit))
           .sort({ createdAt: -1 })
@@ -183,7 +226,7 @@ class LikeService extends Service {
     }
 
     currentCount = result.length;
-    totalCount = await ctx.model.Like.count(query)
+    totalCount = await ctx.model.Like.countDocuments(query)
       .exec();
 
     // 整理数据源 -> Ant Design Pro
@@ -235,7 +278,6 @@ class LikeService extends Service {
   async find(id) {
     return this.ctx.model.Like.findById(id);
   }
-
 }
 
 module.exports = LikeService;

@@ -7,21 +7,15 @@ module.exports = app => {
   const mongoose = app.mongoose;
 
   const ConfigSchema = new mongoose.Schema({
-    // 配置别名
-    alias: { type: String, required: true, default: 'default' },
-    // 标题
-    title: { type: String, required: true },
-    // 描述
-    desc: { type: String },
-    // 配置内容，这里偷懒了，内容可以传 json 传，可以扩展
-    content: { type: String },
+    alias: { type: String, required: true, default: 'default' }, // 配置别名
+    title: { type: String, required: true }, // 标题
+    desc: { type: String }, // 描述
+    content: { type: String }, // 配置内容，这里偷懒了，内容可以传 json 传，可以扩展
   },
   // schema 的选项options
   {
-    // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
-    id: true,
-    // 生成时间
-    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+    // id: true, // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
+    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }, // 生成时间
   });
 
   return mongoose.model('Config', ConfigSchema);

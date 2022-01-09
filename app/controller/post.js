@@ -19,9 +19,9 @@ class PostController extends Controller {
     ctx.validate({ title: 'title?', content: 'content', extension: 'string?' }, params);
 
     // 调用 Service 进行业务处理
-    await service.post.create(params);
+    const post = await service.post.create(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '发布成功' });
+    ctx.helper.success({ ctx, msg: '发布成功', data: post });
   }
 
   /**

@@ -4,8 +4,6 @@
  */
 'use strict';
 const crypto = require('crypto');
-const hmacSHA1 = require('crypto-js/hmac-sha1');
-const Base64 = require('crypto-js/enc-base64');
 const moment = require('moment');
 const fs = require('fs');
 const path = require('path');
@@ -31,21 +29,13 @@ exports.cryptoSHA1 = function(data) {
 };
 
 /**
- * qi 加密
+ * 数据进行 HMACSHA1 加密，一般还需要将签名进行 Base64 加密
  * @param data 加密数据
  */
 exports.cryptoHMACSHA1 = function(data, secret) {
   const sha1 = crypto.createHmac('sha1', secret);
   sha1.update(data);
-  return sha1.digest('hex');
-};
-
-/**
- * qi 加密
- * @param data 加密数据
- */
-exports.cryptoSignature = function(data, secret) {
-  return Base64.stringify(hmacSHA1(data, secret));
+  return sha1.digest();
 };
 
 /**
@@ -112,7 +102,7 @@ exports.syncCreateDirs = function(paths) {
     }
     return true;
   } catch (e) {
-    console.log(`创建目录失败 ${paths} - ${e}`);
+    this.ctx.logger.error(`-lz-helper- 创建目录失败 ${paths} - ${e}`);
     return false;
   }
 };

@@ -27,7 +27,10 @@ class RoomService extends Service {
     if (!params.owner) {
       params.owner = ctx.state.user.id;
     }
-    const id = await service.easemob.createRoom(params.title, params.desc, params.owner);
+    if (!params.maxCount) {
+      params.maxCount = 500;
+    }
+    const id = await service.third.easemob.createRoom(params);
     if (!id || id === '') {
       ctx.throw(500, '房间创建失败');
     }
@@ -49,12 +52,12 @@ class RoomService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity <= 9 && room.owner.id !== userId) {
+      if (identity < 200 && room.owner.id !== userId) {
         ctx.throw(403, '无权操作，普通用户只能操作自己创建的房间');
       }
     }
     // 先删除三方的数据
-    await service.easemob.destroyRoom(id);
+    await service.third.easemob.destroyRoom(id);
     // 删除
     return ctx.model.Room.findByIdAndRemove(id);
   }
@@ -73,12 +76,12 @@ class RoomService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity <= 9 && room.owner.id !== userId) {
+      if (identity < 200 && room.owner.id !== userId) {
         ctx.throw(403, '无权操作，普通用户只能操作自己创建的房间');
       }
     }
     // 同步更新到三方服务
-    await service.easemob.updateRoom(id, params.title, params.desc);
+    await service.third.easemob.updateRoom(id, params);
 
     return service.room.findByIdAndUpdate(id, params);
   }
@@ -101,7 +104,7 @@ class RoomService extends Service {
    * @param params 查询参数
    */
   async index(params) {
-    const { ctx } = this;
+    const { ctx, service } = this;
     const { page, limit, owner } = params;
     let result = [];
     let currentCount = 0;
@@ -122,11 +125,11 @@ class RoomService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Room.count(query).exec();
+    totalCount = await ctx.model.Room.countDocuments(query).exec();
 
     // 去三方服务查下当前房间人数，后续还要查下人员信息
     for (const room of result) {
-      const info = await this.service.easemob.roomInfo(room._id);
+      const info = await service.third.easemob.roomInfo(room._id);
       room._doc.count = info.affiliations_count;
     }
     // 整理数据源 -> Ant Design Pro
@@ -163,6 +166,13 @@ class RoomService extends Service {
    */
   async findByIdAndUpdate(id, params) {
     return this.ctx.model.Room.findByIdAndUpdate(id, params);
+  }
+
+  /**
+   * 删除房间
+   */
+  async findOneAndRemove(query) {
+    return this.ctx.model.Room.findOneAndRemove(query);
   }
 
 }

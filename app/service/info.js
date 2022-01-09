@@ -48,18 +48,14 @@ class SignService extends Service {
    * @param filename 文件名
    * @param extname 文件后缀
    */
-  async updateAvatar(stream, filename, extname) {
+  async updateAvatar(stream) {
     const { ctx, service } = this;
     // 调用通用上传方法
-    const params = await service.attachment.upload(stream, filename, extname);
+    const params = await service.attachment.upload(stream, 'avatar');
     const attachment = await service.attachment.create(params);
 
-    // 更新用户头像
+    // 查询用户信息
     const id = ctx.state.user.id;
-    const user = await service.user.find(id);
-    if (!user) {
-      ctx.throw(404, `用户不存在 ${id}`);
-    }
     // 更新用户信息并返回
     return service.user.findByIdAndUpdate(id, { avatar: attachment.path });
   }
@@ -71,18 +67,14 @@ class SignService extends Service {
    * @param {String}filename 文件名
    * @param {String}extname 文件后缀
    */
-  async updateCover(stream, filename, extname) {
+  async updateCover(stream) {
     const { ctx, service } = this;
     // 调用通用上传方法
-    const params = await service.attachment.upload(stream, filename, extname);
+    const params = await service.attachment.upload(stream, 'cover');
     const attachment = await service.attachment.create(params);
 
     // 更新用户头像
     const id = ctx.state.user.id;
-    const user = await service.user.find(id);
-    if (!user) {
-      ctx.throw(404, `用户不存在 ${id}`);
-    }
     // 更新用户信息并返回
     return service.user.findByIdAndUpdate(id, { cover: attachment.path });
   }
@@ -159,8 +151,8 @@ class SignService extends Service {
     const { ctx, service } = this;
     // const user = await service.user.find(id, userSelect);
     const user = await ctx.model.User.findById(id, userSelect)
-      .populate('profession', { title: 1, desc: 1 })
-      .populate('role', { title: 1, desc: 1, identity: 1 })
+      .populate('profession', { title: 1 })
+      .populate('role', { title: 1, identity: 1 })
       .exec();
     if (!user) {
       ctx.throw(404, `用户不存在 ${id}`);
@@ -175,12 +167,12 @@ class SignService extends Service {
    * 获取指定集合用户信息
    */
   async userList(ids, userSelect) {
-    const { ctx, service } = this;
+    const { ctx } = this;
     // const user = await service.user.find(id, userSelect);
     const query = { _id: { $in: ids } };
     const users = await ctx.model.User.find(query, userSelect)
-      .populate('profession', { title: 1, desc: 1 })
-      .populate('role', { title: 1, desc: 1, identity: 1 })
+      .populate('profession', { title: 1 })
+      .populate('role', { title: 1, identity: 1 })
       .exec();
     if (!users) {
       ctx.throw(404, `用户不存在 ${ids}`);

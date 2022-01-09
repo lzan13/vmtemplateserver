@@ -31,11 +31,11 @@ class EmailService extends Service {
       data.from = app.config.mail.from;
       await transporter.sendMail(data);
     } catch (e) {
-      console.log(`邮件发送失败 ${e}`);
+      ctx.logger.error(`-lz-email-邮件发送失败 ${e} - ${data}`);
       ctx.throw(500, `邮件发送失败 ${e}`);
       return false;
     }
-    console.log('邮件发送成功');
+    ctx.logger.info(`-lz-email-邮件发送成功 ${data}`);
     return true;
 
   }

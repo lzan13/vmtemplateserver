@@ -12,17 +12,18 @@ class ClockService extends Service {
    * 创建一条新纪录
    * @param params
    */
-  async create(userId) {
+  async create() {
     const { ctx } = this;
     // 查询今天是否已经打卡
-    const todayClock = await ctx.service.clock.findToday(userId);
-    if (todayClock.length > 0) {
+    const userId = ctx.state.user.id;
+    const todayCount = await ctx.service.clock.findTodayCount(userId);
+    if (todayCount > 0) {
       ctx.throw(409, '今天已签到');
     }
     // 判断昨天是否打卡
-    const yesterdayClock = await ctx.service.clock.findYesterday(userId);
+    const yesterdayCount = await ctx.service.clock.findYesterdayCount(userId);
     let update = {};
-    if (yesterdayClock.length > 0) {
+    if (yesterdayCount > 0) {
       // 连续签到积分 +10
       update = { $inc: { clockContinuousCount: 1, clockTotalCount: 1, score: 10 }, clockTime: Date.now() };
     } else {
@@ -72,7 +73,7 @@ class ClockService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Clock.count(query).exec();
+    totalCount = await ctx.model.Clock.countDocuments(query).exec();
 
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {
@@ -89,22 +90,30 @@ class ClockService extends Service {
    * 通用方法，主要是这些方法有多个地方调用，简单封装下
    */
   /**
+   * 通过 Id 查找一个评论
+   * @param id
+   */
+  async find(id) {
+    return this.ctx.model.Clock.findById(id).exec();
+  }
+
+  /**
    * 查找今天打卡记录
    * @param userId
    */
-  async findToday(userId) {
+  async findTodayCount(userId) {
     const startTime = new Date(new Date(new Date().toLocaleDateString()).getTime()); // 当天0点
     const endTime = new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1);// 当天23:59
-    return this.ctx.model.Clock.find({ userId, createdAt: { $gte: startTime, $lte: endTime } });
+    return this.ctx.model.Clock.countDocuments({ userId, createdAt: { $gte: startTime, $lte: endTime } });
   }
   /**
    * 查找昨天打卡记录
    * @param userId
    */
-  async findYesterday(userId) {
+  async findYesterdayCount(userId) {
     const startTime = new Date(new Date(new Date().toLocaleDateString()).getTime() - 24 * 60 * 60 * 1000); // 昨天0点
     const endTime = new Date(new Date(new Date().toLocaleDateString()).getTime() - 1);// 昨天23:59
-    return this.ctx.model.Clock.find({ userId, createdAt: { $gte: startTime, $lte: endTime } });
+    return this.ctx.model.Clock.countDocuments({ userId, createdAt: { $gte: startTime, $lte: endTime } });
   }
 }
 

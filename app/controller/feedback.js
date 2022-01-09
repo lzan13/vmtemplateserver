@@ -14,9 +14,9 @@ class FeedbackController extends Controller {
   async create() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('contact', 'content', 'attachment');
+    const params = ctx.params.permit('contact', 'content', 'user', 'post', 'remark', 'attachments', 'type');
     // 校验参数
-    // ctx.validate({ content: 'content' }, params);
+    ctx.validate({ content: 'content', type: 'int' }, params);
     // 调用 Service 进行业务处理
     const role = await service.feedback.create(params);
     // 设置响应内容和响应状态码
@@ -52,6 +52,22 @@ class FeedbackController extends Controller {
   }
 
   /**
+   * 修改反馈
+   */
+  async update() {
+    const { ctx, service } = this;
+    // 组装参数
+    const { id } = ctx.params;
+    const params = ctx.params.permit('contact', 'content', 'remark', 'status', 'type');
+    // 校验参数
+    ctx.validate({ content: 'content', status: 'int', type: 'int' }, params);
+    // 调用 Service 进行业务处理
+    const feedback = await service.feedback.update(id, params);
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '更新反馈成功', data: feedback });
+  }
+
+  /**
    * 获取单个反馈
    */
   async show() {
@@ -70,7 +86,7 @@ class FeedbackController extends Controller {
   async index() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('page', 'limit', 'contact');
+    const params = ctx.params.permit('page', 'limit', 'contact', 'status', 'type');
     // 调用 Service 进行业务处理
     const roles = await service.feedback.index(params);
     // 设置响应内容和响应状态码

@@ -22,7 +22,7 @@ class FollowController extends Controller {
   }
 
   /**
-   * 取消关注
+   * 删除
    */
   async destroy() {
     const { ctx, service } = this;
@@ -31,8 +31,22 @@ class FollowController extends Controller {
     // 调用 Service 进行业务处理
     await service.follow.destroy(id);
     // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '删除关注成功' });
+  }
+
+  /**
+   * 取消关注
+   */
+  async cancelFollow() {
+    const { ctx, service } = this;
+    // 校验参数
+    const { id } = ctx.params;
+    // 调用 Service 进行业务处理
+    await service.follow.destroy(id);
+    // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '取消关注成功' });
   }
+
 
   /**
    * 批量删除关注
@@ -50,6 +64,20 @@ class FollowController extends Controller {
     }
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '批量删除关注成功' });
+  }
+
+  /**
+   * 修改关系
+   */
+  async update() {
+    const { ctx, service } = this;
+    // 组装参数
+    const { id } = ctx.params;
+    const params = ctx.params.permit('relation');
+    // 调用 Service 进行业务处理
+    const category = await service.follow.update(id, params);
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '更新关系成功', data: category });
   }
 
   /**

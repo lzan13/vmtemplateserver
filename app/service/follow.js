@@ -67,10 +67,22 @@ class FollowService extends Service {
   }
 
   /**
-   * 删除一个关注
+   * 删除数据
+   */
+  async destroy(id) {
+    const { ctx, service } = this;
+    const follow = await service.follow.find(id);
+    if (!follow) {
+      ctx.throw(404, `数据不存在 ${id}`);
+    }
+    return ctx.model.Follow.findByIdAndRemove(id);
+  }
+
+  /**
+   * 取消关注
    * @param user2
    */
-  async destroy(user2) {
+  async cancelFollow(user2) {
     const { ctx, service } = this;
     const user1 = ctx.state.user.id;
 
@@ -121,6 +133,20 @@ class FollowService extends Service {
       return ctx.model.Follow.findByIdAndRemove(follow.id);
     }
     return service.follow.findByIdAndUpdate(follow.id, { relation: follow.relation });
+  }
+
+  /**
+   * 更新关系
+   * @param id
+   * @param params
+   */
+  async update(id, params) {
+    const { ctx, service } = this;
+    const follow = await service.follow.find(id);
+    if (!follow) {
+      ctx.throw(404, `关系不存在 ${id}`);
+    }
+    return service.follow.findByIdAndUpdate(id, params);
   }
 
   /**
@@ -190,7 +216,10 @@ class FollowService extends Service {
         ],
       };
     } else if (Number(type) === 2) {
+      // 查询互相关注的用户集合
       query = { $or: [{ user1: user }, { user2: user }], relation: 2 };
+    } else {
+      query = {};
     }
 
     // 查询关系数据
@@ -203,27 +232,31 @@ class FollowService extends Service {
       .exec();
 
     currentCount = result.length;
-    totalCount = await ctx.model.Follow.count(query).exec();
+    totalCount = await ctx.model.Follow.countDocuments(query)
+      .exec();
 
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {
       const json = Object.assign({}, item._doc);
-      // 去除外层数据
-      let result;
-      if (user === item.user1.id) {
-        result = Object.assign({}, json.user2._doc);
-      } else {
-        result = Object.assign({}, json.user1._doc);
+      if (type && type <= 2) {
+        // 去除外层数据
+        let result;
+        if (user === item.user1.id) {
+          result = Object.assign({}, json.user2._doc);
+        } else {
+          result = Object.assign({}, json.user1._doc);
+        }
+        // 关系
+        if (json.relation) {
+          result.relation = json.relation;
+        } else if (Number(type) === 0) {
+          result.relation = 0;
+        } else if (Number(type) === 1) {
+          result.relation = 1;
+        }
+        return result;
       }
-      // 关系
-      if (json.relation) {
-        result.relation = json.relation;
-      } else if (Number(type) === 0) {
-        result.relation = 0;
-      } else if (Number(type) === 1) {
-        result.relation = 1;
-      }
-      return result;
+      return json;
     });
 
     return { currentCount, totalCount, page: Number(page), limit: Number(limit), data };

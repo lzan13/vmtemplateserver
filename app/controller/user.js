@@ -132,7 +132,6 @@ class UserController extends Controller {
       nickname: 'nickname?',
       signature: 'signature?',
       address: 'address?',
-      hobby: 'hobby?',
       idCardNumber: 'idCardNumber?',
       realName: 'string?',
     }, params);

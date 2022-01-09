@@ -6,8 +6,8 @@
 
 const Service = require('egg').Service;
 
-const roleSelect = { title: 1, desc: 1, identity: 1 };
-const professionSelect = { title: 1, desc: 1 };
+const roleSelect = { title: 1, identity: 1 };
+const professionSelect = { title: 1 };
 
 class UserService extends Service {
 
@@ -29,7 +29,7 @@ class UserService extends Service {
     params.password = await ctx.helper.cryptoMD5(params.password);
     const user = await ctx.model.User.create(params);
 
-    const result = await service.easemob.createUser(user.id, user.password);
+    const result = await service.third.easemob.createUser(user.id, user.password);
     if (result) {
       return user;
     }
@@ -63,7 +63,9 @@ class UserService extends Service {
     await ctx.model.Post.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
 
     // 删除环信账户
-    await service.easemob.delUser(user.id);
+    await service.third.easemob.delUser(user.id);
+    // 删除用户创建的房间
+    await service.room.findOneAndRemove({ owner: user.id });
 
     // 删除用户并返回
     return ctx.model.User.findByIdAndRemove(id);
@@ -119,8 +121,8 @@ class UserService extends Service {
    * @param params 查询参数
    */
   async index(params) {
-    const { ctx, service } = this;
-    const { page, limit, email, phone, profession, deleted } = params;
+    const { ctx } = this;
+    const { page, limit, email, phone, profession, role, deleted } = params;
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
@@ -137,7 +139,6 @@ class UserService extends Service {
     if (profession) {
       query.profession = profession;
     }
-    const role = await service.role.findByIdentity(8);
     if (role) {
       query.role = role.id;
     }
@@ -145,8 +146,6 @@ class UserService extends Service {
       password: 0,
       token: 0,
       code: 0,
-      idCardNumber: 0,
-      realName: 0,
     })
       .populate('profession', professionSelect)
       .populate('role', roleSelect)
@@ -155,7 +154,7 @@ class UserService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.User.count(query)
+    totalCount = await ctx.model.User.countDocuments(query)
       .exec();
 
     // 整理数据源 -> Ant Design Pro

@@ -14,7 +14,7 @@ class RoleService extends Service {
    */
   async create(params) {
     const { ctx } = this;
-    let role = await ctx.model.Role.findOne({ title: params.title });
+    let role = await ctx.model.Role.findOne({ $or: [{ title: params.title }, { identity: params.identity }] });
     if (role) {
       ctx.throw(409, '角色已存在');
     }
@@ -98,7 +98,7 @@ class RoleService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Role.count(query).exec();
+    totalCount = await ctx.model.Role.countDocuments(query).exec();
 
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {

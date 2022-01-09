@@ -69,7 +69,7 @@ class EasemobService extends Service {
         return easemob.token;
       }
     }
-    easemob = await service.easemob.token();
+    easemob = await service.third.easemob.token();
     return easemob.token;
   }
 
@@ -85,7 +85,7 @@ class EasemobService extends Service {
   async createUser(id, password) {
     const { app, service } = this;
     // 获取 token
-    const token = await service.easemob.checkToken();
+    const token = await service.third.easemob.checkToken();
     if (!token) {
       return false;
     }
@@ -110,7 +110,7 @@ class EasemobService extends Service {
   async delUser(id) {
     const { app, service } = this;
     // 获取 token
-    const token = await service.easemob.checkToken();
+    const token = await service.third.easemob.checkToken();
     const apiUrl = `${app.config.easemob.host}/${app.config.easemob.orgName}/${app.config.easemob.appName}/users/${id}`;
 
     const result = await this.apiRequest(apiUrl, 'DELETE', { Authorization: `Bearer ${token}` }, {});
@@ -128,7 +128,7 @@ class EasemobService extends Service {
   async updatePassword(id, password) {
     const { app, service } = this;
     // 获取 token
-    const token = await service.easemob.checkToken();
+    const token = await service.third.easemob.checkToken();
     const apiUrl = `${app.config.easemob.host}/${app.config.easemob.orgName}/${app.config.easemob.appName}/users/${id}/password`;
     const result = await this.apiRequest(apiUrl, 'POST', { Authorization: `Bearer ${token}` }, { newpassword: password });
 
@@ -145,22 +145,21 @@ class EasemobService extends Service {
 
   /**
    * 创建聊天室
-   * @param title 标题
-   * @param desc 描述
+   * @param params 参数
    */
-  async createRoom(title, desc, owner) {
+  async createRoom(params) {
     const { app, service } = this;
     // 获取 token
-    const token = await service.easemob.checkToken();
+    const token = await service.third.easemob.checkToken();
     if (!token) {
       return '';
     }
     const apiUrl = `${app.config.easemob.host}/${app.config.easemob.orgName}/${app.config.easemob.appName}/chatrooms`;
     const data = {
-      name: title,
-      description: desc,
-      owner,
-      maxusers: 500,
+      name: params.title,
+      description: params.desc,
+      owner: params.owner,
+      maxusers: params.maxCount,
     };
     const result = await this.apiRequest(apiUrl, 'POST', { Authorization: `Bearer ${token}` }, data);
 
@@ -173,20 +172,23 @@ class EasemobService extends Service {
   /**
    * 修改聊天室信息
    * @param roomId 聊天室 Id
+   * @param params 更新参数
    */
-  async updateRoom(roomId, title, desc, maxCount = 500) {
+  async updateRoom(roomId, params) {
     const { app, service } = this;
     // 获取 token
-    const token = await service.easemob.checkToken();
+    const token = await service.third.easemob.checkToken();
     if (!token) {
       return false;
     }
     const apiUrl = `${app.config.easemob.host}/${app.config.easemob.orgName}/${app.config.easemob.appName}/chatrooms/${roomId}`;
     const data = {
-      name: title,
-      description: desc,
-      maxusers: maxCount,
+      name: params.title,
+      description: params.desc,
     };
+    if (params.maxCount) {
+      data.maxusers = params.maxCount;
+    }
     const result = await this.apiRequest(apiUrl, 'POST', { Authorization: `Bearer ${token}` }, data);
 
     if (result.status === 200) {
@@ -202,7 +204,7 @@ class EasemobService extends Service {
   async destroyRoom(roomId) {
     const { app, service } = this;
     // 获取 token
-    const token = await service.easemob.checkToken();
+    const token = await service.third.easemob.checkToken();
     if (!token) {
       return false;
     }
@@ -222,7 +224,7 @@ class EasemobService extends Service {
   async roomInfo(roomId) {
     const { app, service } = this;
     // 获取 token
-    const token = await service.easemob.checkToken();
+    const token = await service.third.easemob.checkToken();
     if (!token) {
       return {};
     }

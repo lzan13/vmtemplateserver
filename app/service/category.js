@@ -98,7 +98,7 @@ class CategoryService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Category.count(query).exec();
+    totalCount = await ctx.model.Category.countDocuments(query).exec();
 
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {

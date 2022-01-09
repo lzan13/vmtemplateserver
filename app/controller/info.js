@@ -3,7 +3,6 @@
  * 描述：登录注册接口
  */
 'use strict';
-const path = require('path');
 const Controller = require('egg').Controller;
 const userSelect = {
   devicesId: 0,
@@ -31,7 +30,7 @@ class SignController extends Controller {
   async updateInfo() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('avatar', 'cover', 'birthday', 'gender', 'nickname', 'signature', 'address', 'hobby', 'profession');
+    const params = ctx.params.permit('birthday', 'gender', 'nickname', 'signature', 'address', 'hobby', 'profession');
     // 参数校验
     ctx.validate({
       birthday: 'birthday?',
@@ -69,6 +68,36 @@ class SignController extends Controller {
 
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '信息更新成功', data: user });
+  }
+
+  /**
+   * 修改头像
+   */
+  async updateAvatar() {
+    const { ctx, service } = this;
+    // 通过 ctx.getFileStream 获取用户上传的文件
+    const stream = await ctx.getFileStream();
+    await service.info.updateAvatar(stream);
+    // 查询最新数据
+    const id = ctx.state.user.id;
+    const user = await service.user.find(id, { password: 0 });
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '更新头像成功', data: user });
+  }
+
+  /**
+   * 修改封面
+   */
+  async updateCover() {
+    const { ctx, service } = this;
+    // 通过 ctx.getFileStream 获取用户上传的文件
+    const stream = await ctx.getFileStream();
+    await service.info.updateCover(stream);
+    // 查询最新数据
+    const id = ctx.state.user.id;
+    const user = await service.user.find(id, { password: 0 });
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '更新封面成功', data: user });
   }
 
   /**

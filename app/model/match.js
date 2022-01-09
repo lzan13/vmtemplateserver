@@ -7,31 +7,29 @@ module.exports = app => {
   const mongoose = app.mongoose;
 
   const MatchSchema = new mongoose.Schema({
-    // 用户
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    // 匹配内容
-    content: { type: String },
-    // 可供匹配次数
-    count: { type: Number, default: 5 },
-    // 匹配时心情 0-开心 1-平淡 2-难过 3-愤怒
-    emotion: {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // 用户
+    content: { type: String }, // 匹配内容
+    count: { type: Number, default: 5 }, // 可供匹配次数
+    emotion: { // 匹配时心情 0-开心 1-平淡 2-难过 3-愤怒
       type: Number,
       enum: [ 0, 1, 2, 3 ],
-      default: 2,
+      default: 0,
     },
-    // 性别，对应用户自身性别：0-女，1-男，2-神秘
-    gender: {
+    gender: { // 性别，方便过滤，对应用户自身性别：0-女，1-男，2-神秘
       type: Number,
       enum: [ 0, 1, 2 ],
       default: 2,
     },
+    type: { // 匹配类型 0-普通 1-急速聊天 2-树洞
+      type: Number,
+      enum: [ 0, 1, 2 ],
+      default: 0,
+    },
   },
   // schema 的选项options
   {
-    // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
-    id: true,
-    // 生成时间
-    timestamps: { createdAt: 'createdAt' },
+    // id: true, // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
+    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }, // 生成时间
   });
 
   return mongoose.model('Match', MatchSchema);

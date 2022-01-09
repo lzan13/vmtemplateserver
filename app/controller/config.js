@@ -16,7 +16,7 @@ class ConfigController extends Controller {
     // 组装参数
     const params = ctx.params.permit('alias', 'title', 'desc', 'content');
     // 校验参数
-    ctx.validate({ title: 'title', desc: 'desc' }, params);
+    ctx.validate({ alias: 'string', title: 'title', desc: 'desc' }, params);
     // 调用 Service 进行业务处理
     const config = await service.config.create(params);
     // 设置响应内容和响应状态码

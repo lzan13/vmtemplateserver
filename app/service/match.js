@@ -8,12 +8,8 @@ const Service = require('egg').Service;
 const userSelect = {
   username: 1,
   avatar: 1,
-  cover: 1,
   gender: 1,
   nickname: 1,
-  signature: 1,
-  deleted: 1,
-  deletedReason: 1,
 };
 
 class MatchService extends Service {
@@ -28,14 +24,11 @@ class MatchService extends Service {
     const match = await ctx.service.match.findByUserId(id);
     let data = { ...params };
     if (match) {
-      // 存在匹配数据，检查最大可供匹配次数
-      if (match.count < 5) {
-        data = {
-          $inc: { count: 1 },
-          ...params,
-        };
-      }
-      // 检查最大可供匹配次数，不足 5 次+1
+      // 存在匹配数据，可供匹配次数+1
+      data = {
+        $inc: { fromCount: 1 },
+        ...params,
+      };
       return ctx.model.Match.findOneAndUpdate({ user: id }, data);
     }
     // 首次提交匹配数据，直接创建
@@ -45,7 +38,6 @@ class MatchService extends Service {
 
   /**
    * 删除一条记录
-   * @param id
    */
   async destroy(id) {
     const { ctx, service } = this;
@@ -53,27 +45,34 @@ class MatchService extends Service {
     if (!match) {
       ctx.throw(404, `记录不存在 ${id}`);
     }
-    return ctx.model.match.findByIdAndRemove(id);
+    return ctx.model.Match.findByIdAndRemove(id);
   }
 
   /**
    * 随机获取一条数据
-   * @return {Promise<void>}
    */
-  async match(params) {
+  async random(params) {
     const { ctx } = this;
+    const { gender, type } = params;
     let result = [];
     const limit = 50;
     // 过滤掉自己
     const currId = ctx.state.user.id;
     const query = {
       user: { $ne: currId },
+      count: { $gte: 0 }, // 防止男女比例差别过大，这里暂时放开匹配限制
     };
-    if (params.gender === '0') {
+
+    if (gender === '0') {
       query.gender = { $ne: 1 };
-    } else if (params.gender === '1') {
+    } else if (gender === '1') {
       query.gender = { $ne: 0 };
     }
+
+    if (type) {
+      query.type = type;
+    }
+
     // 查询最近的指定条数数据，然后在结果中随机选择一条返回
     result = await ctx.model.Match.find(query)
       .populate('user', userSelect)
@@ -86,13 +85,9 @@ class MatchService extends Service {
     }
     const match = result[Math.floor(Math.random() * result.length)];
 
-    if (match.count > 1) {
-      // 获取到的匹配数据最大可供匹配次数-1
-      const update = { $inc: { count: -1 } };
-      await ctx.model.Match.findOneAndUpdate({ user: match.user.id }, update);
-    } else {
-      ctx.model.Match.findByIdAndRemove(match.id);
-    }
+    // 获取到的匹配数据最大可供匹配次数-1
+    const update = { $inc: { fromCount: -1, toCount: +1 } };
+    await ctx.model.Match.findOneAndUpdate({ user: match.user.id }, update);
 
     return match;
   }
@@ -104,7 +99,7 @@ class MatchService extends Service {
    */
   async index(params) {
     const { ctx } = this;
-    const { page, limit, gender } = params;
+    const { page, limit, gender, type } = params;
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
@@ -114,11 +109,17 @@ class MatchService extends Service {
     // 过滤掉自己
     const currId = ctx.state.user.id;
     // 组装查询参数
-    const query = { user: { $ne: currId } };
+    const query = {
+      user: { $ne: currId },
+      count: { $gte: 0 }, // 防止男女比例差别过大，这里暂时放开匹配限制
+    };
     if (gender === '0') {
       query.gender = { $ne: 1 };
     } else if (params.gender === '1') {
       query.gender = { $ne: 0 };
+    }
+    if (type) {
+      query.type = type;
     }
     result = await ctx.model.Match.find(query)
       .populate('user', userSelect)
@@ -127,7 +128,7 @@ class MatchService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Match.count(query)
+    totalCount = await ctx.model.Match.countDocuments(query)
       .exec();
 
     // 整理数据源 -> Ant Design Pro

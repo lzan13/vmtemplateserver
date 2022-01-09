@@ -5,6 +5,16 @@
 'use strict';
 
 const Service = require('egg').Service;
+const userSelect = {
+  username: 1,
+  avatar: 1,
+  cover: 1,
+  gender: 1,
+  nickname: 1,
+  signature: 1,
+  deleted: 1,
+  deletedReason: 1,
+};
 
 class FeedbackService extends Service {
 
@@ -13,17 +23,20 @@ class FeedbackService extends Service {
    * @param params
    */
   async create(params) {
-    return await this.ctx.model.Feedback.create(params);
+    const { ctx } = this;
+    if (!params.owner && ctx.state.user && ctx.state.user.id) {
+      params.owner = ctx.state.user.id;
+    }
+    return await ctx.model.Feedback.create(params);
   }
 
   /**
    * 删除一个反馈
-   * @param id
    */
   async destroy(id) {
     const { ctx, service } = this;
-    const role = await service.feedback.find(id);
-    if (!role) {
+    const like = await service.feedback.find(id);
+    if (!like) {
       ctx.throw(404, `反馈不存在 ${id}`);
     }
     return ctx.model.Feedback.findByIdAndRemove(id);
@@ -38,16 +51,31 @@ class FeedbackService extends Service {
   }
 
   /**
+   * 更新反馈
+   * @param id
+   * @param params
+   */
+  async update(id, params) {
+    const { ctx, service } = this;
+    const feedback = await service.feedback.find(id);
+    if (!feedback) {
+      ctx.throw(404, `反馈不存在 ${id}`);
+    }
+
+    return service.feedback.findByIdAndUpdate(id, params);
+  }
+
+  /**
    * 获取一个反馈
    * @param id
    */
   async show(id) {
     const { ctx, service } = this;
-    const role = await service.feedback.find(id);
-    if (!role) {
+    const like = await service.feedback.find(id);
+    if (!like) {
       ctx.throw(404, `反馈不存在 ${id}`);
     }
-    return role;
+    return like;
   }
 
   /**
@@ -56,7 +84,7 @@ class FeedbackService extends Service {
    */
   async index(params) {
     const { ctx } = this;
-    const { page, limit, contact } = params;
+    const { page, limit, owner, contact, status, type } = params;
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
@@ -64,17 +92,29 @@ class FeedbackService extends Service {
     const skip = Number(page) * Number(limit || 20);
     // 组装查询参数
     const query = {};
+    if (owner) {
+      query.owner = owner;
+    }
     if (contact) {
       query.contact = contact;
     }
+    if (status) {
+      query.status = Number(status);
+    }
+    if (type) {
+      query.type = Number(type);
+    }
     result = await ctx.model.Feedback.find(query)
-      .populate('attachment', { extname: 1, path: 1 })
+      .populate('owner', userSelect)
+      .populate('user', userSelect)
+      .populate('post', { title: 1 })
+      .populate('attachments', { extname: 1, path: 1, width: 1, height: 1 })
       .skip(skip)
       .limit(Number(limit))
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Feedback.count(query)
+    totalCount = await ctx.model.Feedback.countDocuments(query)
       .exec();
 
     // 整理数据源 -> Ant Design Pro
@@ -100,10 +140,19 @@ class FeedbackService extends Service {
    */
   async find(id) {
     return this.ctx.model.Feedback.findById(id)
-      .populate('attachment', { extname: 1, path: 1 })
+      .populate('owner', userSelect)
+      .populate('attachments', { extname: 1, path: 1, width: 1, height: 1 })
       .exec();
   }
 
+  /**
+   * 更新反馈信息
+   * @param id
+   * @param params 需要更新的信息
+   */
+  async findByIdAndUpdate(id, params) {
+    return this.ctx.model.Feedback.findByIdAndUpdate(id, params, { new: true });
+  }
 }
 
 module.exports = FeedbackService;

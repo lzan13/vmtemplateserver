@@ -1,14 +1,14 @@
 {
   "name": "vmtemplateserver",
-  "version": "0.0.1",
-  "description": "vmtemplateserver 一套社交模板服务端接口项目，包括账户登录注册，角色权限管理，附件管理，分类，职业，发帖，评论，关注等",
+  "version": "0.0.3",
+  "description": "忘忧服务端接口项目，包括账户登录注册，角色权限管理，附件管理，分类，职业，发帖，评论，关注等",
   "private": true,
   "egg": {
     "declarations": true
   },
   "dependencies": {
-    "crypto-js": "^4.0.0",
-    "egg": "^2.29.1",
+    "alipay-sdk": "^3.1.7",
+    "egg": "^2.31.0",
     "egg-alinode": "^2.0.1",
     "egg-bcrypt": "^1.1.0",
     "egg-cors": "^2.2.3",
@@ -16,18 +16,20 @@
     "egg-mongoose": "^3.2.0",
     "egg-parameters": "^1.1.2",
     "egg-router-plus": "^1.3.1",
-    "egg-scripts": "^2.11.0",
+    "egg-scripts": "^2.15.1",
     "egg-validate": "^2.0.2",
-    "mocha": "^8.0.1",
+    "image-downloader": "^4.0.1",
+    "mocha": "^8.4.0",
     "moment": "^2.27.0",
-    "nodemailer": "^6.4.17"
+    "nodemailer": "^6.7.0",
+    "upyun": "^3.4.4"
   },
   "devDependencies": {
     "autod": "^3.0.1",
     "autod-egg": "^1.1.0",
-    "egg-bin": "^4.11.0",
-    "egg-ci": "^1.11.0",
-    "egg-mock": "^3.21.0",
+    "egg-bin": "^4.16.4",
+    "egg-ci": "^1.19.0",
+    "egg-mock": "^3.26.0",
     "eslint": "^5.13.0",
     "eslint-config-egg": "^7.1.0"
   },
@@ -35,8 +37,8 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmmatchserver",
-    "stop": "egg-scripts stop --title=vmmatchserver",
+    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmnepentheserver",
+    "stop": "egg-scripts stop --title=vmnepentheserver",
     "dev": "EGG_SERVER_ENV=local egg-bin dev --sticky",
     "debug": "EGG_SERVER_ENV=local egg-bin debug --sticky",
     "test": "npm run lint -- --fix && npm run test-local",

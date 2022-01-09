@@ -30,6 +30,38 @@ class CodeService extends Service {
   }
 
   /**
+   * 获取列表，可根据参数判断是否分页，搜索
+   * @param params 查询参数
+   */
+  async index(params) {
+    const { ctx } = this;
+    const { page, limit } = params;
+    let result = [];
+    let currentCount = 0;
+    let totalCount = 0;
+    // 计算分页
+    const skip = Number(page) * Number(limit || 20);
+    // 组装查询参数
+    const query = {};
+
+    result = await ctx.model.Code.find(query)
+      .skip(skip)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 })
+      .exec();
+    currentCount = result.length;
+    totalCount = await ctx.model.Code.countDocuments(query).exec();
+
+    // 整理数据源 -> Ant Design Pro
+    const data = result.map(item => {
+      const json = Object.assign({}, item._doc);
+      return json;
+    });
+
+    return { currentCount, totalCount, page: Number(page), limit: Number(limit), data };
+  }
+
+  /**
    * ===================================================================================
    * 通用方法，主要是这些方法有多个地方调用，简单封装下
    */

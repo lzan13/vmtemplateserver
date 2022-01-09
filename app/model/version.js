@@ -7,27 +7,22 @@ module.exports = app => {
   const mongoose = app.mongoose;
 
   const VersionSchema = new mongoose.Schema({
-    // 平台
-    platform: { type: String, required: true },
-    // 标题
-    title: { type: String },
-    // 升级描述
-    desc: { type: String },
-    // 升级地址
-    url: { type: String },
-    // 版本号
-    versionCode: { type: Number },
-    // 版本名称
-    versionName: { type: String },
-    // 强制升级
-    force: { type: Boolean, default: false },
+    platform: { // 平台 0-Android 1-iOS 2-Mac 3-PC
+      type: Number,
+      enum: [ 0, 1, 2, 3 ],
+      default: 0,
+    },
+    title: { type: String }, // 标题
+    desc: { type: String }, // 升级描述
+    url: { type: String }, // 升级地址
+    versionCode: { type: Number }, // 版本号
+    versionName: { type: String }, // 版本名称
+    force: { type: Boolean, default: false }, // 强制升级
   },
   // schema 的选项options
   {
-    // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
-    id: true,
-    // 生成时间
-    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+    // id: true, // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
+    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }, // 生成时间
   });
 
   return mongoose.model('Version', VersionSchema);

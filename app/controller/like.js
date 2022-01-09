@@ -22,9 +22,22 @@ class LikeController extends Controller {
   }
 
   /**
-   * 取消喜欢
+   * 删除
    */
   async destroy() {
+    const { ctx, service } = this;
+    // 校验参数
+    const { id } = ctx.params;
+    // 调用 Service 进行业务处理
+    await service.like.destroy(id);
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '取消喜欢成功' });
+  }
+
+  /**
+   * 取消喜欢
+   */
+  async cancelLike() {
     const { ctx, service } = this;
     // 校验参数
     const params = ctx.params.permit('type', 'id');

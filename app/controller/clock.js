@@ -1,6 +1,6 @@
 /**
  * Create by lzan13 2020/7/7
- * 描述：喜欢对外接口
+ * 描述：签到接口
  */
 'use strict';
 
@@ -13,10 +13,8 @@ class ClockController extends Controller {
    */
   async create() {
     const { ctx, service } = this;
-    // 组装参数
-    const { userId } = ctx.params;
     // 调用 Service 进行业务处理
-    await service.clock.create(userId);
+    await service.clock.create();
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '签到成功' });
   }

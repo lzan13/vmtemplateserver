@@ -14,7 +14,7 @@ class RoomController extends Controller {
   async create() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('title', 'desc', 'owner');
+    const params = ctx.params.permit('title', 'desc', 'extension', 'maxCount');
     // 校验参数
     ctx.validate({ title: 'title', desc: 'desc' }, params);
 
@@ -64,7 +64,7 @@ class RoomController extends Controller {
     // 组装参数
     const { id } = ctx.params;
     // 组装参数
-    const params = ctx.params.permit('title', 'desc');
+    const params = ctx.params.permit('title', 'desc', 'extension', 'maxCount');
     // 校验参数
     ctx.validate({ title: 'title', desc: 'desc' }, params);
 

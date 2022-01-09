@@ -167,7 +167,7 @@ class SignService extends Service {
    */
   async signOut() {
     const { ctx, service } = this;
-    const id = ctx.state.user.data.id;
+    const id = ctx.state.user.id;
     return service.user.findByIdAndUpdate(id, { token: '' });
   }
 

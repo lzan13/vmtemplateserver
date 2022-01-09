@@ -23,13 +23,17 @@ class PostService extends Service {
    * @param params
    */
   async create(params) {
-    const { ctx } = this;
+    const { ctx, service } = this;
     const userId = ctx.state.user.id;
     // 设置内容发布者
     params.owner = userId;
-    const post = await ctx.model.Post.create(params);
+    if (!params.title) {
+      params.title = params.content.substr(0, 24);
+    }
+    let post = await ctx.model.Post.create(params);
     // 修改用户内容数+1
     await ctx.model.User.findByIdAndUpdate(userId, { $inc: { postCount: 1 } });
+    post = await service.post.find(post._id);
     return post;
   }
 
@@ -46,7 +50,7 @@ class PostService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity <= 9 && post.owner.id !== userId) {
+      if (identity < 200 && post.owner.id !== userId) {
         ctx.throw(403, '无权操作，普通用户只能操作自己内容');
       }
     }
@@ -55,6 +59,12 @@ class PostService extends Service {
     await ctx.model.User.findByIdAndUpdate(userId, { $inc: { postCount: -1 } });
     // 删除内容下的评论
     await ctx.model.Comment.deleteMany({ post: this.app.mongoose.Types.ObjectId(post.id) });
+    // 删除包含的附件
+    if (post.attachments) {
+      post.attachments.forEach(item => {
+        service.attachment.destroy(item._id);
+      });
+    }
     // 删除内容
     return ctx.model.Post.findByIdAndRemove(id);
   }
@@ -72,7 +82,7 @@ class PostService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity <= 9 && post.owner.id !== userId) {
+      if (identity < 200 && post.owner.id !== userId) {
         ctx.throw(403, '无权操作，普通用户只能操作自己内容');
       }
     }
@@ -96,7 +106,7 @@ class PostService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity <= 9 && post.owner.id !== userId) {
+      if (identity < 200 && post.owner.id !== userId) {
         ctx.throw(403, '普通用户只能操作自己发布的内容');
       }
     }
@@ -142,14 +152,15 @@ class PostService extends Service {
     }
     result = await ctx.model.Post.find(query, { deleted: 0, deletedAt: 0 })
       .populate('owner', userSelect)
-      .populate('category', { title: 1, desc: 1 })
-      .populate('attachments', { extname: 1, path: 1 })
+      .populate('category', { title: 1 })
+      .populate('attachments', { extname: 1, path: 1, width: 1, height: 1 })
       .skip(skip)
       .limit(Number(limit))
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Post.count(query).exec();
+    totalCount = await ctx.model.Post.countDocuments(query)
+      .exec();
 
     for (const post of result) {
       const isLike = await this.service.like.isLike(1, currentUserId, post.id);
@@ -180,7 +191,7 @@ class PostService extends Service {
     return this.ctx.model.Post.findById(id)
       .populate('owner', userSelect)
       .populate('category', { title: 1 })
-      .populate('attachments', { extname: 1, path: 1 })
+      .populate('attachments', { extname: 1, path: 1, width: 1, height: 1 })
       .exec();
   }
 

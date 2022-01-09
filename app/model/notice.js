@@ -8,16 +8,10 @@ module.exports = app => {
   const mongoose = app.mongoose;
 
   const NoticeSchema = new mongoose.Schema({
-    // 触发者
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    // 被评论者
-    toUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
-    // 被评论的帖子
-    toPost: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
-    // 被评论的评论
-    toComment: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment' },
-    // 通知内容
-    content: { type: String },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // 触发者
+    toUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true }, // 接收者
+    toPost: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' }, // 相关帖子
+    content: { type: String }, // 通知内容
     /**
      * 通知类型
      * 0-系统公告，
@@ -36,10 +30,8 @@ module.exports = app => {
   },
   // schema 的选项options
   {
-    // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
-    id: true,
-    // 生成时间
-    timestamps: { createdAt: 'createdAt' },
+    // id: true, // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
+    timestamps: { createdAt: 'createdAt' }, // 生成时间
   });
 
   return mongoose.model('Notice', NoticeSchema);
