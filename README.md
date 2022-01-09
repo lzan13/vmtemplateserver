@@ -44,8 +44,9 @@ $ tar -czvf ../vmnepentheserver.tgz .
 # 将打包的代码上传到要发布的服务器上，解包，运行
 $ tar -xzvf vmnepentheserver.tgz .
 $ ./vmrun.sh
+# 完成之后运行单元测试初始化数据库
+$ npm run test
 ```
-> 因为管理端还没有开发完成，所以服务器首次部署完成，需要调用 `http://ip:port/v1/admin/init` 接口进行数据初始化，等管理端完成之后，登录管理端会自动初始化操作
 
 
 ## 域名配置
