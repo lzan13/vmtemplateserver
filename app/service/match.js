@@ -60,7 +60,7 @@ class MatchService extends Service {
     const currId = ctx.state.user.id;
     const query = {
       user: { $ne: currId },
-      count: { $gte: 0 }, // 防止男女比例差别过大，这里暂时放开匹配限制
+      fromCount: { $gte: 0 }, // 防止男女比例差别过大，这里暂时放开匹配限制
     };
 
     if (gender === '0') {
@@ -89,7 +89,7 @@ class MatchService extends Service {
 
     // 这里加上随机跳过是为了保证能随机到所有的匹配数据
     // 查询总数
-    const totalCount = await ctx.model.Match.countDocuments(query)
+    const totalCount = await ctx.model.Match.countDocuments()
       .exec();
     // 随机跳过
     let skip = Math.floor(Math.random() * (totalCount - 1));
@@ -102,7 +102,7 @@ class MatchService extends Service {
       .populate('user', userSelect)
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ updatedAt: -1 })
       .exec();
 
     if (result.length === 0) {
@@ -137,7 +137,7 @@ class MatchService extends Service {
     // 组装查询参数
     const query = {
       user: { $ne: currId },
-      count: { $gte: 0 }, // 防止男女比例差别过大，这里暂时放开匹配限制
+      fromCount: { $gte: 0 }, // 防止男女比例差别过大，这里暂时放开匹配限制
     };
     if (gender === '0') {
       query.gender = { $ne: 1 };
