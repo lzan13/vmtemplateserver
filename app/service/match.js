@@ -52,7 +52,7 @@ class MatchService extends Service {
    * 随机获取一条数据
    */
   async random(params) {
-    const { ctx } = this;
+    const { ctx, service } = this;
     const { gender, type } = params;
     let result = [];
     const limit = 50;
@@ -72,10 +72,35 @@ class MatchService extends Service {
     if (type) {
       query.type = type;
     }
+    const user = await service.user.find(currId);
+    // 会员身份不需要消耗积分
+    if (user.role.identity < 100) {
+      if (user.score <= 0) {
+        ctx.throw(412, '忘忧币不足，可通过签到或完成每日任务获取');
+      } else {
+        // 用户积分-1
+        let update = { $inc: { score: -1 } };
+        if (user.matchCount > 0) {
+          update = { $inc: { matchCount: -1 } };
+        }
+        service.user.findByIdAndUpdate(currId, update);
+      }
+    }
+
+    // 这里加上随机跳过是为了保证能随机到所有的匹配数据
+    // 查询总数
+    const totalCount = await ctx.model.Match.countDocuments(query)
+      .exec();
+    // 随机跳过
+    let skip = Math.floor(Math.random() * (totalCount - 1));
+    if (skip > 50) {
+      skip -= 50;
+    }
 
     // 查询最近的指定条数数据，然后在结果中随机选择一条返回
     result = await ctx.model.Match.find(query)
       .populate('user', userSelect)
+      .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })
       .exec();
@@ -83,6 +108,7 @@ class MatchService extends Service {
     if (result.length === 0) {
       ctx.throw(404, '哎呀对方走掉了');
     }
+
     const match = result[Math.floor(Math.random() * result.length)];
 
     // 获取到的匹配数据最大可供匹配次数-1
@@ -104,7 +130,7 @@ class MatchService extends Service {
     let currentCount = 0;
     let totalCount = 0;
     // 计算分页
-    const skip = Number(page) * Number(limit || 20);
+    const skip = Number(page || 0) * Number(limit || 20);
 
     // 过滤掉自己
     const currId = ctx.state.user.id;

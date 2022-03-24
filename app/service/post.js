@@ -12,6 +12,7 @@ const userSelect = {
   gender: 1,
   nickname: 1,
   signature: 1,
+  role: 1,
   deleted: 1,
   deletedReason: 1,
 };
@@ -33,7 +34,7 @@ class PostService extends Service {
     let post = await ctx.model.Post.create(params);
     // 修改用户内容数+1
     await ctx.model.User.findByIdAndUpdate(userId, { $inc: { postCount: 1 } });
-    post = await service.post.find(post._id);
+    post = await service.post.find(post.id);
     return post;
   }
 
@@ -120,6 +121,9 @@ class PostService extends Service {
   async show(id) {
     const { ctx, service } = this;
     const post = await service.post.find(id);
+    const currentUserId = ctx.state.user.id;
+    const isLike = await this.service.like.isLike(1, currentUserId, post.id);
+    post._doc.isLike = isLike;
     if (!post) {
       ctx.throw(404, `内容不存在 ${id}`);
     }
@@ -138,7 +142,7 @@ class PostService extends Service {
     let totalCount = 0;
     const currentUserId = ctx.state.user.id;
     // 计算分页
-    const skip = Number(page) * Number(limit || 20);
+    const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
     const query = { deleted: Number(deleted) || 0 };
     if (owner) {
@@ -151,7 +155,14 @@ class PostService extends Service {
       query.category = category;
     }
     result = await ctx.model.Post.find(query, { deleted: 0, deletedAt: 0 })
-      .populate('owner', userSelect)
+      // .populate('owner', userSelect)
+      .populate({
+        path: 'owner',
+        select: userSelect,
+        populate: [
+          { path: 'role', select: { identity: 1 } },
+        ],
+      })
       .populate('category', { title: 1 })
       .populate('attachments', { extname: 1, path: 1, width: 1, height: 1 })
       .skip(skip)
@@ -189,7 +200,14 @@ class PostService extends Service {
    */
   async find(id) {
     return this.ctx.model.Post.findById(id)
-      .populate('owner', userSelect)
+      // .populate('owner', userSelect)
+      .populate({
+        path: 'owner',
+        select: userSelect,
+        populate: [
+          { path: 'role', select: { identity: 1 } },
+        ],
+      })
       .populate('category', { title: 1 })
       .populate('attachments', { extname: 1, path: 1, width: 1, height: 1 })
       .exec();

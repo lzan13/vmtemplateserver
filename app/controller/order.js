@@ -14,11 +14,12 @@ class OrderController extends Controller {
   async create() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('price', 'status', 'title', 'type', 'remarks', 'extend');
+    const params = ctx.params.permit('commoditys', 'remarks');
 
     // 调用 Service 进行业务处理
-    const order = await service.order.create(params);
-
+    let order = await service.order.create(params);
+    // 这里在查询一下
+    order = await service.order.show(order.id);
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '创建成功', data: order });
   }
@@ -60,7 +61,7 @@ class OrderController extends Controller {
   async update() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('id', 'price', 'status', 'title', 'type', 'remarks', 'extend');
+    const params = ctx.params.permit('id', 'price', 'realPrice', 'status', 'title', 'type', 'remarks', 'extend');
 
     // 调用 Service 进行业务处理
     await service.order.update(params);
@@ -77,6 +78,17 @@ class OrderController extends Controller {
     const { id } = ctx.params;
     // 调用 Service 进行业务处理
     const order = await service.order.show(id);
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '获取成功', data: order });
+  }
+
+  // 获取订单支付信息
+  async payInfo() {
+    const { ctx, service } = this;
+    // 组装参数
+    const { id } = ctx.params;
+    // 调用 Service 进行业务处理
+    const order = await service.order.payInfo(id);
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '获取成功', data: order });
   }

@@ -110,14 +110,21 @@ class RoomService extends Service {
     let currentCount = 0;
     let totalCount = 0;
     // 计算分页
-    const skip = Number(page) * Number(limit || 20);
+    const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
     const query = {};
     if (owner) {
       query.owner = owner;
     }
     result = await ctx.model.Room.find(query)
-      .populate('owner', userSelect)
+      // .populate('owner', userSelect)
+      .populate({
+        path: 'owner',
+        select: userSelect,
+        populate: [
+          { path: 'role', select: { identity: 1 } },
+        ],
+      })
       .populate('managers', userSelect)
       .populate('members', userSelect)
       .skip(skip)

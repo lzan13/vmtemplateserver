@@ -8,7 +8,6 @@ module.exports = app => {
 
   const OrderSchema = new mongoose.Schema({
     owner: { type: String }, // 订单所属用户
-    orderId: { type: String }, // 订单 Id
     title: { type: String }, // 订单标题
     price: { type: String }, // 订单价格
     realPrice: { type: String }, // 实际支付价格
@@ -16,9 +15,9 @@ module.exports = app => {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Commodity',
     }],
-    status: { // 订单状态 0-待支付 1-支付成功 2-已关闭
+    status: { // 订单状态 0-待支付 1-支付成功 2-已关闭 3-支付异常
       type: Number,
-      enum: [ 0, 1, 2 ],
+      enum: [ 0, 1, 2, 3 ],
       default: 0,
     },
     payType: { // 支付类型 0-微信 1-支付宝，可以设置默认支付方式
@@ -27,7 +26,7 @@ module.exports = app => {
       default: 1,
     },
     remarks: { type: String }, // 订单备注
-    extend: { type: String }, // 其他扩展
+    extend: { type: String }, // 其他扩展，记录支付订单结束后的一些信息说明 比如：3-支付异常，记录下异常原因
   },
   // schema 的选项options
   {

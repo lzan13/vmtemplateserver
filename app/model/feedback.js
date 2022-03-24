@@ -22,9 +22,9 @@ module.exports = app => {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Attachment',
     }],
-    type: { // 反馈类型 0-意见建议 1-广告 2-政治敏感 3-色情低俗 4-血腥暴力 5-不文明 6-涉嫌诈骗 7-其他
+    type: { // 反馈类型 0-意见建议 1-广告引流 2-政治敏感 3-违法违规 4-色情低俗 5-血腥暴力 6-诱导信息 7-谩骂攻击 8-涉嫌诈骗 9-引人不适 10-其他
       type: Number,
-      enum: [ 0, 1, 2, 3, 4, 5, 6, 7 ],
+      enum: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
       default: 0,
     },
   },

@@ -9,8 +9,8 @@ module.exports = app => {
 
   const NoticeSchema = new mongoose.Schema({
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // 触发者
-    toUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true }, // 接收者
-    toPost: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' }, // 相关帖子
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true }, // 接收者
+    post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' }, // 相关帖子
     content: { type: String }, // 通知内容
     /**
      * 通知类型

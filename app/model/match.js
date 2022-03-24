@@ -7,9 +7,10 @@ module.exports = app => {
   const mongoose = app.mongoose;
 
   const MatchSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // 用户
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true }, // 用户
     content: { type: String }, // 匹配内容
-    count: { type: Number, default: 5 }, // 可供匹配次数
+    fromCount: { type: Number, default: 5 }, // 可供匹配次数
+    toCount: { type: Number, default: 0 }, // 被匹配次数
     emotion: { // 匹配时心情 0-开心 1-平淡 2-难过 3-愤怒
       type: Number,
       enum: [ 0, 1, 2, 3 ],

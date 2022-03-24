@@ -15,21 +15,21 @@ module.exports = app => {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Attachment',
     }],
-    status: { // 商品状态 0-待上架 1-上架中 2-已下架 3-售罄
+    status: { // 商品状态 0-待上架 1-上架中 2-已下架 3-已售罄
       type: Number,
       enum: [ 0, 1, 2, 3 ],
       default: 0,
     },
-    stockCount: { type: Number, default: 9999 }, // 库存数量
-    type: { // 商品类型 0-金币充值 1-开通/会员 2-普通商品
+    inventory: { type: Number, default: 999999 }, // 库存数量
+    type: { // 商品类型 0-金币充值 1-开通/续费会员 2-普通商品
       type: Number,
       enum: [ 0, 1, 2 ],
       default: 0,
     },
-    level: { // 开通/续费会员级别，0-月度 1-季度 2-年度 商品 type == 1 需要
+    level: { // 开通/续费会员级别，1-月度 3-季度 12-年度 商品 type == 1 需要
       type: Number,
-      enum: [ 0, 1, 2 ],
-      default: 0,
+      enum: [ 1, 3, 12 ],
+      default: 1,
     },
     remarks: { type: String }, // 商品备注
   },

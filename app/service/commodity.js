@@ -73,16 +73,21 @@ class CommodityService extends Service {
    */
   async index(params) {
     const { ctx } = this;
-    const { page, limit, status, type } = params;
+    const { page, limit, status, type, extend } = params;
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
     // 计算分页
-    const skip = Number(page) * Number(limit || 20);
+    const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
-    const query = {};
-    if (status) {
+    const query = extend || {};
+
+    // 只有管理员才能查看所有商品
+    const identity = ctx.state.user.identity;
+    if (status && identity > 200) {
       query.status = status;
+    } else {
+      query.status = 1;
     }
     if (type) {
       query.type = type;
@@ -95,7 +100,8 @@ class CommodityService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Commodity.countDocuments(query).exec();
+    totalCount = await ctx.model.Commodity.countDocuments(query)
+      .exec();
 
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {

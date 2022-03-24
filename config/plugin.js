@@ -24,6 +24,9 @@ exports.bcrypt = {
   package: 'egg-bcrypt',
 };
 
+/**
+ * 启用插件 egg-cors，用于跨域访问
+ */
 exports.cors = {
   enable: true,
   package: 'egg-cors',

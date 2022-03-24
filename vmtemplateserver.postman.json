@@ -25,7 +25,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"管理员\",\n    \"identity\": 1,\n    \"desc\": \"拥有管理普通用户及部分系统功能的人员\"\n}",
+									"raw": "{\n    \"title\": \"VIP账户\",\n    \"identity\": 99,\n    \"desc\": \"享有使用系统及分享内容的权利，受到系统保护\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -228,7 +228,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"username\": \"lzan14\",\n    \"email\": \"lzan14@sina.com\",\n    \"phone\": \"15617021614\",\n    \"password\": \"123123\"\n}",
+									"raw": "{\n    \"username\": \"lzan17\",\n    \"email\": \"lzan17@sina.com\",\n    \"phone\": \"15617021617\",\n    \"password\": \"123123\",\n    \"devicesId\": \"100000007\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -437,7 +437,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/user?page=0&limit=10",
+									"raw": "{{host}}/user?page=2&limit=10",
 									"host": [
 										"{{host}}"
 									],
@@ -447,7 +447,7 @@
 									"query": [
 										{
 											"key": "page",
-											"value": "0"
+											"value": "2"
 										},
 										{
 											"key": "limit",
@@ -689,6 +689,177 @@
 					]
 				},
 				{
+					"name": "签到接口",
+					"item": [
+						{
+							"name": "创建",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"测试分类\",\n    \"desc\": \"测试分类描述\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/clock",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"clock"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/clock/6120954d0404db403c7e1b33",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"clock",
+										"6120954d0404db403c7e1b33"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "批量删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ids\": \"5f1ea65fe9d6ceed2f53f5e1,5f083a72b7fc317651887ab6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/clock",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"clock"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/clock?page=0&limit=10",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"clock"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/category/5f1ea66ae9d6ceed2f53f5e2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"category",
+										"5f1ea66ae9d6ceed2f53f5e2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "分类接口",
 					"item": [
 						{
@@ -744,13 +915,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/category/5f1ea621e9d6ceed2f53f5e0",
+									"raw": "{{host}}/category/6120954d0404db403c7e1b33",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"category",
-										"5f1ea621e9d6ceed2f53f5e0"
+										"6120954d0404db403c7e1b33"
 									]
 								}
 							},
@@ -885,6 +1056,439 @@
 									"path": [
 										"category",
 										"5f1ea66ae9d6ceed2f53f5e2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "订单接口",
+					"item": [
+						{
+							"name": "创建",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"commoditys\": [\"6215ee4b7f5c983c9fa3d7f2\"],\n    \"remarks\": \"测试充值体验支付订单\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/order",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/order/5f1ea621e9d6ceed2f53f5e0",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"order",
+										"5f1ea621e9d6ceed2f53f5e0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "批量删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ids\": \"5f1ea65fe9d6ceed2f53f5e1,5f083a72b7fc317651887ab6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/order",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\":\"测试分类\",\n    \"desc\": \"享有使用系统及分享内容的权利，受到系统保护\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/category/5f1ea66ae9d6ceed2f53f5e2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"category",
+										"5f1ea66ae9d6ceed2f53f5e2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/order?page=0&limit=10",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"order"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/order/621650b57bc0026251f41d47",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"order",
+										"621650b57bc0026251f41d47"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取支付信息",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/order/payInfo/6215eeb7d5d8443ccb357d1f",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"order",
+										"payInfo",
+										"6215eeb7d5d8443ccb357d1f"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "商品接口",
+					"item": [
+						{
+							"name": "创建",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": 1,\n    \"stockCount\": 9999,\n    \"type\": 0,\n    \"level\": 0,\n    \"title\": \"充值 819200 忘忧币\",\n    \"desc\": \"限时6.3折\",\n    \"price\": \"8192\",\n    \"currPrice\": \"5160.96\",\n    \"remarks\": \"忘忧币充值\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/commodity",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"commodity"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/commodity/5f1ea621e9d6ceed2f53f5e0",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"commodity",
+										"5f1ea621e9d6ceed2f53f5e0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "批量删除",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ids\": \"5f1ea65fe9d6ceed2f53f5e1,5f083a72b7fc317651887ab6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/commodity",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"commodity"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\":\"测试分类\",\n    \"desc\": \"享有使用系统及分享内容的权利，受到系统保护\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/commodity/5f1ea66ae9d6ceed2f53f5e2",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"commodity",
+										"5f1ea66ae9d6ceed2f53f5e2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/commodity?page=0&limit=20",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"commodity"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/commodity/61138de85849914821e345bf",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"commodity",
+										"61138de85849914821e345bf"
 									]
 								}
 							},
@@ -1065,7 +1669,7 @@
 						{
 							"name": "配置用户协议",
 							"request": {
-								"method": "POST",
+								"method": "PUT",
 								"header": [
 									{
 										"key": "Authorization",
@@ -1075,7 +1679,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"alias\": \"userAgreement\",\n    \"title\": \"用户协议\",\n    \"desc\": \"配置用户协议 html 内容\",\n    \"content\": \"https://nepenthe.melove.net/agreement_policy/agreement.html\"\n}",
+									"raw": "{\n    \"alias\": \"userAgreement\",\n    \"title\": \"用户协议\",\n    \"desc\": \"配置用户协议地址\",\n    \"content\": \"https://nepenthe.melove.net/#/agreement\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1083,12 +1687,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/config",
+									"raw": "{{host}}/config/60fc34bdfbffea602f05b415",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
-										"config"
+										"config",
+										"60fc34bdfbffea602f05b415"
 									]
 								}
 							},
@@ -1097,7 +1702,7 @@
 						{
 							"name": "创建隐私政策",
 							"request": {
-								"method": "POST",
+								"method": "PUT",
 								"header": [
 									{
 										"key": "Authorization",
@@ -1107,7 +1712,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"alias\": \"privatePolicy\",\n    \"title\": \"隐私策略\",\n    \"desc\": \"配置隐私策略 html 内容\",\n    \"content\": \"https://nepenthe.melove.net/agreement_policy/policy.html\"\n}",
+									"raw": "{\n    \"alias\": \"privatePolicy\",\n    \"title\": \"隐私策略\",\n    \"desc\": \"配置隐私策略地址\",\n    \"content\": \"https://nepenthe.melove.net/#/policy\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1115,12 +1720,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/config",
+									"raw": "{{host}}/config/60fc34d8fbffea602f05b416",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
-										"config"
+										"config",
+										"60fc34d8fbffea602f05b416"
 									]
 								}
 							},
@@ -1144,7 +1750,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"platform\": \"android\",\n    \"title\": \"版本升级\",\n    \"desc\": \"重大更新\",\n    \"url\": \"http://app.melove.net/squx\",\n    \"versionCode\": 2,\n    \"versionName\": \"0.0.2\",\n    \"force\": false\n}",
+									"raw": "{\n    \"platform\": \"android\",\n    \"title\": \"版本升级\",\n    \"desc\": \"- 匹配方式调整，实现匹配过滤功能\\n- 心情编辑方式调整\\n- 添加用户主动注销功能处理，方便保护隐私\\n\\n当前为开放少量测试版本，后续当前产生数据\\n可能会清空，\\n如果有什么问题可以随时进行反馈\\n设置->关于->问题反馈\\n\\n感谢各位使用\",\n    \"url\": \"https://nepenthe.melove.net/\",\n    \"versionCode\": 2,\n    \"versionName\": \"0.0.2\",\n    \"force\": false\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1209,7 +1815,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"platform\": \"android\",\n    \"title\": \"版本升级\",\n    \"desc\": \"重大更新，添加检查省级功能，完善邮箱注册与绑定逻辑\",\n    \"url\": \"http://app.melove.net/squx\",\n    \"versionCode\": 3,\n    \"versionName\": \"0.0.3\",\n    \"force\": true\n}",
+									"raw": "{\n    \"platform\": \"android\",\n    \"title\": \"版本升级\",\n    \"desc\": \"匹配方式调整，实现匹配过滤功能\\n心情编辑方式调整\\n添加用户主动注销功能处理，方便保护隐私\\n\\n当前为开放少量测试版本，后续当前产生数据可能会清空，\\n\\n如果有什么问题可以随时进行反馈\\n\\n设置->关于->问题反馈\\n\\n感谢各位使用\",\n    \"url\": \"https://nepenthe.melove.net/\",\n    \"versionCode\": 2,\n    \"versionName\": \"0.0.2\",\n    \"force\": false\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1217,13 +1823,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/version/60dedfc6b037bd9b8e9877d0",
+									"raw": "{{host}}/version/610a61280ba9d86c55f51f99",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"version",
-										"60dedfc6b037bd9b8e9877d0"
+										"610a61280ba9d86c55f51f99"
 									]
 								}
 							},
@@ -1305,7 +1911,7 @@
 					]
 				},
 				{
-					"name": "管理初始化",
+					"name": "仪表盘",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1322,12 +1928,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/init",
+							"raw": "{{host}}/admin/dashboard",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"init"
+								"admin",
+								"dashboard"
 							]
 						}
 					},
@@ -1426,7 +2033,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"account\": \"template\",\n    \"password\": \"123123\"\n}",
+							"raw": "{\n    \"account\": \"admin\",\n    \"password\": \"123123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1819,6 +2426,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "获取商品列表",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}/common/virtualCommodityList",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"common",
+								"virtualCommodityList"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1905,6 +2543,21 @@
 							"mode": "formdata",
 							"formdata": [
 								{
+									"key": "desc",
+									"value": "更新头像",
+									"type": "text"
+								},
+								{
+									"key": "width",
+									"value": "460",
+									"type": "text"
+								},
+								{
+									"key": "height",
+									"value": "460",
+									"type": "text"
+								},
+								{
 									"key": "avatar",
 									"type": "file",
 									"src": "/Users/lzan13/Pictures/avatar_me.png"
@@ -1941,7 +2594,7 @@
 								{
 									"key": "cover",
 									"type": "file",
-									"src": "/Users/lzan13/Downloads/res/img_default.png"
+									"src": "/Users/lzan13/Pictures/cover.png"
 								}
 							]
 						},
@@ -2171,13 +2824,29 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"filename\": \"123.jpg\",\n    \"extname\": \".jpg\",\n    \"path\": \"https://data.match.melove.net/123.jpg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "desc",
+									"value": "测试带上参数",
+									"type": "text"
+								},
+								{
+									"key": "width",
+									"value": "460",
+									"type": "text"
+								},
+								{
+									"key": "height",
+									"value": "460",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/lzan13/Pictures/avatar_me.png"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{host}}/attachment",
@@ -2186,6 +2855,55 @@
 							],
 							"path": [
 								"attachment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "多附件",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/lzan13/Pictures/avatar_me.png"
+								},
+								{
+									"key": "desc",
+									"value": "图片描述",
+									"type": "text"
+								},
+								{
+									"key": "width",
+									"value": "460",
+									"type": "text"
+								},
+								{
+									"key": "height",
+									"value": "460",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/attachment/multiple",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"attachment",
+								"multiple"
 							]
 						}
 					},
@@ -2461,7 +3179,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/match?page=0&limit=20&gender=1",
+							"raw": "{{host}}/match?page=0&limit=20&gender=-1&type=0",
 							"host": [
 								"{{host}}"
 							],
@@ -2479,7 +3197,11 @@
 								},
 								{
 									"key": "gender",
-									"value": "1"
+									"value": "-1"
+								},
+								{
+									"key": "type",
+									"value": "0"
 								}
 							]
 						}
@@ -2580,13 +3302,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/room/149483234066434",
+							"raw": "{{host}}/room/155102643027969",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"room",
-								"149483234066434"
+								"155102643027969"
 							]
 						}
 					},
@@ -2749,7 +3471,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"这是第3条帖子标题哈\",\n    \"content\": \"这是帖子测试内容，哈哈哈😁哈哈哈\",\n    \"category\":\"6007f7953e07176fc0afbd5f\",\n    \"stick\":0,\n    \"attachments\": [\"60ad0be1a983e3e979e706e6\"],\n    \"extension\": \"\"\n}",
+							"raw": "{\n    \"title\": \"\",\n    \"content\": \"这是第6条帖子测试内容，哈哈哈😁 水电费水电费水电费水电费水电费是发但是对方哈哈哈\",\n    \"category\": \"60fc31c5fbffea602f05b40a\",\n    \"stick\": 1,\n    \"attachments\": [],\n    \"extension\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2924,7 +3646,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/post?page=0&limit=10&owner=60b6406e871e8a5fa9d77e8d",
+							"raw": "{{host}}/post?page=0&limit=20",
 							"host": [
 								"{{host}}"
 							],
@@ -2937,17 +3659,13 @@
 									"value": "0"
 								},
 								{
-									"key": "limit",
-									"value": "10"
-								},
-								{
 									"key": "deleted",
 									"value": "true",
 									"disabled": true
 								},
 								{
-									"key": "owner",
-									"value": "60b6406e871e8a5fa9d77e8d"
+									"key": "limit",
+									"value": "20"
 								}
 							]
 						}
@@ -2996,7 +3714,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"post\": \"60598750614e985b4b2594ce\",\n    \"content\": \"这是第2条帖子第2个测试评论内容\"\n}",
+							"raw": "{\n    \"user\":\"\",\n    \"post\": \"61855b68236f9ef035e2c239\",\n    \"content\": \"我又又来评论了！ 哈哈哈 😁 😋\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3104,7 +3822,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/comment?page=0&limit=20&post=60598750614e985b4b2594ce",
+							"raw": "{{host}}/comment?page=0&limit=20",
 							"host": [
 								"{{host}}"
 							],
@@ -3122,7 +3840,8 @@
 								},
 								{
 									"key": "post",
-									"value": "60598750614e985b4b2594ce"
+									"value": "60598750614e985b4b2594c",
+									"disabled": true
 								}
 							]
 						}
@@ -3248,7 +3967,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/follow?page=0&limit=20&type=1&userId=60404e46c220733e746af20b",
+							"raw": "{{host}}/follow?page=0&limit=20",
 							"host": [
 								"{{host}}"
 							],
@@ -3263,14 +3982,6 @@
 								{
 									"key": "limit",
 									"value": "20"
-								},
-								{
-									"key": "type",
-									"value": "1"
-								},
-								{
-									"key": "userId",
-									"value": "60404e46c220733e746af20b"
 								}
 							]
 						}
@@ -3555,16 +4266,16 @@
 			]
 		},
 		{
-			"name": "三方服务",
+			"name": "测试接口",
 			"item": [
 				{
-					"name": "UCloud对象操作认证",
+					"name": "测试支付通知网关",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"method\": \"PUT\",\n  \"bucket\": \"vmmatch\",\n  \"key\": \"20210707_163950707\",\n  \"content_type\": \"image/*\",\n  \"content_md5\": \"ccbc1d54257d3c061dbdb63e0916bec5\",\n  \"date\": \"20210707163950\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3572,27 +4283,27 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/third/ucloud/signatureObj",
+							"raw": "{{host}}/third/pay/notifyCallback",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"third",
-								"ucloud",
-								"signatureObj"
+								"pay",
+								"notifyCallback"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "UCloud对象上传回调",
+					"name": "测试支付授权回调",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"method\": \"PUT\",\n  \"bucket\": \"vmmatch\",\n  \"key\": \"20210707_163950707\",\n  \"content_type\": \"image/*\",\n  \"content_md5\": \"ccbc1d54257d3c061dbdb63e0916bec5\",\n  \"date\": \"20210707163950\"\n}",
+							"raw": "{\n  \"path\": \"/avatar\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3600,32 +4311,27 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/third/ucloud/signatureObj",
+							"raw": "{{host}}/third/pay/authCallback",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"third",
-								"ucloud",
-								"signatureObj"
+								"pay",
+								"authCallback"
 							]
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "测试接口",
-			"item": [
+				},
 				{
-					"name": "发送邮件",
+					"name": "测试MQTTUserToken",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"from\": \"VMLoft<notify@vmloft.com>\",\n  \"to\": \"lzan13@sina.com\",\n  \"subject\": \"邮件主题\",\n  \"html\": \"邮件内容（二选一）\",\n  \"text\": \"邮件内容（二选一）\"\n}",
+							"raw": "{\n    \"id\":\"123123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3633,13 +4339,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/test/sendMail",
+							"raw": "{{host}}/info/mqttUserToken",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"test",
-								"sendMail"
+								"info",
+								"mqttUserToken"
 							]
 						}
 					},

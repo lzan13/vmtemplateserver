@@ -24,11 +24,11 @@ class ClockService extends Service {
     const yesterdayCount = await ctx.service.clock.findYesterdayCount(userId);
     let update = {};
     if (yesterdayCount > 0) {
-      // 连续签到积分 +10
-      update = { $inc: { clockContinuousCount: 1, clockTotalCount: 1, score: 10 }, clockTime: Date.now() };
+      // 连续签到积分 +20
+      update = { $inc: { clockContinuousCount: 1, clockTotalCount: 1, score: 20 }, clockTime: Date.now() };
     } else {
-      // 单次签到积分 +5
-      update = { $inc: { clockTotalCount: 1, score: 5 }, clockContinuousCount: 1, clockTime: Date.now() };
+      // 单次签到积分 +10
+      update = { $inc: { clockTotalCount: 1, score: 10 }, clockContinuousCount: 1, clockTime: Date.now() };
     }
     // 更新打卡天数，总数与连续天数都更新
     await ctx.model.User.findByIdAndUpdate(userId, update);
@@ -60,7 +60,7 @@ class ClockService extends Service {
     let currentCount = 0;
     let totalCount = 0;
     // 计算分页
-    const skip = Number(page) * Number(limit || 20);
+    const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
     const query = {};
     if (userId) {

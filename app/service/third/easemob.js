@@ -61,7 +61,7 @@ class EasemobService extends Service {
    * @return {Promise<void>}
    */
   async checkToken() {
-    const { ctx, service } = this;
+    const { ctx } = this;
     let easemob = ctx.common.easemob;
     if (easemob && easemob.token) {
       // 过期 1 分钟前都重新请求
@@ -69,7 +69,7 @@ class EasemobService extends Service {
         return easemob.token;
       }
     }
-    easemob = await service.third.easemob.token();
+    easemob = await this.token();
     return easemob.token;
   }
 
@@ -83,9 +83,9 @@ class EasemobService extends Service {
    * @param password 加密后的账户密码
    */
   async createUser(id, password) {
-    const { app, service } = this;
+    const { app } = this;
     // 获取 token
-    const token = await service.third.easemob.checkToken();
+    const token = await this.checkToken();
     if (!token) {
       return false;
     }
@@ -108,9 +108,9 @@ class EasemobService extends Service {
    * @param id 要删除的用户 id，针对环信那边就是 username
    */
   async delUser(id) {
-    const { app, service } = this;
+    const { app } = this;
     // 获取 token
-    const token = await service.third.easemob.checkToken();
+    const token = await this.checkToken();
     const apiUrl = `${app.config.easemob.host}/${app.config.easemob.orgName}/${app.config.easemob.appName}/users/${id}`;
 
     const result = await this.apiRequest(apiUrl, 'DELETE', { Authorization: `Bearer ${token}` }, {});
@@ -126,9 +126,9 @@ class EasemobService extends Service {
    * @param id 要删除的用户 id，针对环信那边就是 username
    */
   async updatePassword(id, password) {
-    const { app, service } = this;
+    const { app } = this;
     // 获取 token
-    const token = await service.third.easemob.checkToken();
+    const token = await this.checkToken();
     const apiUrl = `${app.config.easemob.host}/${app.config.easemob.orgName}/${app.config.easemob.appName}/users/${id}/password`;
     const result = await this.apiRequest(apiUrl, 'POST', { Authorization: `Bearer ${token}` }, { newpassword: password });
 
@@ -148,9 +148,9 @@ class EasemobService extends Service {
    * @param params 参数
    */
   async createRoom(params) {
-    const { app, service } = this;
+    const { app } = this;
     // 获取 token
-    const token = await service.third.easemob.checkToken();
+    const token = await this.checkToken();
     if (!token) {
       return '';
     }
@@ -175,9 +175,9 @@ class EasemobService extends Service {
    * @param params 更新参数
    */
   async updateRoom(roomId, params) {
-    const { app, service } = this;
+    const { app } = this;
     // 获取 token
-    const token = await service.third.easemob.checkToken();
+    const token = await this.checkToken();
     if (!token) {
       return false;
     }
@@ -202,9 +202,9 @@ class EasemobService extends Service {
    * @param roomId 聊天室 Id
    */
   async destroyRoom(roomId) {
-    const { app, service } = this;
+    const { app } = this;
     // 获取 token
-    const token = await service.third.easemob.checkToken();
+    const token = await this.checkToken();
     if (!token) {
       return false;
     }
@@ -222,9 +222,9 @@ class EasemobService extends Service {
    * @param roomId 聊天室 Id
    */
   async roomInfo(roomId) {
-    const { app, service } = this;
+    const { app } = this;
     // 获取 token
-    const token = await service.third.easemob.checkToken();
+    const token = await this.checkToken();
     if (!token) {
       return {};
     }

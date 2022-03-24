@@ -13,23 +13,58 @@ class PayController extends Controller {
    */
   async authCallback() {
     const { ctx, service } = this;
-    const result = service.third.pay.authCallback();
+
+    ctx.logger.error('-lz- 收到授权回调');
+    ctx.logger.error(ctx.params);
+
+    const result = service.third.pay.authCallback(ctx.params);
     ctx.helper.success({ ctx, msg: '回调策略执行成功', data: result });
   }
+
   /**
-   * 支付通知网关
+   * 支付通知回调
    */
-  async gateway() {
+  async notifyCallback() {
     const { ctx, service } = this;
 
     ctx.logger.error(`-lz-headers- ${JSON.stringify(ctx.headers)}`);
-    // ctx.throw(403, '无权调用');
-    const params = ctx.params;
+
+    ctx.logger.error('-lz- 收到支付通知回调-1');
+    ctx.logger.error(ctx.params);
+
+    const params = ctx.params.permit(
+      'gmt_create',
+      'charset',
+      'seller_email',
+      'subject',
+      'sign',
+      'body',
+      'buyer_id',
+      'invoice_amount',
+      'notify_id',
+      'fund_bill_list',
+      'notify_type',
+      'trade_status',
+      'receipt_amount',
+      'app_id',
+      'buyer_pay_amount',
+      'sign_type',
+      'seller_id',
+      'gmt_payment',
+      'notify_time',
+      'version',
+      'out_trade_no',
+      'total_amount',
+      'trade_no',
+      'auth_app_id',
+      'buyer_logon_id',
+      'point_amount'
+    );
 
     // 调用支付通知网关处理服务
-    const result = await service.third.pay.gateway(params);
+    await service.third.pay.notifyCallback(JSON.parse(JSON.stringify(params)));
 
-    ctx.helper.success({ ctx, msg: '支付通知网关执行成功', data: result });
+    ctx.helper.success({ ctx, msg: '支付通知回调执行成功' });
   }
 
 }

@@ -48,7 +48,7 @@ class CommonController extends Controller {
       version = await service.version.findByPlatform(platform);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '检查结果', data: version });
+    ctx.helper.success({ ctx, msg: '版本检查成功', data: version });
   }
 
   /**
@@ -56,9 +56,9 @@ class CommonController extends Controller {
    */
   async clientConfig() {
     const { ctx, service } = this;
-    const config = await service.config.findByAlias('clientConfig');
+    const config = await service.config.findByAlias('client');
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '检查结果', data: config });
+    ctx.helper.success({ ctx, msg: '获取配置信息成功', data: config });
   }
 
   /**
@@ -68,7 +68,7 @@ class CommonController extends Controller {
     const { ctx, service } = this;
     const config = await service.config.findByAlias('policy');
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '获取配置成功', data: config });
+    ctx.helper.success({ ctx, msg: '获取隐私政策成功', data: config });
   }
 
   /**
@@ -78,7 +78,7 @@ class CommonController extends Controller {
     const { ctx, service } = this;
     const config = await service.config.findByAlias('agreement');
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '获取配置成功', data: config });
+    ctx.helper.success({ ctx, msg: '获取用户协议成功', data: config });
   }
 
   /**
@@ -88,8 +88,15 @@ class CommonController extends Controller {
     const { ctx, service } = this;
     // 组装参数
     const params = ctx.params.permit('contact', 'content', 'user', 'post', 'remark', 'attachments', 'type');
+    if (!params.user) {
+      delete params.user;
+    }
+    if (!params.post) {
+      delete params.post;
+    }
+
     // 校验参数
-    ctx.validate({ content: 'content', type: 'int' }, params);
+    ctx.validate({ content: 'content' }, params);
     // 调用 Service 进行业务处理
     const feedback = await service.feedback.create(params);
     // 设置响应内容和响应状态码
@@ -113,16 +120,12 @@ class CommonController extends Controller {
   }
 
   /**
-   * 商品列表，这里只能查询正常商品
+   * 获取虚拟商品列表
    */
-  async commodityList() {
+  async virtualCommodityList() {
     const { ctx, service } = this;
-    // 组装参数
-    const params = ctx.params.permit('page', 'limit', 'type');
-    // 这个接口只能查正常上架商品
-    params.status = 1;
     // 调用 Service 进行业务处理
-    const role = await service.commodity.index(params);
+    const role = await service.commodity.index({ page: 0, limit: 20, extend: { $or: [{ type: 0 }, { type: 1 }] } });
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '获取商品数据成功', data: role });
   }

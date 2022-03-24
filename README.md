@@ -18,10 +18,20 @@ vmnepentheserver
 - [Ubuntu 安装并配置 Mongodb](https://blog.melove.net/develop-config-ubuntu-install-mongodb/)
 
 
+## 配置说明
+`config`目录下添加了几个配置模板，需要自己根据需要复制相应的文件进行配置，复制文件后删除模板文件中的`template`即可，如` config.local.template.js`->`config.local.bak.js`
+```
+config.local.template.js // 本地调试配置模板
+config.pre.template.js // 线上调试配置模板
+config.prod.template.js // 线上运行配置模板
+config.unittest.template.js // 单元测试配置模板
+
+```
+
 ## 本地开发调试
 
 ```
-# 创建本地运行配置文件 config.local.js 修改配置文件内相关信息为自己的
+# 创建本地运行配置文件 config.local.bak.js 修改配置文件内相关信息为自己的
 $ cp config.local.template.js config.local.js
 # 终端运行
 $ npm i
@@ -36,6 +46,7 @@ $ open http://localhost:5920/
 ```
 # 创建发布运行配置文件 config.prod.js 修改配置文件内相关信息为自己的
 $ cp config.prod.template.js config.prod.js
+$ cp config.unittest.template.js config.unittest.js
 # 安装发布依赖
 $ npm i --production
 # 打包发布代码

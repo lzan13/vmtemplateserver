@@ -12,7 +12,7 @@ module.exports = options => {
     // 判断 token 是否有效，反馈接口有些特殊，
     if (!result.verify) {
     // 有 token 和无 token 情况都可以访问，经过这里只是为了解析 token 携带的用户信息，方便保存反馈信息时带上用户信息
-      if (ctx.path.includes('/feedback')) {
+      if (ctx.path.includes('/common') || ctx.path.includes('/feedback')) {
         return await next();
       }
       // token 校验失败，抛出异常，由 errorHandler 中间件统一处理

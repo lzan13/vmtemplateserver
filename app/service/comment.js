@@ -29,7 +29,7 @@ class CommentService extends Service {
 
     // 修改评论评论数+1
     await ctx.model.Post.findByIdAndUpdate(params.post, { $inc: { commentCount: 1 } });
-    comment = await this.find(comment._id);
+    comment = await this.find(comment.id);
     return comment;
   }
 
@@ -95,7 +95,7 @@ class CommentService extends Service {
     let currentCount = 0;
     let totalCount = 0;
     // 计算分页
-    const skip = Number(page) * Number(limit || 20);
+    const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
     const query = {};
     if (owner) {
@@ -109,7 +109,14 @@ class CommentService extends Service {
     }
 
     result = await ctx.model.Comment.find(query)
-      .populate('owner', userSelect)
+      // .populate('owner', userSelect)
+      .populate({
+        path: 'owner',
+        select: userSelect,
+        populate: [
+          { path: 'role', select: { identity: 1 } },
+        ],
+      })
       .populate('user', userSelect)
       .populate('post', { title: 1 })
       .skip(skip)
@@ -142,7 +149,14 @@ class CommentService extends Service {
    */
   async find(id) {
     return this.ctx.model.Comment.findById(id)
-      .populate('owner', userSelect)
+      // .populate('owner', userSelect)
+      .populate({
+        path: 'owner',
+        select: userSelect,
+        populate: [
+          { path: 'role', select: { identity: 1 } },
+        ],
+      })
       .populate('user', userSelect)
       .populate('post', { title: 1 })
       .exec();

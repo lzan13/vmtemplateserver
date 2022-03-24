@@ -6,6 +6,7 @@
 module.exports = {
   common: {
     easemob: { token: '' },
+    mqtt: {},
   },
 
 };

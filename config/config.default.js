@@ -41,7 +41,7 @@ module.exports = appInfo => {
     enable: true,
     // 设置符合某些规则的请求不经过这个中间件，和 match 互斥，同时只能配置一个
     // [ '/v1/init', /^\/v1\/(sign\/(in|up|activate))/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
-    ignore: /\/v1\/(common|sign\/(in|up|activate)|test|third)/,
+    ignore: /\/v1\/(sign\/(in|up|activate)|third)/,
     // 设置只有符合某些规则的请求才会经过这个中间件。
     // match: [ '' ],
     // 这里配置的是对应角色无权限访问的接口正则匹配
@@ -54,7 +54,7 @@ module.exports = appInfo => {
        * 类别、签到、验证码、商品、配置、订单、职业、角色、用户、版本 等相关接口，
        * 可通过对外暴露的对应接口操作，比如更新用户资料等
        */
-      user: /\/v1\/(category|clock|code|commodity|config|order|profession|role|user|version)/,
+      user: /\/v1\/(category|clock|code|commodity|config|profession|role|user|version)/,
       lock: '',
     },
   };
@@ -122,15 +122,6 @@ module.exports = appInfo => {
     filterParameters: [ 'token' ],
   };
 
-  /**
-   * 接口安全配置
-   */
-  config.security = {
-    csrf: {
-      enable: false,
-    },
-    domainWhiteList: [ 'http://localhost:5920' ],
-  };
 
   /**
    * 接口安全配置
@@ -146,6 +137,16 @@ module.exports = appInfo => {
    */
 
   /**
+   * 接口安全配置
+   */
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+    domainWhiteList: [ 'http://localhost:5920' ], // '前端网页托管的域名'
+  };
+
+  /**
    * 配置 alinode 监控，这里本地调试暂时随便填写，正式环境另外配置
    */
   config.alinode = {
@@ -154,12 +155,24 @@ module.exports = appInfo => {
   };
 
   /**
-   * Easemob 配置，后台地址 https://console.easemob.com/app/im-service/detail
+   * Easemob IM 配置 https://console.easemob.com/app/im-service/detail
    */
   config.easemob = {
     host: 'http://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
     orgName: 'orgName', // 环信 appKey # 前半段
     appName: 'appName', // 环信 appkey # 后半段
+    clientId: 'client id', // 替换环信后台 clientId
+    clientSecret: 'client secret', // 替换环信后台 clientSecret
+  };
+
+  /**
+   * Easemob MQTT 配置 https://console.easemob.com/app/generalizeMsg/overviewService
+   */
+  config.mqtt = {
+    host: '8igtc0.cn1.mqtt.chat', // MQTT 链接地址
+    appId: '8igtc0', // MQTT AppId
+    port: [ 1883, 1884, 80, 443 ], // MQTT 端口 1883(mqtt),1884(mqtts),80(ws),443(wss)
+    restHost: 'https://api.cn1.mqtt.chat/app/8igtc0', // MQTT 服务 API 地址
     clientId: 'client id', // 替换环信后台 clientId
     clientSecret: 'client secret', // 替换环信后台 clientSecret
   };
@@ -181,8 +194,12 @@ module.exports = appInfo => {
     alipayEncryptKey: 'AES 秘钥', // alipay AES 秘钥
     alipayPrivateKey: '私钥', // alipay 私钥
     alipayPublicKey: '公钥', // alipay 公钥
-    alipayGateway: '网关', // alipay 网关
-
+    alipayGateway: 'https://openapi.alipaydev.com/gateway.do', // alipay 网关
+    format: 'JSON', // 格式类型
+    charset: 'utf-8', // 编码类型
+    signType: 'RSA2', // 签名类型
+    version: '1.0', // 版本 1.0
+    notifyUrl: '', // 通知回调地址
   };
 
   /**
@@ -236,19 +253,19 @@ module.exports = appInfo => {
       password: '123123',
     },
     siteList: [{ // 系统配置信息
-      alias: 'template',
-      title: '社交服务系统',
-      desc: '社交服务数据管理系统，包含完整的社交逻辑处理',
+      alias: 'nepenthe',
+      title: '忘忧服务系统',
+      desc: '忘忧服务数据管理系统，包含完整的社交逻辑处理',
     }, {
       alias: 'agreement',
       title: '用户协议',
       desc: '用户协议配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://template.melove.net/#/agreement',
+      content: 'https://nepenthe.melove.net/#/agreement',
     }, {
       alias: 'policy',
       title: '隐私政策',
       desc: '隐私政策配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://template.melove.net/#/policy',
+      content: 'https://nepenthe.melove.net/#/policy',
     }, {
       alias: 'client',
       title: '客户端配置信息',
@@ -272,129 +289,129 @@ module.exports = appInfo => {
     commodityList: [{ // 开通会员商品
       title: '月度会员',
       desc: '尊享多重会员独享服务',
-      price: '12',
-      currPrice: '11.11',
-      stockCount: '9999',
-      status: 1,
-      type: 1,
-      level: 0,
-      remarks: '订阅会员服务',
-    }, {
-      title: '季度会员',
-      desc: '尊享多重会员独享服务',
-      price: '36',
-      currPrice: '31.68',
-      stockCount: '9999',
+      price: '10.00',
+      currPrice: '8.88',
+      inventory: '999999',
       status: 1,
       type: 1,
       level: 1,
       remarks: '订阅会员服务',
     }, {
-      title: '年度会员',
+      title: '季度会员',
       desc: '尊享多重会员独享服务',
-      price: '144',
-      currPrice: '115.20',
-      stockCount: '9999',
+      price: '30.00',
+      currPrice: '25.50',
+      inventory: '999999',
       status: 1,
       type: 1,
-      level: 2,
+      level: 3,
+      remarks: '订阅会员服务',
+    }, {
+      title: '年度会员',
+      desc: '尊享多重会员独享服务',
+      price: '120.00',
+      currPrice: '96.00',
+      inventory: '999999',
+      status: 1,
+      type: 1,
+      level: 12,
       remarks: '订阅会员服务',
     }, { // 金币充值商品
       title: '充值 200 忘忧币',
       desc: '首冲体验',
-      price: '1',
+      price: '1.00',
       currPrice: '1.00',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 600 忘忧币',
       desc: '限时9.2折',
-      price: '6',
+      price: '6.00',
       currPrice: '5.52',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 1800 忘忧币',
       desc: '限时9.0折',
-      price: '18',
+      price: '18.00',
       currPrice: '16.20',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 3600 忘忧币',
       desc: '限时8.8折',
-      price: '36',
+      price: '36.00',
       currPrice: '31.68',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 7200 忘忧币',
       desc: '限时7.9折',
-      price: '72',
+      price: '72.00',
       currPrice: '56.88',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 12800 忘忧币',
       desc: '限时7.5折',
-      price: '128',
-      currPrice: '96',
-      stockCount: '9999',
+      price: '128.00',
+      currPrice: '96.00',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 25600 忘忧币',
       desc: '限时7.3折',
-      price: '256',
+      price: '256.00',
       currPrice: '186.88',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 51200 忘忧币',
       desc: '限时7.1折',
-      price: '512',
+      price: '512.00',
       currPrice: '363.52',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 102400 忘忧币',
       desc: '限时6.9折',
-      price: '1024',
+      price: '1024.00',
       currPrice: '706.56',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 204800 忘忧币',
       desc: '限时6.7折',
-      price: '2048',
+      price: '2048.00',
       currPrice: '1372.16',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
     }, {
       title: '充值 409600 忘忧币',
       desc: '限时6.5折',
-      price: '4096',
+      price: '4096.00',
       currPrice: '2662.40',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
@@ -402,9 +419,9 @@ module.exports = appInfo => {
     {
       title: '充值 819200 忘忧币',
       desc: '限时6.3折',
-      price: '8192',
+      price: '8192.00',
       currPrice: '5160.96',
-      stockCount: '9999',
+      inventory: '999999',
       status: 1,
       type: 0,
       remarks: '忘忧币充值',
@@ -481,7 +498,7 @@ module.exports = appInfo => {
       platform: 0,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://template.melove.net',
+      url: 'https://nepenthe.melove.net',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
@@ -489,7 +506,7 @@ module.exports = appInfo => {
       platform: 1,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://template.melove.net',
+      url: 'https://nepenthe.melove.net',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
@@ -497,7 +514,7 @@ module.exports = appInfo => {
       platform: 2,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://template.melove.net',
+      url: 'https://nepenthe.melove.net',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
@@ -505,7 +522,7 @@ module.exports = appInfo => {
       platform: 3,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://template.melove.net',
+      url: 'https://nepenthe.melove.net',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,

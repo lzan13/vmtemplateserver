@@ -31,7 +31,7 @@ class LikeController extends Controller {
     // 调用 Service 进行业务处理
     await service.like.destroy(id);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '取消喜欢成功' });
+    ctx.helper.success({ ctx, msg: '删除喜欢成功' });
   }
 
   /**
@@ -42,7 +42,7 @@ class LikeController extends Controller {
     // 校验参数
     const params = ctx.params.permit('type', 'id');
     // 调用 Service 进行业务处理
-    await service.like.destroy(params.type, params.id);
+    await service.like.cancelLike(params.type, params.id);
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '取消喜欢成功' });
   }

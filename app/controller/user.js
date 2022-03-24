@@ -14,9 +14,9 @@ class UserController extends Controller {
     const { ctx, service } = this;
 
     // 组装参数
-    const params = ctx.params.permit('phone', 'email', 'password', 'devicesId');
+    const params = ctx.params.permit('username', 'email', 'phone', 'password', 'devicesId');
     // 校验参数
-    ctx.validate({ phone: 'phone', email: 'email', password: 'password', devicesId: 'string' }, params);
+    ctx.validate({ username: 'username?', email: 'email', phone: 'phone', password: 'password', devicesId: 'devicesId' }, params);
 
     // 调用 Service 进行业务处理
     const data = await service.user.create(params);

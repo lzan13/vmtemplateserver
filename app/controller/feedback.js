@@ -16,7 +16,7 @@ class FeedbackController extends Controller {
     // 组装参数
     const params = ctx.params.permit('contact', 'content', 'user', 'post', 'remark', 'attachments', 'type');
     // 校验参数
-    ctx.validate({ content: 'content', type: 'int' }, params);
+    ctx.validate({ content: 'content' }, params);
     // 调用 Service 进行业务处理
     const role = await service.feedback.create(params);
     // 设置响应内容和响应状态码

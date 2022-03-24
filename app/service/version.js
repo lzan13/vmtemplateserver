@@ -66,7 +66,7 @@ class VersionService extends Service {
     let currentCount = 0;
     let totalCount = 0;
     // 计算分页
-    const skip = Number(page) * Number(limit || 20);
+    const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
     const query = {};
     if (platform) {

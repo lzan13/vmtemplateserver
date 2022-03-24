@@ -14,7 +14,7 @@ class CommodityController extends Controller {
   async create() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('title', 'desc', 'price', 'preferentialPrice', 'attachments', 'status', 'stockCount', 'type', 'remarks');
+    const params = ctx.params.permit('title', 'desc', 'price', 'currPrice', 'attachments', 'status', 'inventory', 'type', 'remarks');
     // 校验参数
     ctx.validate({ title: 'title', desc: 'desc?' }, params);
     // 调用 Service 进行业务处理
@@ -43,7 +43,7 @@ class CommodityController extends Controller {
     const { ctx, service } = this;
     // 组装参数
     const { id } = ctx.params;
-    const params = ctx.params.permit('title', 'desc', 'price', 'preferentialPrice', 'attachments', 'status', 'stockCount', 'type', 'remarks');
+    const params = ctx.params.permit('title', 'desc', 'price', 'currPrice', 'attachments', 'status', 'inventory', 'type', 'remarks');
     // 校验参数
     ctx.validate({ title: 'title?', desc: 'desc?' }, params);
     // 调用 Service 进行业务处理

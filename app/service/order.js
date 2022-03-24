@@ -10,27 +10,20 @@ class OrderService extends Service {
 
   /**
    * 创建
-   * @param params
-   * Order validation failed: extend: Cast to string failed for value \"{\n  wxCode: 'http://zyphoto.itluntan.cn/20210809161857',\n  zfbCode: 'http://zyphoto.itluntan.cn/20210809161957',\n  zfbScheme: 'alipayqr://platformapi/startapp?saId=10000007&qrcode=https%3A%2F%2Fqr.alipay.com%2Ftsx14575pzorxigphwtdj84',\n  afbPayUrl: 'https://admin.zhanzhangfu.com/common/zfbuserid?zfbuserid=2088602250620913&price=2.97'\n}\" at path \"extend\""
    */
   async create(params) {
     const { ctx, service } = this;
     if (!params.owner) {
       params.owner = ctx.state.user.id;
     }
-    const order = await service.third.pay.createOrder(params);
-    if (!order || order.code !== '0' || order.orderId === '') {
-      ctx.throw(500, '订单创建失败');
+    // 查询下商品信息 TODO 这里有一点需要注意，commoditys 本身是集合参数，单当集合只有一个时，服务器获取到的参数直接是集合内的第一个参数
+    const commodity = await service.commodity.show(params.commoditys);
+    if (!commodity || commodity.status !== 1) {
+      ctx.throw(500, '商品信息有误，订单创建失败');
     }
-    params.orderId = order.orderId;
-    params.realPrice = order.price;
-    params.status = 0;
-    params.extend = JSON.stringify({
-      wxCode: order.wxcode,
-      zfbCode: order.zfbcode,
-      zfbScheme: order.qrcode,
-      afbPayUrl: order.zfbuseridcode,
-    });
+    params.price = commodity.price;
+    params.realPrice = commodity.currPrice;
+    params.title = commodity.title;
 
     return ctx.model.Order.create(params);
   }
@@ -48,6 +41,7 @@ class OrderService extends Service {
     }
     const userId = ctx.state.user.id;
     const identity = ctx.state.user.identity;
+    // 权限判断
     if (identity < 200 && order.owner !== userId) {
       ctx.throw(403, '无权操作，普通用户只能操作自己创建的订单');
     }
@@ -57,26 +51,25 @@ class OrderService extends Service {
 
   /**
    * 更新信息
-   * @param id
    * @param params
    */
   async update(params) {
     const { ctx, service } = this;
     // 先判断下权限
-    const order = await service.order.find(params.id);
-    if (!order) {
-      ctx.throw(404, '订单不存在');
-    }
     const identity = ctx.state.user.identity;
     if (identity < 200) {
       ctx.throw(403, '无权操作，普通用户不能直接修改订单');
+    }
+    // 先判断下权限
+    const order = await service.order.find(params.id);
+    if (!order) {
+      ctx.throw(404, '订单不存在');
     }
     return service.order.findByIdAndUpdate(params.id, params);
   }
 
   /**
    * 获取信息
-   * @param id
    */
   async show(id) {
     const { ctx, service } = this;
@@ -84,16 +77,34 @@ class OrderService extends Service {
     if (!order) {
       ctx.throw(404, `订单不存在 ${id}`);
     }
-    // 如果订单支付状态待支付，则去支付那里查询下状态进行更新
-    if (order.status === 0) {
-      // 查询下支付状态
-      const result = await service.third.pay.findOrder(order.orderId);
-      // 更新支付状态
-      order.status = result.status;
-      await service.order.update(order.id, order);
+    // 判断下权限
+    const userId = ctx.state.user.id;
+    const identity = ctx.state.user.identity;
+    if (identity < 200 && order.owner !== userId) {
+      ctx.throw(403, '无权操作，普通用户不能查看他人订单信息');
     }
 
     return order;
+  }
+
+  /**
+   * 获取订单支付信息
+   */
+  async payInfo(id) {
+    const { ctx, service } = this;
+    const order = await service.order.find(id);
+    if (!order) {
+      ctx.throw(404, `订单不存在 ${id}`);
+    }
+    // 判断下权限
+    const userId = ctx.state.user.id;
+    const identity = ctx.state.user.identity;
+    if (identity < 200 && order.owner !== userId) {
+      ctx.throw(403, '无权操作，普通用户不能获取他人订单信息');
+    }
+    const payInfo = await service.third.pay.payInfo(order);
+
+    return payInfo;
   }
 
   /**
@@ -107,7 +118,7 @@ class OrderService extends Service {
     let currentCount = 0;
     let totalCount = 0;
     // 计算分页
-    const skip = Number(page) * Number(limit || 20);
+    const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
     const query = {};
     if (owner) {
@@ -121,6 +132,13 @@ class OrderService extends Service {
       }
     }
     result = await ctx.model.Order.find(query)
+      .populate({
+        path: 'commoditys',
+        select: { title: 1, price: 1 },
+        populate: [
+          { path: 'attachments', select: { path: 1 } },
+        ],
+      })
       .skip(skip)
       .limit(Number(limit))
       .sort({ createdAt: -1 })
@@ -151,14 +169,13 @@ class OrderService extends Service {
    * @param id
    */
   async find(id) {
-    return this.ctx.model.Order.findById(id);
-  }
-
-  /**
-   * 通过 orderId 查找
-   */
-  async findOrderId(orderId) {
-    return this.ctx.model.Order.findOne({ orderId });
+    return this.ctx.model.Order.findById(id).populate({
+      path: 'commoditys',
+      select: { title: 1, price: 1, type: 1, level: 1 },
+      populate: [
+        { path: 'attachments', select: { path: 1 } },
+      ],
+    });
   }
 
   /**

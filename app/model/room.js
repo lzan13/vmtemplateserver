@@ -19,9 +19,14 @@ module.exports = app => {
     }],
     title: { type: String }, // 标题
     desc: { type: String }, // 描述
-    extension: { type: String }, // 扩展信息
+    type: { // 房间类型 0-普通聊天 1-你画我猜 2-谁是卧底
+      type: Number,
+      enum: [ 0, 1, 2 ],
+      default: 0,
+    },
     count: { type: Number, default: 1 }, // 当前加入人数
     maxCount: { type: Number, default: 500 }, // 最大人数
+    extension: { type: String }, // 扩展信息
   },
   // schema 的选项options
   {

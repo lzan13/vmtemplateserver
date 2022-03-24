@@ -3,7 +3,7 @@
 'use strict';
 
 /**
- * 线上配置模板
+ * 本地配置模板
  */
 module.exports = () => {
   /**
@@ -19,12 +19,10 @@ module.exports = () => {
     csrf: {
       enable: false,
     },
-    domainWhiteList: [ 'https://前端网页托管的域名' ], // '前端网页托管的域名'
+    domainWhiteList: [ 'http://localhost:5920' ], // '前端网页托管的域名'
   };
 
-  /**
-   * 配置 alinode 监控，这里本地调试暂时随便填写，正式环境另外配置
-   */
+  // 配置 alinode 监控
   config.alinode = {
     appid: 'alinode appId',
     secret: 'alinode secret',
@@ -70,7 +68,7 @@ module.exports = () => {
     alipayEncryptKey: 'AES 秘钥', // alipay AES 秘钥
     alipayPrivateKey: '私钥', // alipay 私钥
     alipayPublicKey: '公钥', // alipay 公钥
-    alipayGateway: 'https://openapi.alipay.com/gateway.do', // alipay 网关
+    alipayGateway: 'https://openapi.alipaydev.com/gateway.do', // alipay 网关
     format: 'JSON', // 格式类型
     charset: 'utf-8', // 编码类型
     signType: 'RSA2', // 签名类型
@@ -118,7 +116,7 @@ module.exports = () => {
     // 部署服务地址
     host: '自己的服务器域名地址',
     // 是否配置站点二级目录下，默认关闭，这个只有你需要配置二级站点时才开启
-    subSite: false,
+    subSite: true,
     // 启用二级站点后，二级站点目录路径，这里需要和你站点代理配置一致
     subSitePath: '/api',
     // 配置邮箱注册账户是否需要激活

@@ -42,7 +42,7 @@ class FollowController extends Controller {
     // 校验参数
     const { id } = ctx.params;
     // 调用 Service 进行业务处理
-    await service.follow.destroy(id);
+    await service.follow.cancelFollow(id);
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '取消关注成功' });
   }

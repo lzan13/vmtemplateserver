@@ -109,7 +109,7 @@ module.exports = app => {
   apiRouter.get('/v1/common/userAgreement', controller.common.userAgreement); // 用户协议
   apiRouter.post('/v1/common/feedback', controller.common.feedback); // 提交反馈
   apiRouter.get('/v1/common/feedbackList', controller.common.feedbackList); // 查询我提交的反馈
-  apiRouter.get('/v1/common/commodityList', controller.common.commodityList); // 获取商品列表
+  apiRouter.get('/v1/common/virtualCommodityList', controller.common.virtualCommodityList); // 获取虚拟商品列表
 
   /**
    * ----------------------------------------------------------
@@ -146,9 +146,10 @@ module.exports = app => {
    */
   // 支付相关接口
   // 支付通知网关
-  apiRouter.post('/v1/third/pay/gateway', controller.third.pay.gateway);
+  apiRouter.post('/v1/third/pay/notifyCallback', controller.third.pay.notifyCallback);
   // 授权回调接口
   apiRouter.post('/v1/third/pay/authCallback', controller.third.pay.authCallback);
+
 
   /**
    * ----------------------------------------------------------
@@ -165,6 +166,8 @@ module.exports = app => {
   apiRouter.get('/v1/info/other/:id', controller.info.other); // 查询指定用户信息
   apiRouter.post('/v1/info/ids', controller.info.userList); // 获取指定用户集合
   apiRouter.get('/v1/info/clock', controller.info.clock); // 签到
+  apiRouter.get('/v1/info/mqttUserToken', controller.third.mqtt.userToken); // mqtt token接口
+
 
   /**
    * ----------------------------------------------------------
@@ -197,6 +200,8 @@ module.exports = app => {
   apiRouter.resources('order', '/v1/order', controller.order);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
   apiRouter.delete('/v1/order/destroyList', controller.order.destroyList);
+  // 获取订单支付信息
+  apiRouter.get('/v1/order/payInfo/:id', controller.order.payInfo);
 
   /**
    * ----------------------------------------------------------
