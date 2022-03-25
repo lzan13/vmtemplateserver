@@ -17,19 +17,19 @@ class PayService extends Service {
     const { app } = this;
     const alipaySDK = new AlipaySdk({
       /** 支付宝网关 **/
-      gateway: 'https://openapi.alipaydev.com/gateway.do',
+      gateway: app.config.pay.alipayGateway,
 
       /** 应用id，如何获取请参考：https://opensupport.alipay.com/support/helpcenter/190/201602493024 **/
       appId: app.config.pay.alipayAppId,
 
       /** 应用私钥，密钥格式为pkcs1，如何获取私钥请参考：https://opensupport.alipay.com/support/helpcenter/207/201602469554  **/
-      privateKey: 'MIIEpAIBAAKCAQEAqBgtTfjg1wG/6nOSuddqlWomxLQ8TZ6T/6M3EM6zHJjiqhk537cj69GAfaDEpROkrBFGZaOjObLOo+dJXUtBHCwlLhQ1u3iMxQWLWLzxO8BE6N8kEtzx3m3vxA8RRov6n1y5GrfpXDqYfoxPjO03ykFt94sF6TUphhOa5/JzPIEQaYwpksAa2TD6GmZC4/xtWdvQ7eMxDgzQtimOrZpRUQ3/dQDQIUBbCZi1owUGLXZLsYyY1ydGZFp/ZNghDzZYXpVqeC/3AhYJfwNv89dCoMEZOeD5bbK/0TAxQ64BSOTdjBMEnDte1//QahbTn1J75BulC6iGKg2YJZ36NRriiQIDAQABAoIBAE9gE0ylgG6nCdwJNTkCivcBSEtMnMk+X76wcNlD8fpIC4itHtIQZir+JAGuwAz/iJwkEC0Ap5wgXkmxdshSN+24vtnSe0kKdNa4doOxvOwtL50TebJamPAi07yuLMc2ZGOKYnJGdDC0Drx7PzlZ7yVX3jitcl4cV35Tlat/poDj3pCG6TZAVYC8uyJPE48TZr+emoKyFj2H2h4fy/8uUB3uxOoT6HX+EQJJMBjElKPqUH1cSDs/Azk2UOsU9MeOTAZB6OF0gvxCktzC6BjTfne8lRrqNyiUKGUdvnRqUcA+blVKS02PmvQpIgGM9YeGWYFSqnkRH0+9qoULozNQ3HECgYEA9V5RwUqos7I3b6xXiHtrpbpV/3eB32YCxJIu4yGXr0k35ikhXn760qwxRld3EXf/yVknQcorGgVZgC9z0J3uIqvQ7KpzUGgpETzeTdZw5qLfpAGCG8gpecQayeTEjubRxQGddqTxelYQjB2MNxMYWacpFMikhmLv53Pw/MKTrNUCgYEAr2C3rPCIqwRP8exUvsZhh8cvX2DAbNE1kgbDL/oT5QI2UGpVIuqXViZPPEGIATqWgs+suWtgj5pHL316FnuyNpqJ7mshA4qZ1UOgsCi8dDxTwZwjlijwB/2hRhk+yBH7SJ8JBsyfETiEoN4blu1LTn0jb/pBssocVvWjjsQAKOUCgYEA2ZaTv2o6omfnOzPEx/ZS5ruQKaTL2dT3nWPZCngusDWoyYUt30ORoCMs6ykDIM2eWeqionfqsv+Nd9wcwyJaHArrkgQxkFteF7g3lyUUJ6LF2gWwYHynMyERdHpXSDYuTZr6DU2GCquprudBAVIApPhUuOaY58dy4Xhye2L9XCUCgYBJ97fgN97cikgRmASyJceS1b60MoFWI/K9MR73yDjF2OYBiqd3v4uuqR+4IUd0hTpf16lY1uH2DzLA4+IvQ2KJxyovpX1aGgYBvbEzOysotxz4Rpt3xLJgHGf9wb4J8hOSsIjFFl5si/LcSnFGebTOWNcublVxS+8h+h5Oo3oRxQKBgQCxc9rp6WnyZnslKgYfZvL0Ryu69dBQizyHH8wQPXosqZcGvmX5YHMUC2lPG+BXFafbj7qfCFaWjvX3q/GxdCaeTlXLBqQJ09v7769zlBKVVd6gGXHpTjm3xh7zQpPUy72rTVzcVghLO3u5q6KPAWiT1nMTIOjSUEVxTHFVtEypqw==',
+      privateKey: app.config.pay.alipayPrivateKey,
 
       /** 支付宝公钥，如何获取请参考：https://opensupport.alipay.com/support/helpcenter/207/201602487431 **/
-      alipayPublicKey: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjds3JSzgu+ksokQrRIL+W5o0UAsBDGyCUTTxQBt+kGkiugcX4XLmwBQMsJvJt6OBgNTIIBUJ88GGmti122SQGF9Kb9j5XEn2kxg+MrhP5zNs6FSX95aHKNxgyxTymi4tnWWbin62KJwp/9loqmomqOdhuwS4BiWtUhnwZw2rAjKEaIfYiLb728iGZDLUcfEkzl1wNV3kSPVUWlzORT4zODiM2fwz9zv6ojGsC/ykunV0Zmh+PCU5D8pp2lxfZufSzeBtKfpKsN1GRhB7E6rzCNnpzGsaijTmC05Om/2v+0ipcSZuFOpY6mU0Zck7GNwxFFkU8WGG7yTLGX2VUgnR6wIDAQAB',
+      alipayPublicKey: app.config.pay.alipayPublicKey,
 
       /** 签名算法类型 **/
-      signType: 'RSA2',
+      signType: app.config.pay.signType,
     });
     return alipaySDK;
   }
@@ -58,7 +58,7 @@ class PayService extends Service {
       /** 订单金额，精确到小数点后两位 **/
       TotalAmount: order.realPrice,
       /** 订单描述 **/
-      Body: '订单描述',
+      Body: order.remarks,
       // extendParams:{
       /** 系统商编号，填写服务商的PID用于获取返佣，返佣参数传值前提：传值账号需要签约返佣协议，用于isv商户。 **/
       // SysServiceProviderId: '2088****000',
@@ -78,7 +78,7 @@ class PayService extends Service {
 
     const result = await alipaySDK.exec('alipay.trade.app.pay', {}, { formData });
     /** 返回的url去除支付宝网关获取到orderString，可以直接给客户端请求。如果传值客户端失败，可根据返回错误信息到该文档寻找排查方案：https://opensupport.alipay.com/support/helpcenter/89 **/
-    return result.replace('https://openapi.alipaydev.com/gateway.do?', '');
+    return result.replace(`${app.config.pay.signType}?`, '');
 
   }
 
