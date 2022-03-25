@@ -78,7 +78,7 @@ class PayService extends Service {
 
     const result = await alipaySDK.exec('alipay.trade.app.pay', {}, { formData });
     /** 返回的url去除支付宝网关获取到orderString，可以直接给客户端请求。如果传值客户端失败，可根据返回错误信息到该文档寻找排查方案：https://opensupport.alipay.com/support/helpcenter/89 **/
-    return result.replace(`${app.config.pay.signType}?`, '');
+    return result.replace(`${app.config.pay.alipayGateway}?`, '');
 
   }
 
@@ -221,16 +221,16 @@ class PayService extends Service {
    */
   async updateUserRole(owner, commodity) {
     const { service } = this;
-    // 计算会员到期时间
+    // 计算会员到期时间，这里每个月都按31天算，可以给用户多一点儿福利
     let time = 0;
     if (commodity.level === 1) {
-      time = 30 * 24 * 60 * 60 * 1000;
+      time = 31 * 24 * 60 * 60 * 1000;
     } else if (commodity.level === 3) {
-      time = 3 * 30 * 24 * 60 * 60 * 1000;
+      time = 3 * 31 * 24 * 60 * 60 * 1000;
     } else if (commodity.level === 12) {
-      time = 12 * 30 * 24 * 60 * 60 * 1000;
+      time = 12 * 31 * 24 * 60 * 60 * 1000;
     } else {
-      time = 30 * 24 * 60 * 60 * 1000;
+      time = 31 * 24 * 60 * 60 * 1000;
     }
     const user = await service.user.find(owner);
     // 角色过期时间戳

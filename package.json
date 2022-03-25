@@ -7,7 +7,7 @@
     "declarations": true
   },
   "dependencies": {
-    "alipay-sdk": "^3.1.7",
+    "alipay-sdk": "^3.2.0",
     "egg": "^2.31.0",
     "egg-alinode": "^2.0.1",
     "egg-bcrypt": "^1.1.0",
