@@ -77,7 +77,7 @@ class AttachmentService extends Service {
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
-    const skip = Number(page) * Number(limit || 10);
+    const skip = Number(page) * Number(limit || 20);
     const query = {};
     if (kind) {
       query.extname = { $in: kinds[kind] };

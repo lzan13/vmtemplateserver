@@ -101,7 +101,7 @@ class SignController extends Controller {
     // 组装参数
     const params = ctx.params.permit('devicesId', 'password');
     // 校验参数
-    ctx.validate({ devicesId: 'devicesId', password: 'password' }, params);
+    ctx.validate({ devicesId: 'devicesId' }, params);
 
     // 调用 Service 进行业务处理
     const user = await service.sign.signInByDevicesId(params);

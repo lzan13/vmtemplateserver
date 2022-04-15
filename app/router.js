@@ -49,6 +49,18 @@ module.exports = app => {
 
   /**
    * ----------------------------------------------------------
+   * 黑名单相关路由
+   */
+  // apiRouter.post('/v1/blacklist/:id', controller.blacklist.create);
+  // apiRouter.delete('/v1/blacklist/:id', controller.blacklist.destroy);
+  // apiRouter.get('/v1/blacklist', controller.blacklist.index);
+  apiRouter.resources('blacklist', '/v1/blacklist', controller.blacklist);
+  apiRouter.delete('/v1/blacklist', controller.blacklist.destroyList);
+  apiRouter.post('/v1/blacklist/cancel', controller.blacklist.cancel);
+
+
+  /**
+   * ----------------------------------------------------------
    * 分类相关路由
    */
   // apiRouter.post('/v1/category', controller.category.create);
@@ -107,6 +119,7 @@ module.exports = app => {
   apiRouter.get('/v1/common/clientConfig', controller.common.clientConfig); // 获取客户端配置
   apiRouter.get('/v1/common/privatePolicy', controller.common.privatePolicy); // 隐私政策
   apiRouter.get('/v1/common/userAgreement', controller.common.userAgreement); // 用户协议
+  apiRouter.get('/v1/common/userNorm', controller.common.userNorm); // 用户行为规范
   apiRouter.post('/v1/common/feedback', controller.common.feedback); // 提交反馈
   apiRouter.get('/v1/common/feedbackList', controller.common.feedbackList); // 查询我提交的反馈
   apiRouter.get('/v1/common/virtualCommodityList', controller.common.virtualCommodityList); // 获取虚拟商品列表
@@ -138,7 +151,7 @@ module.exports = app => {
   // apiRouter.get('/v1/follow', controller.follow.index);
   apiRouter.resources('follow', '/v1/follow', controller.follow);
   apiRouter.delete('/v1/follow', controller.follow.destroyList);
-  apiRouter.post('/v1/follow/cancel', controller.follow.cancelFollow);
+  apiRouter.post('/v1/follow/cancel', controller.follow.cancel);
 
   /**
    * ----------------------------------------------------------

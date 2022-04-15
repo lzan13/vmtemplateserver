@@ -16,7 +16,7 @@ class VersionController extends Controller {
     // 组装参数
     const params = ctx.params.permit('platform', 'title', 'desc', 'url', 'versionCode', 'versionName', 'force');
     // 校验参数
-    ctx.validate({ title: 'title', desc: 'desc' }, params);
+    ctx.validate({ title: 'title', desc: 'content' }, params);
     // 调用 Service 进行业务处理
     const version = await service.version.create(params);
     // 设置响应内容和响应状态码
@@ -45,7 +45,7 @@ class VersionController extends Controller {
     const { id } = ctx.params;
     const params = ctx.params.permit('platform', 'title', 'desc', 'url', 'versionCode', 'versionName', 'force');
     // 校验参数
-    ctx.validate({ title: 'title', desc: 'desc' }, params);
+    ctx.validate({ title: 'title', desc: 'content' }, params);
     // 调用 Service 进行业务处理
     const version = await service.version.update(id, params);
     // 设置响应内容和响应状态码

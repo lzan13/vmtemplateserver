@@ -14,7 +14,7 @@ class PostController extends Controller {
   async create() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('title', 'content', 'category', 'attachments', 'stick', 'extension');
+    const params = ctx.params.permit('title', 'content', 'category', 'attachments', 'status', 'stick', 'extension');
     // 校验参数
     ctx.validate({ title: 'title?', content: 'content', extension: 'string?' }, params);
 
@@ -93,7 +93,7 @@ class PostController extends Controller {
     // 组装参数
     const { id } = ctx.params;
     // 组装参数
-    const params = ctx.params.permit('title', 'content', 'stick', 'category', 'extension');
+    const params = ctx.params.permit('title', 'content', 'status', 'stick', 'category', 'extension');
     // 校验参数
     ctx.validate({ title: 'title?', content: 'content', stick: 'int?', extension: 'string?' }, params);
 

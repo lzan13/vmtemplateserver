@@ -38,6 +38,7 @@ module.exports = app => {
     likeCount: { type: Number, default: 0 }, // 喜欢我数量
     matchCount: { type: Number, default: 99 }, // 可用匹配次数，为0后需要消耗积分，每天 00:00 刷新
     postCount: { type: Number, default: 0 }, // 帖子数量
+    strangerMsg: { type: Boolean, default: true }, // 陌生人私信
     profession: { type: mongoose.Schema.Types.ObjectId, ref: 'Profession' }, // 职业
     role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' }, // 角色，和角色数据关联，不同角色拥有不同权限，默认为普通用户
     roleDate: { type: Date }, // 角色到期时间，到期后自动变为普通用户

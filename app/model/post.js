@@ -10,12 +10,12 @@ module.exports = app => {
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true }, // 发布者
     title: { type: String }, // 标题
     content: { type: String }, // 内容
-    stick: { // 置顶状态 0-不置顶 1-个人置顶 2-全局置顶
+    status: { // 审核状态，前期默认直接通过，有需求时可以改成默认待审核 0-通过 1-待审核 2-拒绝
       type: Number,
       enum: [ 0, 1, 2 ],
       default: 0,
     },
-    status: { // 审核状态，前期默认直接通过，有需求时可以改成默认待审核 0-通过 1-待审核 2-拒绝
+    stick: { // 置顶状态 0-不置顶 1-个人置顶 2-全局置顶
       type: Number,
       enum: [ 0, 1, 2 ],
       default: 0,

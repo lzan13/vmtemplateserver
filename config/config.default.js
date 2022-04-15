@@ -169,10 +169,10 @@ module.exports = appInfo => {
    * Easemob MQTT 配置 https://console.easemob.com/app/generalizeMsg/overviewService
    */
   config.mqtt = {
-    host: '8igtc0.cn1.mqtt.chat', // MQTT 链接地址
-    appId: '8igtc0', // MQTT AppId
+    host: 'mqtt host', // MQTT 链接地址
+    appId: 'appId', // MQTT AppId
     port: [ 1883, 1884, 80, 443 ], // MQTT 端口 1883(mqtt),1884(mqtts),80(ws),443(wss)
-    restHost: 'https://api.cn1.mqtt.chat/app/8igtc0', // MQTT 服务 API 地址
+    restHost: 'rest API', // MQTT 服务 API 地址
     clientId: 'client id', // 替换环信后台 clientId
     clientSecret: 'client secret', // 替换环信后台 clientSecret
   };
@@ -266,6 +266,11 @@ module.exports = appInfo => {
       title: '隐私政策',
       desc: '隐私政策配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
       content: 'https://nepenthe.melove.net/#/policy',
+    }, {
+      alias: 'norm',
+      title: '用户行为规范',
+      desc: '用户行为规范配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
+      content: 'https://nepenthe.melove.net/#/norm',
     }, {
       alias: 'client',
       title: '客户端配置信息',

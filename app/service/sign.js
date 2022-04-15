@@ -145,8 +145,8 @@ class SignService extends Service {
       ctx.throw(404, '用户不存在');
     }
     // 校验密码
-    if (user.password !== ctx.helper.cryptoMD5(params.password)) {
-      ctx.throw(412, '设备已绑定邮箱或用户名并设置密码，请使用其他方式登录');
+    if (user.password !== params.password) {
+      ctx.throw(412, '设备已绑定邮箱或用户名并设置密码，请使用账户密码登录');
     }
     // 校验账户状态
     if (user.deleted > 0) {

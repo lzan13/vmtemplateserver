@@ -89,10 +89,11 @@ class SignService extends Service {
     if (!user) {
       ctx.throw(404, `用户不存在 ${id}`);
     }
-    const code = service.code.findByEmail(params.email);
-    if (!code) {
+    const code = await service.code.findByEmail(params.email);
+    if (!code || code.code !== params.code) {
       ctx.throw(404, `验证码不存在或已失效 ${code}`);
     }
+    service.code.destroy(code.id);
 
     return service.user.findByIdAndUpdate(id, { email: params.email, emailVerify: true });
   }
@@ -101,22 +102,29 @@ class SignService extends Service {
    * 重置密码
    * @param params
    */
-  async updatePassword(password, oldPassword) {
+  async updatePassword(params) {
     const { ctx, service } = this;
+
+    const code = await service.code.findByEmail(params.email);
+    if (!code || code._doc.code !== params.code) {
+      ctx.throw(404, '验证码不存在或已失效');
+    }
+    service.code.destroy(code.id);
+
     const id = ctx.state.user.id;
     const user = await service.user.find(id);
     if (!user) {
       ctx.throw(404, `用户不存在 ${id}`);
     }
-
-    if (user.password !== ctx.helper.cryptoMD5(oldPassword)) {
-      ctx.throw(412, '原密码错误');
-    }
     // 密码加密，这里是简单的 md5 加密
-    user.password = await ctx.helper.cryptoMD5(password);
+    user.password = await ctx.helper.cryptoMD5(params.password);
     // 修改密码需要清除 token 重新登录认证
     user.token = service.token.create(user);
 
+    const result = await service.third.easemob.updatePassword(id, user.password);
+    if (result !== 0) {
+      ctx.throw(result, '密码更新失败，请稍后重试');
+    }
     return service.user.findByIdAndUpdate(id, user);
   }
 
@@ -158,8 +166,11 @@ class SignService extends Service {
       ctx.throw(404, `用户不存在 ${id}`);
     }
     // 查询与用户的关系
-    const relation = await service.follow.relation(id);
-    user._doc.relation = relation;
+    user._doc.relation = await service.follow.relation(id);
+
+    // 查询与用户拉黑状态
+
+    user._doc.blacklist = await service.blacklist.relation(id);
     return user;
   }
 

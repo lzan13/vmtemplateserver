@@ -30,7 +30,7 @@ class SignController extends Controller {
   async updateInfo() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('birthday', 'gender', 'nickname', 'signature', 'address', 'hobby', 'profession');
+    const params = ctx.params.permit('birthday', 'gender', 'nickname', 'signature', 'address', 'hobby', 'profession', 'strangerMsg');
     // 参数校验
     ctx.validate({
       birthday: 'birthday?',
@@ -126,12 +126,12 @@ class SignController extends Controller {
   async updatePassword() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('password', 'oldPassword');
+    const params = ctx.params.permit('password', 'email', 'code');
     // 校验参数
-    ctx.validate({ password: 'password', oldPassword: 'password' }, params);
+    ctx.validate({ password: 'password', email: 'email', code: 'code' }, params);
 
     // 调用 Service 进行业务处理
-    await service.info.updatePassword(params.password, params.oldPassword);
+    await service.info.updatePassword(params);
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '密码修改成功，请用新密码重新登录' });
   }

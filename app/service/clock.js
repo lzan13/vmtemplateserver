@@ -24,11 +24,11 @@ class ClockService extends Service {
     const yesterdayCount = await ctx.service.clock.findYesterdayCount(userId);
     let update = {};
     if (yesterdayCount > 0) {
-      // 连续签到积分 +20
-      update = { $inc: { clockContinuousCount: 1, clockTotalCount: 1, score: 20 }, clockTime: Date.now() };
+      // 连续签到积分 +20 同时恢复匹配次数
+      update = { $inc: { clockContinuousCount: 1, clockTotalCount: 1, score: 20 }, clockTime: Date.now(), matchCount: 9 };
     } else {
-      // 单次签到积分 +10
-      update = { $inc: { clockTotalCount: 1, score: 10 }, clockContinuousCount: 1, clockTime: Date.now() };
+      // 单次签到积分 +10 同时恢复匹配次数
+      update = { $inc: { clockTotalCount: 1, score: 10 }, clockContinuousCount: 1, clockTime: Date.now(), matchCount: 99 };
     }
     // 更新打卡天数，总数与连续天数都更新
     await ctx.model.User.findByIdAndUpdate(userId, update);

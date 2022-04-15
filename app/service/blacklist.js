@@ -1,6 +1,6 @@
 /**
- * Create by lzan13 2020/7/7
- * 描述：关注信息处理服务
+ * Create by lzan13 2022/04/07
+ * 描述：黑名单信息处理服务
  */
 'use strict';
 
@@ -16,54 +16,50 @@ const userSelect = {
   deletedReason: 1,
 };
 
-class FollowService extends Service {
+class BlacklistService extends Service {
 
   /**
-   * 创建一个新关注
-   * @param user2 被关注的人
+   * 创建
+   * @param user2 被拉黑的人
    */
   async create(user2) {
     const { ctx, service } = this;
     const user1 = ctx.state.user.id;
     let params = { user1, user2 };
     // 首先通过 A=>B 查询关系
-    let follow = await ctx.model.Follow.findOne(params);
-    if (follow) {
-      if (follow.relation === 0 || follow.relation === 2) {
-        // A->B A<->B 都表示已关注
-        ctx.throw(409, '你已关注对方');
+    let blacklist = await ctx.model.Blacklist.findOne(params);
+    if (blacklist) {
+      if (blacklist.relation === 0 || blacklist.relation === 2) {
+        // A->B A<->B 都表示已拉黑
+        ctx.throw(409, '你已拉黑对方');
       } else {
         // 说明 B->A 这里要改成 A<->B
-        follow.relation = 2;
+        blacklist.relation = 2;
       }
     } else {
       params = { user1: user2, user2: user1 };
       // 根据 B=>A 查询关系
-      follow = await ctx.model.Follow.findOne(params);
-      if (follow) {
-        if (follow.relation === 1 || follow.relation === 2) {
-          // B->A B<->A 都表示已关注
-          ctx.throw(409, '你已关注对方');
+      blacklist = await ctx.model.Blacklist.findOne(params);
+      if (blacklist) {
+        if (blacklist.relation === 1 || blacklist.relation === 2) {
+          // B->A B<->A 都表示已拉黑
+          ctx.throw(409, '你已拉黑对方');
         } else {
           // 说明 A->B 这里要改成 B<->A
-          follow.relation = 2;
+          blacklist.relation = 2;
         }
       }
     }
-    if (follow) {
-      // 更新关注关系
-      follow = await service.follow.findByIdAndUpdate(follow.id, { relation: follow.relation });
+    if (blacklist) {
+      // 更新拉黑关系
+      blacklist = await service.blacklist.findByIdAndUpdate(blacklist.id, { relation: blacklist.relation });
     } else {
-      // 创建关注关系
-      follow = await ctx.model.Follow.create({ user1, user2, relation: 0 });
+      // 创建拉黑关系
+      blacklist = await ctx.model.Blacklist.create({ user1, user2, relation: 0 });
     }
-
-    // 修改粉丝的关注数+1
-    await ctx.model.User.findByIdAndUpdate(user1, { $inc: { followCount: 1 } });
-    // 修改关注的人的粉丝数+1
-    await ctx.model.User.findByIdAndUpdate(user2, { $inc: { fansCount: 1 } });
-
-    return follow;
+    // 不论后端关系怎样，到im那边就是A->B
+    service.third.easemob.addBlacklist(user1, user2);
+    return blacklist;
   }
 
   /**
@@ -71,15 +67,15 @@ class FollowService extends Service {
    */
   async destroy(id) {
     const { ctx, service } = this;
-    const follow = await service.follow.find(id);
-    if (!follow) {
+    const blacklist = await service.blacklist.find(id);
+    if (!blacklist) {
       ctx.throw(404, `数据不存在 ${id}`);
     }
-    return ctx.model.Follow.findByIdAndRemove(id);
+    return ctx.model.Blacklist.findByIdAndRemove(id);
   }
 
   /**
-   * 取消关注
+   * 取消
    * @param user2
    */
   async cancel(user2) {
@@ -88,51 +84,50 @@ class FollowService extends Service {
 
     let params = { user1, user2 };
     // 首先通过 A=>B 查询关系
-    let follow = await ctx.model.Follow.findOne(params);
-    if (follow) {
-      if (follow.relation === 1) {
-        // B->A A<->B 才表示关注对方
-        ctx.throw(404, '你没有关注对方');
+    let blacklist = await ctx.model.Blacklist.findOne(params);
+    if (blacklist) {
+      if (blacklist.relation === 1) {
+        // B->A A<->B 才表示拉黑对方
+        ctx.throw(404, '你没有拉黑对方');
       } else {
-        if (follow.relation === 0) {
-          // 互相都无关注，后边会删除数据
-          follow.relation = -1;
+        if (blacklist.relation === 0) {
+          // 互相都无拉黑，后边会删除数据
+          blacklist.relation = -1;
         } else {
-          // 改为单向关注 B->A
-          follow.relation = 1;
+          // 改为单向拉黑 B->A
+          blacklist.relation = 1;
         }
       }
     } else {
       params = { user1: user2, user2: user1 };
       // 根据 B=>A 查询关系
-      follow = await ctx.model.Follow.findOne(params);
-      if (follow) {
-        if (follow.relation === 0) {
-          // B->A A<->B 才表示关注对方
-          ctx.throw(404, '你没有关注对方');
+      blacklist = await ctx.model.Blacklist.findOne(params);
+      if (blacklist) {
+        if (blacklist.relation === 0) {
+          // B->A A<->B 才表示拉黑对方
+          ctx.throw(404, '你没有拉黑对方');
         } else {
-          if (follow.relation === 1) {
-            // 互相都无关注，后边会删除数据
-            follow.relation = -1;
+          if (blacklist.relation === 1) {
+            // 互相都无拉黑，后边会删除数据
+            blacklist.relation = -1;
           } else {
-            // 改为单向关注 B->A
-            follow.relation = 0;
+            // 改为单向拉黑 B->A
+            blacklist.relation = 0;
           }
         }
       } else {
-        ctx.throw(404, '你没有关注对方');
+        ctx.throw(404, '你没有拉黑对方');
       }
     }
 
-    // 修改粉丝的关注数+1
-    await ctx.model.User.findByIdAndUpdate(user1, { $inc: { followCount: -1 } });
-    // 修改关注的人的粉丝数+1
-    await ctx.model.User.findByIdAndUpdate(user2, { $inc: { fansCount: -1 } });
-
-    if (follow.relation === -1) {
-      return ctx.model.Follow.findByIdAndRemove(follow.id);
+    if (blacklist.relation === -1) {
+      return ctx.model.Blacklist.findByIdAndRemove(blacklist.id);
     }
-    return service.follow.findByIdAndUpdate(follow.id, { relation: follow.relation });
+
+    // 不论后端关系怎样，到im那边就是A-B
+    service.third.easemob.delBlacklist(user1, user2);
+
+    return service.blacklist.findByIdAndUpdate(blacklist.id, { relation: blacklist.relation });
   }
 
   /**
@@ -142,17 +137,17 @@ class FollowService extends Service {
    */
   async update(id, params) {
     const { ctx, service } = this;
-    const follow = await service.follow.find(id);
-    if (!follow) {
+    const blacklist = await service.blacklist.find(id);
+    if (!blacklist) {
       ctx.throw(404, `关系不存在 ${id}`);
     }
-    return service.follow.findByIdAndUpdate(id, params);
+    return service.blacklist.findByIdAndUpdate(id, params);
   }
 
   /**
    * 获取自己与某人的关系
    * @param userId 对方 id
-   * @return 0-关注 1-被关注 2-互相关注
+   * @return 0-拉黑 1-被拉黑 2-互相拉黑
    */
   async relation(user2) {
     const { ctx } = this;
@@ -160,19 +155,19 @@ class FollowService extends Service {
 
     let params = { user1, user2 };
     // 首先通过 A=>B 查询关系
-    let follow = await ctx.model.Follow.findOne(params);
-    if (follow) {
+    let blacklist = await ctx.model.Blacklist.findOne(params);
+    if (blacklist) {
       // 直接返回关系
-      return follow.relation;
+      return blacklist.relation;
     }
     params = { user1: user2, user2: user1 };
     // 根据 B=>A 查询关系
-    follow = await ctx.model.Follow.findOne(params);
-    if (follow) {
+    blacklist = await ctx.model.Blacklist.findOne(params);
+    if (blacklist) {
       // 这里讲 B->A 转换为 A->B
-      if (follow.relation === 0) {
+      if (blacklist.relation === 0) {
         return 1;
-      } else if (follow.relation === 1) {
+      } else if (blacklist.relation === 1) {
         return 0;
       }
       return 2;
@@ -182,7 +177,7 @@ class FollowService extends Service {
   }
 
   /**
-   * 获取关注列表，可根据参数判断是否分页，搜索
+   * 获取拉黑列表，可根据参数判断是否分页，搜索
    * @param params 查询参数
    */
   async index(params) {
@@ -200,7 +195,7 @@ class FollowService extends Service {
       currUserId = userId;
     }
     if (Number(type) === 0) {
-      // 查询某人关注的用户集合
+      // 查询某人拉黑的用户集合
       query = {
         $or: [
           { user1: currUserId, relation: 0 }, { user1: currUserId, relation: 2 },
@@ -208,7 +203,7 @@ class FollowService extends Service {
         ],
       };
     } else if (Number(type) === 1) {
-      // 查询关注某人的集合
+      // 查询拉黑某人的集合
       query = {
         $or: [
           { user2: currUserId, relation: 0 }, { user2: currUserId, relation: 2 },
@@ -216,14 +211,14 @@ class FollowService extends Service {
         ],
       };
     } else if (Number(type) === 2) {
-      // 查询互相关注的用户集合
+      // 查询互相拉黑的用户集合
       query = { $or: [{ user1: currUserId }, { user2: currUserId }], relation: 2 };
     } else {
       query = {};
     }
 
     // 查询关系数据
-    result = await ctx.model.Follow.find(query)
+    result = await ctx.model.Blacklist.find(query)
       .populate('user1', userSelect)
       .populate('user2', userSelect)
       .skip(skip)
@@ -232,7 +227,7 @@ class FollowService extends Service {
       .exec();
 
     currentCount = result.length;
-    totalCount = await ctx.model.Follow.countDocuments(query)
+    totalCount = await ctx.model.Blacklist.countDocuments(query)
       .exec();
 
     // 整理数据源 -> Ant Design Pro
@@ -268,24 +263,24 @@ class FollowService extends Service {
    * 通用方法，主要是这些方法有多个地方调用，简单封装下
    */
   /**
-   * 通过 Id 查找一个关注
+   * 通过 Id 查找一个拉黑
    * @param id
    */
   async find(id) {
-    return this.ctx.model.Follow.findById(id)
+    return this.ctx.model.Blacklist.findById(id)
       .populate('user1', userSelect)
       .populate('user2', userSelect)
       .exec();
   }
 
   /**
-   * 更新关注信息
+   * 更新拉黑信息
    * @param 用户关系 Id
    * @param params 需要更新的信息
    */
   async findByIdAndUpdate(id, params) {
-    return this.ctx.model.Follow.findByIdAndUpdate(id, params);
+    return this.ctx.model.Blacklist.findByIdAndUpdate(id, params);
   }
 }
 
-module.exports = FollowService;
+module.exports = BlacklistService;

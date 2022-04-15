@@ -82,6 +82,16 @@ class CommonController extends Controller {
   }
 
   /**
+   * 获取用户行为规范
+   */
+  async userNorm() {
+    const { ctx, service } = this;
+    const config = await service.config.findByAlias('norm');
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '获取用户行为规范成功', data: config });
+  }
+
+  /**
    * 提交反馈信息
    */
   async feedback() {

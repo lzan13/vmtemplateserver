@@ -133,10 +133,47 @@ class EasemobService extends Service {
     const result = await this.apiRequest(apiUrl, 'POST', { Authorization: `Bearer ${token}` }, { newpassword: password });
 
     if (result.status === 200) {
+      return 0;
+    }
+    return result.status;
+  }
+
+
+  /**
+   * 添加黑名单
+   * @param id 自己的用户 id，针对环信那边就是 username
+   * @param userId 要操作的用户 id，针对环信那边就是 username
+   */
+  async addBlacklist(id, userId) {
+    const { app } = this;
+    // 获取 token
+    const token = await this.checkToken();
+    const apiUrl = `${app.config.easemob.host}/${app.config.easemob.orgName}/${app.config.easemob.appName}/users/${id}/blocks/users`;
+    const result = await this.apiRequest(apiUrl, 'POST', { Authorization: `Bearer ${token}` }, { usernames: [ userId ] });
+
+    if (result.status === 200) {
       return true;
     }
     return false;
   }
+  /**
+   * 移除黑名单
+   * @param id 自己的用户 id，针对环信那边就是 username
+   * @param userId 要操作的用户 id，针对环信那边就是 username
+   */
+  async delBlacklist(id, userId) {
+    const { app } = this;
+    // 获取 token
+    const token = await this.checkToken();
+    const apiUrl = `${app.config.easemob.host}/${app.config.easemob.orgName}/${app.config.easemob.appName}/users/${id}/blocks/users/${userId}`;
+    const result = await this.apiRequest(apiUrl, 'DELETE', { Authorization: `Bearer ${token}` }, { });
+
+    if (result.status === 200) {
+      return true;
+    }
+    return false;
+  }
+
 
   /**
    * --------------------------------------------------------------

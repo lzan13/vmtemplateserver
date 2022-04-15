@@ -50,13 +50,13 @@ class UserService extends Service {
       ctx.throw(404, `用户不存在 ${id}`);
     }
 
-    // 删除用户的签到
+    // 删除用户的签到信息
     await ctx.model.Clock.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
 
-    // 删除用户的喜欢
+    // 删除用户的喜欢数据
     await ctx.model.Like.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
 
-    // 删除用户的评论
+    // 删除用户的评论数据
     await ctx.model.Comment.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
 
     // 删除用户名下的帖子
