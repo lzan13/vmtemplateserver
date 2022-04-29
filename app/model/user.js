@@ -36,7 +36,8 @@ module.exports = app => {
     fansCount: { type: Number, default: 0 }, // 粉丝数量
     followCount: { type: Number, default: 0 }, // 关注数量
     likeCount: { type: Number, default: 0 }, // 喜欢我数量
-    matchCount: { type: Number, default: 99 }, // 可用匹配次数，为0后需要消耗积分，每天 00:00 刷新
+    chatCount: { type: Number, default: 99 }, // 可用发起私聊次数，为0后需要消耗积分，签到后重置
+    matchCount: { type: Number, default: 99 }, // 可用匹配次数，为0后需要消耗积分，签到后重置
     postCount: { type: Number, default: 0 }, // 帖子数量
     strangerMsg: { type: Boolean, default: true }, // 陌生人私信
     profession: { type: mongoose.Schema.Types.ObjectId, ref: 'Profession' }, // 职业

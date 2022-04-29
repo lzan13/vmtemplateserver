@@ -23,12 +23,30 @@ class ClockService extends Service {
     // 判断昨天是否打卡
     const yesterdayCount = await ctx.service.clock.findYesterdayCount(userId);
     let update = {};
+    let score = 5;
     if (yesterdayCount > 0) {
-      // 连续签到积分 +20 同时恢复匹配次数
-      update = { $inc: { clockContinuousCount: 1, clockTotalCount: 1, score: 20 }, clockTime: Date.now(), matchCount: 9 };
+      const user = await this.ctx.model.User.findById(userId, { clockContinuousCount: 1 });
+      if (user.clockContinuousCount < 20) {
+        score = (user.clockContinuousCount + 1) * 5;
+      } else {
+        score = 100;
+      }
+      // 连续签到积分 +20 同时恢复私聊和匹配次数
+      update = {
+        $inc: { clockContinuousCount: 1, clockTotalCount: 1, score },
+        clockTime: Date.now(),
+        chatCount: 99,
+        matchCount: 99,
+      };
     } else {
-      // 单次签到积分 +10 同时恢复匹配次数
-      update = { $inc: { clockTotalCount: 1, score: 10 }, clockContinuousCount: 1, clockTime: Date.now(), matchCount: 99 };
+      // 单次签到积分 +10 同时恢复私聊和匹配次数
+      update = {
+        $inc: { clockTotalCount: 1, score },
+        clockContinuousCount: 1,
+        clockTime: Date.now(),
+        chatCount: 99,
+        matchCount: 99,
+      };
     }
     // 更新打卡天数，总数与连续天数都更新
     await ctx.model.User.findByIdAndUpdate(userId, update);
@@ -73,7 +91,8 @@ class ClockService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Clock.countDocuments(query).exec();
+    totalCount = await ctx.model.Clock.countDocuments(query)
+      .exec();
 
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {
@@ -94,7 +113,8 @@ class ClockService extends Service {
    * @param id
    */
   async find(id) {
-    return this.ctx.model.Clock.findById(id).exec();
+    return this.ctx.model.Clock.findById(id)
+      .exec();
   }
 
   /**
@@ -106,6 +126,7 @@ class ClockService extends Service {
     const endTime = new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1);// 当天23:59
     return this.ctx.model.Clock.countDocuments({ userId, createdAt: { $gte: startTime, $lte: endTime } });
   }
+
   /**
    * 查找昨天打卡记录
    * @param userId

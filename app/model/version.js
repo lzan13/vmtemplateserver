@@ -13,8 +13,10 @@ module.exports = app => {
       default: 0,
     },
     title: { type: String }, // 标题
-    desc: { type: String }, // 升级描述
-    url: { type: String }, // 升级地址
+    desc: { type: String }, // 描述
+    url: { type: String }, // 地址
+    negativeBtn: { type: String, default: '暂不升级' }, // 消极按钮
+    positiveBtn: { type: String, default: '马上升级' }, // 积极按钮
     versionCode: { type: Number }, // 版本号
     versionName: { type: String }, // 版本名称
     force: { type: Boolean, default: false }, // 强制升级

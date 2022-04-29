@@ -121,8 +121,8 @@ class PostService extends Service {
   async show(id) {
     const { ctx, service } = this;
     const post = await service.post.find(id);
-    const currentUserId = ctx.state.user.id;
-    const isLike = await this.service.like.isLike(1, currentUserId, post.id);
+    const currUserId = ctx.state.user.id;
+    const isLike = await this.service.like.isLike(1, currUserId, post.id);
     post._doc.isLike = isLike;
     if (!post) {
       ctx.throw(404, `内容不存在 ${id}`);
@@ -140,7 +140,7 @@ class PostService extends Service {
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
-    const currentUserId = ctx.state.user.id;
+    const currUserId = ctx.state.user.id;
     // 计算分页
     const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
@@ -174,7 +174,7 @@ class PostService extends Service {
       .exec();
 
     for (const post of result) {
-      const isLike = await this.service.like.isLike(1, currentUserId, post.id);
+      const isLike = await this.service.like.isLike(1, currUserId, post.id);
       post._doc.isLike = isLike;
     }
     // 整理数据源 -> Ant Design Pro

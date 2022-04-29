@@ -94,6 +94,7 @@ class CommentService extends Service {
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
+    const currUserId = ctx.state.user.id;
     // 计算分页
     const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
@@ -126,6 +127,10 @@ class CommentService extends Service {
     currentCount = result.length;
     totalCount = await ctx.model.Comment.countDocuments(query).exec();
 
+    for (const comment of result) {
+      const isLike = await this.service.like.isLike(1, currUserId, comment.id);
+      comment._doc.isLike = isLike;
+    }
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {
       // const json =

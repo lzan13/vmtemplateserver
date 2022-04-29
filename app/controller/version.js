@@ -14,7 +14,7 @@ class VersionController extends Controller {
   async create() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('platform', 'title', 'desc', 'url', 'versionCode', 'versionName', 'force');
+    const params = ctx.params.permit('platform', 'title', 'desc', 'url', 'negativeBtn', 'positiveBtn', 'versionCode', 'versionName', 'force');
     // 校验参数
     ctx.validate({ title: 'title', desc: 'content' }, params);
     // 调用 Service 进行业务处理
@@ -43,7 +43,7 @@ class VersionController extends Controller {
     const { ctx, service } = this;
     // 组装参数
     const { id } = ctx.params;
-    const params = ctx.params.permit('platform', 'title', 'desc', 'url', 'versionCode', 'versionName', 'force');
+    const params = ctx.params.permit('platform', 'title', 'desc', 'url', 'negativeBtn', 'positiveBtn', 'versionCode', 'versionName', 'force');
     // 校验参数
     ctx.validate({ title: 'title', desc: 'content' }, params);
     // 调用 Service 进行业务处理

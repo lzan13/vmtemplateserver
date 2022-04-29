@@ -13,6 +13,7 @@ module.exports = app => {
     remark: { type: String }, // 备注信息，可填写处理之后的说明
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // 相关用户
     post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' }, // 相关帖子
+    comment: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }, // 相关评论
     status: { // 处理状态 0-待处理 1-处理中 2-处理完成
       type: Number,
       enum: [ 0, 1, 2 ],

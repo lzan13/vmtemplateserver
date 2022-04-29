@@ -29,6 +29,16 @@ module.exports = () => {
   };
 
   /**
+   * 聚合平台相关配置
+   */
+  config.ads = {
+    secKeyCN: '', // TopOn聚合平台国内回调安全密钥
+    secKey: '', // TopOn聚合平台海外回调安全秘钥
+    mintegralSecKeyCN: '', // Mintegral 平台国内回调安全秘钥
+    mintegralSecKey: '', // Mintegral 平台海外回调安全秘钥
+  };
+
+  /**
    * Easemob IM 配置 https://console.easemob.com/app/im-service/detail
    */
   config.easemob = {

@@ -187,6 +187,16 @@ module.exports = appInfo => {
   };
 
   /**
+   * 聚合平台相关配置
+   */
+  config.ads = {
+    secKeyCN: '', // TopOn聚合平台国内回调安全密钥
+    secKey: '', // TopOn聚合平台海外回调安全秘钥
+    mintegralSecKeyCN: '', // Mintegral 平台国内回调安全秘钥
+    mintegralSecKey: '', // Mintegral 平台海外回调安全秘钥
+  };
+
+  /**
    * 支付相关配置
    */
   config.pay = {
@@ -215,7 +225,7 @@ module.exports = appInfo => {
         pass: '邮箱密码', // 这个密码要根据邮箱后台确认是使用账户密码，还是客户端独有的密码
       },
     },
-    from: 'VMLoft<notify@vmloft.com>', // from 表示邮件发送者，必须与认证账户相同
+    from: '你自己的邮箱', // from 表示邮件发送者，必须与认证账户相同
     activateSubject: '【社交系统】验证电子邮件地址',
     activateContent: '<div style="width:100%; background-color:#f6f7f8; margin: 0; padding: 0; font-family: Roboto-Regular,Helvetica,Arial,sans-serif; font-size: 14px;"><div style="width: 100%; height: 36px;"></div><div style="min-width: 360px; max-width: 600px; margin: 20px auto; background-color: #fff; box-shadow: 0px 5px 15px #f8f8f8"><div style="font-size: 22px; text-align:center; border-bottom: #eee 1px solid; margin: 0 16px"><div style="padding: 24px;">【社交系统】验证电子邮件地址</div></div><div style="width: 100%; text-align: left;  background-color: #ffffff;"><div style="min-width: 320px; max-width: 500px; margin: auto; color: #232323; line-height: 1.5; padding: 8px 0;"><div style="font-size: 18px; font-weight: bold; padding: 24px 16px;">尊敬的{0}您好！</div><div style="padding: 16px;">感谢您使用我们的服务，这里需要验证下您的电子邮件地址，点击下方的按钮以验证电子邮箱：</div><div style="padding: 8px 16px;"><a href="{1}/account/activate?verify={2}">验证电子邮件地址</a></div><div style="padding: 16px;">如果您并没进行此类操作请忽略此邮件！</div><div style="color:#999999; padding: 24px 16px; text-align: end">社交系统团队</div></div></div><div style="margin:0 16px; padding: 16px; color: #999999; text-align:center; border-top: #eee 1px solid">©️2021社交系统.</div></div><div style="width: 100%; height: 36px;"></div></div>',
     codeSubject: '【社交系统】验证码',

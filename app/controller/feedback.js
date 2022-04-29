@@ -14,7 +14,7 @@ class FeedbackController extends Controller {
   async create() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('contact', 'content', 'user', 'post', 'remark', 'attachments', 'type');
+    const params = ctx.params.permit('contact', 'content', 'user', 'post', 'comment', 'remark', 'attachments', 'type');
     // 校验参数
     ctx.validate({ content: 'content' }, params);
     // 调用 Service 进行业务处理

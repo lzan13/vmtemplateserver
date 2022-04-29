@@ -97,7 +97,7 @@ class CommonController extends Controller {
   async feedback() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('contact', 'content', 'user', 'post', 'remark', 'attachments', 'type');
+    const params = ctx.params.permit('contact', 'content', 'user', 'post', 'comment', 'remark', 'attachments', 'type');
     if (!params.user) {
       delete params.user;
     }

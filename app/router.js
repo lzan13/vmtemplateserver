@@ -162,6 +162,8 @@ module.exports = app => {
   apiRouter.post('/v1/third/pay/notifyCallback', controller.third.pay.notifyCallback);
   // 授权回调接口
   apiRouter.post('/v1/third/pay/authCallback', controller.third.pay.authCallback);
+  // 广告回调接口
+  apiRouter.get('/v1/third/ads/rewardCallback', controller.third.ads.rewardCallback);
 
 
   /**

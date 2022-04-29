@@ -108,6 +108,7 @@ class FeedbackService extends Service {
       .populate('owner', userSelect)
       .populate('user', userSelect)
       .populate('post', { title: 1 })
+      .populate('comment', { content: 1 })
       .populate('attachments', { extname: 1, path: 1, width: 1, height: 1 })
       .skip(skip)
       .limit(Number(limit))

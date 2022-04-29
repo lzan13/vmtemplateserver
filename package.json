@@ -1,7 +1,7 @@
 {
   "name": "vmtemplateserver",
-  "version": "0.0.3",
-  "description": "忘忧服务端接口项目，包括账户登录注册，角色权限管理，附件管理，分类，职业，发帖，评论，关注等",
+  "version": "0.0.7",
+  "description": "社交系统服务端接口项目，包括账户登录注册，角色权限管理，附件管理，分类，职业，发帖，评论，关注等",
   "private": true,
   "egg": {
     "declarations": true

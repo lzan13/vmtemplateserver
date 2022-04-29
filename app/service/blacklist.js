@@ -120,12 +120,12 @@ class BlacklistService extends Service {
       }
     }
 
+    // 不论后端关系怎样，到im那边就是A-B
+    await service.third.easemob.delBlacklist(user1, user2);
+
     if (blacklist.relation === -1) {
       return ctx.model.Blacklist.findByIdAndRemove(blacklist.id);
     }
-
-    // 不论后端关系怎样，到im那边就是A-B
-    service.third.easemob.delBlacklist(user1, user2);
 
     return service.blacklist.findByIdAndUpdate(blacklist.id, { relation: blacklist.relation });
   }
