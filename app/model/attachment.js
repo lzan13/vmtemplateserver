@@ -14,6 +14,7 @@ module.exports = app => {
     path: { type: String }, // 文件路径，这里一般保存相对路径，展示时拼接域名
     width: { type: Number }, // 宽度，高度 附件为图片、视频时有值
     height: { type: Number },
+    space: { type: String }, // 存储空间目录
   },
   // schema 的选项options
   {

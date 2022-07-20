@@ -9,8 +9,8 @@ module.exports = app => {
   const CommoditySchema = new mongoose.Schema({
     title: { type: String }, // 商品标题
     desc: { type: String }, // 商品描述
-    price: { type: String }, // 商品价格
-    currPrice: { type: String }, // 优惠价格
+    price: { type: Number }, // 商品价格
+    currPrice: { type: Number }, // 优惠价格
     attachments: [{ // 附件信息
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Attachment',

@@ -3,8 +3,6 @@
  * 描述：上传操作控制类
  */
 'use strict';
-const path = require('path');
-
 const Controller = require('egg').Controller;
 
 class AttachmentController extends Controller {
@@ -53,11 +51,11 @@ class AttachmentController extends Controller {
         // console.log('mime: ' + stream.mime);
 
         // 获取参数
-        const filename = path.basename(stream.filename).toLowerCase(); // 文件名称
-        const extname = path.extname(stream.filename).toLowerCase(); // 文件扩展名称
+        // const filename = path.basename(stream.filename).toLowerCase(); // 文件名称
+        // const extname = path.extname(stream.filename).toLowerCase(); // 文件扩展名称
 
         // 调用通用上传方法
-        const params = await service.attachment.upload(stream, filename, extname);
+        const params = await service.attachment.upload(stream);
         const attachment = await service.attachment.create(params);
 
         result.push(attachment);
@@ -103,7 +101,7 @@ class AttachmentController extends Controller {
     const { ctx, service } = this;
     // 组装参数
     const { id } = ctx.params; // 传入要修改的附件 Id
-    const params = ctx.params.permit('desc', 'duration', 'extname', 'path', 'width', 'height');
+    const params = ctx.params.permit('desc', 'path', 'duration', 'extname', 'space', 'width', 'height');
 
     // 调用Service 保持原图片 Id 不变，更新其他属性
     const attachment = await service.attachment.update(id, params);

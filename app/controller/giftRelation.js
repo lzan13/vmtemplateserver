@@ -1,55 +1,42 @@
 /**
  * Create by lzan13 2020/7/7
- * 描述：关注关系对外接口
+ * 描述：礼物记录对外接口
  */
 'use strict';
 
 const Controller = require('egg').Controller;
 
-class FollowController extends Controller {
+class GiftController extends Controller {
 
   /**
-   * 关注
+   * 新建
    */
   async create() {
     const { ctx, service } = this;
     // 组装参数
-    const { id } = ctx.params;
+    const params = ctx.params.permit('user', 'gift', 'count');
+
     // 调用 Service 进行业务处理
-    await service.follow.create(id);
+    const giftRelation = await service.giftRelation.create(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '关注成功' });
+    ctx.helper.success({ ctx, msg: '创建成功', data: giftRelation });
   }
 
   /**
-   * 删除
+   * 销毁
    */
   async destroy() {
     const { ctx, service } = this;
     // 校验参数
     const { id } = ctx.params;
     // 调用 Service 进行业务处理
-    await service.follow.destroy(id);
+    await service.giftRelation.destroy(id);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '删除关注成功' });
+    ctx.helper.success({ ctx, msg: '销毁成功' });
   }
 
   /**
-   * 取消关注
-   */
-  async cancel() {
-    const { ctx, service } = this;
-    // 校验参数
-    const { id } = ctx.params;
-    // 调用 Service 进行业务处理
-    await service.follow.cancel(id);
-    // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '取消关注成功' });
-  }
-
-
-  /**
-   * 批量删除关注
+   * 批量销毁
    * 参数 {ids: "5a452a44ab122b16a0231b42,5a452a3bab122b16a0231b41"}
    */
   async destroyList() {
@@ -60,40 +47,44 @@ class FollowController extends Controller {
     // 设置响应内容和响应状态码
     for (const id of idArray) {
       // 调用 Service 进行业务处理
-      await service.follow.destroy(id);
+      await service.giftRelation.destroy(id);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '批量删除关注成功' });
+    ctx.helper.success({ ctx, msg: '批量销毁成功' });
   }
 
+
   /**
-   * 修改关系
+   * 修改内容
    */
   async update() {
     const { ctx, service } = this;
     // 组装参数
     const { id } = ctx.params;
-    const params = ctx.params.permit('relation');
+    // 组装参数
+    const params = ctx.params.permit('user', 'gift', 'count');
+
     // 调用 Service 进行业务处理
-    const category = await service.follow.update(id, params);
+    await service.giftRelation.update(id, params);
+    const giftRelation = service.giftRelation.find(id);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '更新关系成功', data: category });
+    ctx.helper.success({ ctx, msg: '更新内容成功', data: giftRelation });
   }
 
   /**
-   * 查询所有关注(分页/模糊)
+   * 查询所有内容(分页/模糊)
    */
   async index() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params;
+    const params = ctx.params.permit('user', 'page', 'limit');
     // 调用 Service 进行业务处理
-    const follows = await service.follow.index(params);
+    const gifts = await service.giftRelation.index(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '查询关注信息成功', data: follows });
+    ctx.helper.success({ ctx, msg: '查询成功', data: gifts });
   }
 
 }
 
 
-module.exports = FollowController;
+module.exports = GiftController;

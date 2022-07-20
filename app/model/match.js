@@ -21,7 +21,7 @@ module.exports = app => {
       enum: [ 0, 1, 2 ],
       default: 2,
     },
-    type: { // 匹配类型 0-普通 1-急速聊天 2-树洞
+    type: { // 匹配类型 0-心情匹配 1-急速聊天 2-树洞
       type: Number,
       enum: [ 0, 1, 2 ],
       default: 0,

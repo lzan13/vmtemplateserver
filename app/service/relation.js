@@ -1,6 +1,6 @@
 /**
  * Create by lzan13 2020/7/7
- * 描述：关注信息处理服务
+ * 描述：用户关系处理服务
  */
 'use strict';
 
@@ -16,7 +16,7 @@ const userSelect = {
   deletedReason: 1,
 };
 
-class FollowService extends Service {
+class RelationService extends Service {
 
   /**
    * 创建一个新关注
@@ -27,43 +27,43 @@ class FollowService extends Service {
     const user1 = ctx.state.user.id;
     let params = { user1, user2 };
     // 首先通过 A=>B 查询关系
-    let follow = await ctx.model.Follow.findOne(params);
-    if (follow) {
-      if (follow.relation === 0 || follow.relation === 2) {
+    let relation = await ctx.model.Relation.findOne(params);
+    if (relation) {
+      if (relation.relation === 0 || relation.relation === 2) {
         // A->B A<->B 都表示已关注
         ctx.throw(409, '你已关注对方');
       } else {
         // 说明 B->A 这里要改成 A<->B
-        follow.relation = 2;
+        relation.relation = 2;
       }
     } else {
       params = { user1: user2, user2: user1 };
       // 根据 B=>A 查询关系
-      follow = await ctx.model.Follow.findOne(params);
-      if (follow) {
-        if (follow.relation === 1 || follow.relation === 2) {
+      relation = await ctx.model.Relation.findOne(params);
+      if (relation) {
+        if (relation.relation === 1 || relation.relation === 2) {
           // B->A B<->A 都表示已关注
           ctx.throw(409, '你已关注对方');
         } else {
           // 说明 A->B 这里要改成 B<->A
-          follow.relation = 2;
+          relation.relation = 2;
         }
       }
     }
-    if (follow) {
+    if (relation) {
       // 更新关注关系
-      follow = await service.follow.findByIdAndUpdate(follow.id, { relation: follow.relation });
+      relation = await service.relation.findByIdAndUpdate(relation.id, { relation: relation.relation });
     } else {
       // 创建关注关系
-      follow = await ctx.model.Follow.create({ user1, user2, relation: 0 });
+      relation = await ctx.model.Relation.create({ user1, user2, relation: 0 });
     }
 
     // 修改粉丝的关注数+1
-    await ctx.model.User.findByIdAndUpdate(user1, { $inc: { followCount: 1 } });
+    await ctx.model.User.findByIdAndUpdate(user1, { $inc: { relationCount: 1 } });
     // 修改关注的人的粉丝数+1
     await ctx.model.User.findByIdAndUpdate(user2, { $inc: { fansCount: 1 } });
 
-    return follow;
+    return relation;
   }
 
   /**
@@ -71,52 +71,52 @@ class FollowService extends Service {
    */
   async destroy(id) {
     const { ctx, service } = this;
-    const follow = await service.follow.find(id);
-    if (!follow) {
+    const relation = await service.relation.find(id);
+    if (!relation) {
       ctx.throw(404, `数据不存在 ${id}`);
     }
-    return ctx.model.Follow.findByIdAndRemove(id);
+    return ctx.model.Relation.findByIdAndRemove(id);
   }
 
   /**
    * 取消关注
    * @param user2
    */
-  async cancel(user2) {
+  async cancelFollow(user2) {
     const { ctx, service } = this;
     const user1 = ctx.state.user.id;
 
     let params = { user1, user2 };
     // 首先通过 A=>B 查询关系
-    let follow = await ctx.model.Follow.findOne(params);
-    if (follow) {
-      if (follow.relation === 1) {
+    let relation = await ctx.model.Relation.findOne(params);
+    if (relation) {
+      if (relation.relation === 1) {
         // B->A A<->B 才表示关注对方
         ctx.throw(404, '你没有关注对方');
       } else {
-        if (follow.relation === 0) {
+        if (relation.relation === 0) {
           // 互相都无关注，后边会删除数据
-          follow.relation = -1;
+          relation.relation = -1;
         } else {
           // 改为单向关注 B->A
-          follow.relation = 1;
+          relation.relation = 1;
         }
       }
     } else {
       params = { user1: user2, user2: user1 };
       // 根据 B=>A 查询关系
-      follow = await ctx.model.Follow.findOne(params);
-      if (follow) {
-        if (follow.relation === 0) {
+      relation = await ctx.model.Relation.findOne(params);
+      if (relation) {
+        if (relation.relation === 0) {
           // B->A A<->B 才表示关注对方
           ctx.throw(404, '你没有关注对方');
         } else {
-          if (follow.relation === 1) {
+          if (relation.relation === 1) {
             // 互相都无关注，后边会删除数据
-            follow.relation = -1;
+            relation.relation = -1;
           } else {
             // 改为单向关注 B->A
-            follow.relation = 0;
+            relation.relation = 0;
           }
         }
       } else {
@@ -125,14 +125,14 @@ class FollowService extends Service {
     }
 
     // 修改粉丝的关注数+1
-    await ctx.model.User.findByIdAndUpdate(user1, { $inc: { followCount: -1 } });
+    await ctx.model.User.findByIdAndUpdate(user1, { $inc: { relationCount: -1 } });
     // 修改关注的人的粉丝数+1
     await ctx.model.User.findByIdAndUpdate(user2, { $inc: { fansCount: -1 } });
 
-    if (follow.relation === -1) {
-      return ctx.model.Follow.findByIdAndRemove(follow.id);
+    if (relation.relation === -1) {
+      return ctx.model.Relation.findByIdAndRemove(relation.id);
     }
-    return service.follow.findByIdAndUpdate(follow.id, { relation: follow.relation });
+    return service.relation.findByIdAndUpdate(relation.id, { relation: relation.relation });
   }
 
   /**
@@ -142,11 +142,11 @@ class FollowService extends Service {
    */
   async update(id, params) {
     const { ctx, service } = this;
-    const follow = await service.follow.find(id);
-    if (!follow) {
+    const relation = await service.relation.find(id);
+    if (!relation) {
       ctx.throw(404, `关系不存在 ${id}`);
     }
-    return service.follow.findByIdAndUpdate(id, params);
+    return service.relation.findByIdAndUpdate(id, params);
   }
 
   /**
@@ -160,19 +160,19 @@ class FollowService extends Service {
 
     let params = { user1, user2 };
     // 首先通过 A=>B 查询关系
-    let follow = await ctx.model.Follow.findOne(params);
-    if (follow) {
+    let relation = await ctx.model.Relation.findOne(params);
+    if (relation) {
       // 直接返回关系
-      return follow.relation;
+      return relation.relation;
     }
     params = { user1: user2, user2: user1 };
     // 根据 B=>A 查询关系
-    follow = await ctx.model.Follow.findOne(params);
-    if (follow) {
+    relation = await ctx.model.Relation.findOne(params);
+    if (relation) {
       // 这里讲 B->A 转换为 A->B
-      if (follow.relation === 0) {
+      if (relation.relation === 0) {
         return 1;
-      } else if (follow.relation === 1) {
+      } else if (relation.relation === 1) {
         return 0;
       }
       return 2;
@@ -223,7 +223,7 @@ class FollowService extends Service {
     }
 
     // 查询关系数据
-    result = await ctx.model.Follow.find(query)
+    result = await ctx.model.Relation.find(query)
       .populate('user1', userSelect)
       .populate('user2', userSelect)
       .skip(skip)
@@ -232,7 +232,7 @@ class FollowService extends Service {
       .exec();
 
     currentCount = result.length;
-    totalCount = await ctx.model.Follow.countDocuments(query)
+    totalCount = await ctx.model.Relation.countDocuments(query)
       .exec();
 
     // 整理数据源 -> Ant Design Pro
@@ -272,7 +272,7 @@ class FollowService extends Service {
    * @param id
    */
   async find(id) {
-    return this.ctx.model.Follow.findById(id)
+    return this.ctx.model.Relation.findById(id)
       .populate('user1', userSelect)
       .populate('user2', userSelect)
       .exec();
@@ -284,8 +284,8 @@ class FollowService extends Service {
    * @param params 需要更新的信息
    */
   async findByIdAndUpdate(id, params) {
-    return this.ctx.model.Follow.findByIdAndUpdate(id, params);
+    return this.ctx.model.Relation.findByIdAndUpdate(id, params);
   }
 }
 
-module.exports = FollowService;
+module.exports = RelationService;

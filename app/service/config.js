@@ -18,7 +18,7 @@ class ConfigService extends Service {
     if (config) {
       ctx.throw(409, '配置已存在，请通过更新接口设置内容');
     }
-    return this.ctx.model.Config.create(params);
+    return ctx.model.Config.create(params);
   }
 
   /**

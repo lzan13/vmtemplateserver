@@ -6,6 +6,8 @@
 
 const Service = require('egg').Service;
 
+const giftSelect = { title: 1 };
+const userSelect = { password: 0, token: 0, code: 0 };
 const roleSelect = { title: 1, identity: 1 };
 const professionSelect = { title: 1 };
 
@@ -142,11 +144,16 @@ class UserService extends Service {
     if (role) {
       query.role = role.id;
     }
-    result = await ctx.model.User.find(query, {
-      password: 0,
-      token: 0,
-      code: 0,
-    })
+    result = await ctx.model.User.find(query, userSelect)
+      // .populate('gifts', giftSelect)
+      .populate({
+        path: 'gifts',
+        select: giftSelect,
+        populate: [
+          { path: 'cover' },
+          { path: 'animation' },
+        ],
+      })
       .populate('profession', professionSelect)
       .populate('role', roleSelect)
       .skip(skip)

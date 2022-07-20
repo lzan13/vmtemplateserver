@@ -18,7 +18,7 @@ class CommonController extends Controller {
     // 调用 Service 进行业务处理
     const categorys = await service.category.index(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '查询分类成功', data: categorys });
+    ctx.helper.success({ ctx, msg: '数据获取成功', data: categorys });
   }
 
   /**
@@ -31,7 +31,7 @@ class CommonController extends Controller {
     // 调用 Service 进行业务处理
     const professions = await service.profession.index(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '查询职业成功', data: professions });
+    ctx.helper.success({ ctx, msg: '数据获取成功', data: professions });
   }
 
   /**
@@ -48,7 +48,7 @@ class CommonController extends Controller {
       version = await service.version.findByPlatform(platform);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '版本检查成功', data: version });
+    ctx.helper.success({ ctx, msg: '数据获取成功', data: version });
   }
 
   /**
@@ -58,7 +58,7 @@ class CommonController extends Controller {
     const { ctx, service } = this;
     const config = await service.config.findByAlias('client');
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '获取配置信息成功', data: config });
+    ctx.helper.success({ ctx, msg: '数据获取成功', data: config });
   }
 
   /**
@@ -68,7 +68,7 @@ class CommonController extends Controller {
     const { ctx, service } = this;
     const config = await service.config.findByAlias('policy');
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '获取隐私政策成功', data: config });
+    ctx.helper.success({ ctx, msg: '数据获取成功', data: config });
   }
 
   /**
@@ -78,7 +78,7 @@ class CommonController extends Controller {
     const { ctx, service } = this;
     const config = await service.config.findByAlias('agreement');
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '获取用户协议成功', data: config });
+    ctx.helper.success({ ctx, msg: '数据获取成功', data: config });
   }
 
   /**
@@ -88,7 +88,7 @@ class CommonController extends Controller {
     const { ctx, service } = this;
     const config = await service.config.findByAlias('norm');
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '获取用户行为规范成功', data: config });
+    ctx.helper.success({ ctx, msg: '数据获取成功', data: config });
   }
 
   /**
@@ -126,7 +126,7 @@ class CommonController extends Controller {
     // 调用 Service 进行业务处理
     const feedbacks = await service.feedback.index(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '获取反馈数据', data: feedbacks });
+    ctx.helper.success({ ctx, msg: '数据获取成功', data: feedbacks });
   }
 
   /**
@@ -137,7 +137,7 @@ class CommonController extends Controller {
     // 调用 Service 进行业务处理
     const role = await service.commodity.index({ page: 0, limit: 20, extend: { $or: [{ type: 0 }, { type: 1 }] } });
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '获取商品数据成功', data: role });
+    ctx.helper.success({ ctx, msg: '数据获取成功', data: role });
   }
 
 

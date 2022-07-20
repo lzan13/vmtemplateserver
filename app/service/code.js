@@ -87,6 +87,13 @@ class CodeService extends Service {
     return this.ctx.model.Code.findOne({ email });
   }
 
+  /**
+   * 删除数据
+   */
+  async findOneAndRemove(query) {
+    return this.ctx.model.Code.findOneAndRemove(query);
+  }
+
 }
 
 module.exports = CodeService;

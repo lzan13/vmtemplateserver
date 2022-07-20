@@ -12,7 +12,7 @@ module.exports = app => {
    */
   validator.addRule('account', (rule, value) => {
     if (!/^[a-zA-Z0-9_.@]{4,32}$/.test(value)) {
-      return '账户只能包含 a-z A-Z 0-9 _ . @ 且长度在 4-32 之间';
+      return '账户只能包含 a-zA-Z0-9_.@ 字符 且长度在 4-32 之间';
     }
   });
 
@@ -20,8 +20,8 @@ module.exports = app => {
    * 校验用户名
    */
   validator.addRule('username', (rule, value) => {
-    if (!/^[a-zA-Z0-9_.]{4,20}$/.test(value)) {
-      return '用户名只能包含 a-zA-Z0-9_.@ 中的字符，且长度在 4-20 之间';
+    if (!/^[a-zA-Z0-9_.]{4,32}$/.test(value)) {
+      return '用户名只能包含 a-zA-Z0-9_.@ 字符，且长度在 4-32 之间';
     }
   });
 
@@ -67,8 +67,8 @@ module.exports = app => {
    * 校验密码
    */
   validator.addRule('password', (rule, value) => {
-    if (!/^[a-zA-Z0-9_.]{6,20}$/.test(value)) {
-      return '密码只能包含 a-zA-Z0-9_. 中的字符，且长度在 6-20 之间';
+    if (!/^[a-zA-Z0-9_.]{6,32}$/.test(value)) {
+      return '密码只能包含 a-zA-Z0-9_. 中的字符，且长度在 6-32 之间';
     }
   });
 

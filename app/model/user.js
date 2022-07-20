@@ -29,20 +29,30 @@ module.exports = app => {
     signature: { type: String }, // 签名
     address: { type: String }, // 地址
     hobby: { type: String }, // 爱好
+
     score: { type: Number, default: 100 }, // 积分
+
+    charm: { type: Number, default: 0 }, // 总魅力
+    charmMonth: { type: Number, default: 0 }, // 月魅力，每月清零
+    charmWeek: { type: Number, default: 0 }, // 周魅力，每周清零
+
     clockContinuousCount: { type: Number, default: 0 }, // 打卡连续次数
     clockTotalCount: { type: Number, default: 0 }, // 打卡总次数
     clockTime: { type: Date }, // 最后一次打卡时间
+
     fansCount: { type: Number, default: 0 }, // 粉丝数量
     followCount: { type: Number, default: 0 }, // 关注数量
     likeCount: { type: Number, default: 0 }, // 喜欢我数量
-    chatCount: { type: Number, default: 99 }, // 可用发起私聊次数，为0后需要消耗积分，签到后重置
-    matchCount: { type: Number, default: 99 }, // 可用匹配次数，为0后需要消耗积分，签到后重置
+    matchCount: { type: Number, default: 30 }, // 可用匹配次数，为0后需要消耗积分，签到后重置
+    fastCount: { type: Number, default: 30 }, // 可用快速聊天次数，为0后需要消耗积分，签到后重置
     postCount: { type: Number, default: 0 }, // 帖子数量
+
     strangerMsg: { type: Boolean, default: true }, // 陌生人私信
+
     profession: { type: mongoose.Schema.Types.ObjectId, ref: 'Profession' }, // 职业
     role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' }, // 角色，和角色数据关联，不同角色拥有不同权限，默认为普通用户
     roleDate: { type: Date }, // 角色到期时间，到期后自动变为普通用户
+
     token: { type: String }, // 账户 token，记录账户登录认证信息
     idCardNumber: { type: String }, // 身份证号
     realName: { type: String }, // 真实姓名

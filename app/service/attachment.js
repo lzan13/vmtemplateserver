@@ -8,9 +8,9 @@ const Service = require('egg').Service;
 
 // 附件支持的种类
 const kinds = {
-  binary: [ '.7z', '.apk', '.gz', '.gzip', '.rar', '.tgz', '.zip' ],
+  binary: [ '.7z', '.apk', '.gz', '.gzip', '.rar', '.svga', '.tgz', '.wgt', '.zip' ],
   document: [ '.csv', '.doc', '.docx', '.pdf', '.ppt', '.pptx', '.xls', '.xlsx', '.key', '.numbers', '.pages', '.json', '.txt' ],
-  image: [ '.gif', '.ico', '.jpg', '.jpeg', '.png', 'svg', '.webp' ],
+  image: [ '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp' ],
   voice: [ '.amr', '.mp3', '.ogg' ],
   video: [ '.avi', '.mp4' ],
 };
@@ -126,11 +126,14 @@ class AttachmentService extends Service {
 
   /**
    * 通用的上传方法
-   * @param stream 文件数据
-   * @param space 文件存储目录
+   * @param stream 文件数据，其中包含详细字段：
+   *    desc 文件描述
+   *    duration 持续时间 video/voice 有此值
+   *    width/height 文件宽高，image/video 有此值
+   *    space 文件上传空间目录
    * @return 返回包装好的附件数据
    */
-  async upload(stream, dir) {
+  async upload(stream) {
     // 组装参数 model
     const attachment = new this.ctx.model.Attachment();
     attachment.owner = this.ctx.state.user.id;
@@ -149,6 +152,7 @@ class AttachmentService extends Service {
     if (stream.fields.duration) {
       attachment.duration = stream.fields.duration;
     }
+    // 文件宽高，image/video 有此值
     if (stream.fields.width) {
       attachment.width = stream.fields.width;
     }
@@ -156,45 +160,49 @@ class AttachmentService extends Service {
       attachment.height = stream.fields.height;
     }
 
-    // 判断附件上传目录空间
+    // 判断附件上传空间目录 形如 image video download
     let space = '';
     if (stream.fields.space) {
       space = stream.fields.space;
-    } else {
-      if (kinds.binary.indexOf(attachment.extname) !== -1) {
-        // 二进制文件默认都上传到下载目录
+    }
+
+    if (kinds.binary.indexOf(attachment.extname) !== -1) {
+      // 二进制文件默认都上传到下载目录
+      if (space === '') {
         space = 'download';
-        if (dir) {
-          space += `/${dir}`;
-        }
-      } else if (kinds.document.indexOf(attachment.extname) !== -1) {
-        // 文档默认都上传到文档目录
+      } else if (!space.includes('download')) {
+        space = `download/${space}`;
+      }
+    } else if (kinds.document.indexOf(attachment.extname) !== -1) {
+      // 文档默认都上传到文档目录
+      if (space === '') {
         space = 'document';
-        if (dir) {
-          space += `/${dir}`;
-        }
-      } else if (kinds.image.indexOf(attachment.extname) !== -1) {
-        // 图片默认都上传到 post 子目录下
-        space = 'image';
-        if (dir) {
-          space += `/${dir}`;
-        } else {
-          space += '/post';
-        }
-      } else if (kinds.voice.indexOf(attachment.extname) !== -1) {
-        // 声音默认都上传到声音目录下
+      } else if (!space.includes('document')) {
+        space = `document/${space}`;
+      }
+    } else if (kinds.image.indexOf(attachment.extname) !== -1) {
+      // 图片默认都上传到 post 子目录下
+      if (space === '') {
+        space = 'image/post';
+      } else if (!space.includes('image')) {
+        space = `image/${space}`;
+      }
+    } else if (kinds.voice.indexOf(attachment.extname) !== -1) {
+      // 声音默认都上传到声音目录下
+      if (space === '') {
         space = 'voice';
-        if (dir) {
-          space += `/${dir}`;
-        }
-      } else if (kinds.video.indexOf(attachment.extname) !== -1) {
-        // 视频默认都上传到视频目录下
+      } else if (!space.includes('voice')) {
+        space = `voice/${space}`;
+      }
+    } else if (kinds.video.indexOf(attachment.extname) !== -1) {
+      // 视频默认都上传到视频目录下
+      if (space === '') {
         space = 'video';
-        if (dir) {
-          space += `/${dir}`;
-        }
+      } else if (!space.includes('video')) {
+        space = `video/${space}`;
       }
     }
+    attachment.space = space;
     attachment.path = `/${space}/${attachment.id.toString()}${attachment.extname}`;
     // 处理文件流，这里是将文件内容转存到三方云存储
     const result = await this.service.third.upyun.putFile(attachment.path, stream);

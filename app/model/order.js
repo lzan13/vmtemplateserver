@@ -9,8 +9,8 @@ module.exports = app => {
   const OrderSchema = new mongoose.Schema({
     owner: { type: String }, // 订单所属用户
     title: { type: String }, // 订单标题
-    price: { type: String }, // 订单价格
-    realPrice: { type: String }, // 实际支付价格
+    price: { type: Number }, // 订单价格
+    realPrice: { type: Number }, // 实际价格
     commoditys: [{ // 商品信息
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Commodity',

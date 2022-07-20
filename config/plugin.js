@@ -27,10 +27,10 @@ exports.bcrypt = {
 /**
  * 启用插件 egg-cors，用于跨域访问
  */
-exports.cors = {
-  enable: true,
-  package: 'egg-cors',
-};
+// exports.cors = {
+//   enable: false,
+//   package: 'egg-cors',
+// };
 
 /**
  * 启用插件 egg-jwt，用于 token 生成与校验

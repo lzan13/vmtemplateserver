@@ -26,6 +26,14 @@ class AdminController extends Controller {
     const data = await service.admin.dashboard();
     ctx.helper.success({ ctx, msg: '数据查询完成', data });
   }
+
+  async test() {
+    let num = 880;
+    num = num / 100;
+    console.log(num);
+    num = num.toFixed(2);
+    console.log(num);
+  }
 }
 
 module.exports = AdminController;

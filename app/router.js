@@ -33,6 +33,24 @@ module.exports = app => {
   // apiRouter.get('/v1/admin/init', controller.admin.init);
   apiRouter.get('/v1/admin/dashboard', controller.admin.dashboard);
 
+  apiRouter.get('/v1/test', controller.admin.test);
+
+  /**
+   * ----------------------------------------------------------
+   * 广告相关路由
+   * 视频奖励
+   */
+  apiRouter.post('/v1/ads/videoReward', controller.ads.videoReward);
+
+  /**
+   * ----------------------------------------------------------
+   * 程序相关路由
+   */
+  // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
+  apiRouter.resources('applet', '/v1/applet', controller.applet);
+  // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
+  apiRouter.delete('/v1/applet', controller.applet.destroyList);
+
   /**
    * ----------------------------------------------------------
    * 附件相关路由
@@ -144,27 +162,23 @@ module.exports = app => {
 
   /**
    * ----------------------------------------------------------
-   * 关注相关路由
+   * 礼物相关路由
    */
-  // apiRouter.post('/v1/follow/:id', controller.follow.create);
-  // apiRouter.delete('/v1/follow/:id', controller.follow.destroy);
-  // apiRouter.get('/v1/follow', controller.follow.index);
-  apiRouter.resources('follow', '/v1/follow', controller.follow);
-  apiRouter.delete('/v1/follow', controller.follow.destroyList);
-  apiRouter.post('/v1/follow/cancel', controller.follow.cancel);
+  // apiRouter.post('/v1/gift/:id', controller.gift.create);
+  // apiRouter.delete('/v1/gift/:id', controller.gift.destroy);
+  // apiRouter.get('/v1/gift', controller.gift.index);
+  apiRouter.resources('gift', '/v1/gift', controller.gift);
+  apiRouter.post('/v1/gift/give', controller.gift.give);
+  apiRouter.delete('/v1/gift', controller.gift.destroyList);
 
   /**
-   * ----------------------------------------------------------
-   * 三方服务接口
+   * 礼物记录相关路由
    */
-  // 支付相关接口
-  // 支付通知网关
-  apiRouter.post('/v1/third/pay/notifyCallback', controller.third.pay.notifyCallback);
-  // 授权回调接口
-  apiRouter.post('/v1/third/pay/authCallback', controller.third.pay.authCallback);
-  // 广告回调接口
-  apiRouter.get('/v1/third/ads/rewardCallback', controller.third.ads.rewardCallback);
-
+  // apiRouter.post('/v1/giftRelation/:id', controller.giftRelation.create);
+  // apiRouter.delete('/v1/giftRelation/:id', controller.giftRelation.destroy);
+  // apiRouter.get('/v1/giftRelation', controller.giftRelation.index);
+  apiRouter.resources('giftRelation', '/v1/giftRelation', controller.giftRelation);
+  apiRouter.delete('/v1/giftRelation', controller.giftRelation.destroyList);
 
   /**
    * ----------------------------------------------------------
@@ -252,6 +266,17 @@ module.exports = app => {
 
   /**
    * ----------------------------------------------------------
+   * 用户关系相关路由
+   */
+  // apiRouter.post('/v1/relation/:id', controller.relation.create);
+  // apiRouter.delete('/v1/relation/:id', controller.relation.destroy);
+  // apiRouter.get('/v1/relation', controller.relation.index);
+  apiRouter.resources('relation', '/v1/relation', controller.relation);
+  apiRouter.delete('/v1/relation', controller.relation.destroyList);
+  apiRouter.post('/v1/relation/cancelFollow', controller.relation.cancelFollow);
+
+  /**
+   * ----------------------------------------------------------
    * 角色相关路由
    */
   // apiRouter.post('/v1/role', controller.role.create);
@@ -268,11 +293,11 @@ module.exports = app => {
    * ----------------------------------------------------------
    * 房间相关路由
    */
-  // apiRouter.post('/v1/post', controller.post.create);
-  // apiRouter.delete('/v1/post/:id', controller.post.destroy);
-  // apiRouter.put('/v1/post/:id', controller.post.update)
-  // apiRouter.get('/v1/post/:id', controller.post.show);
-  // apiRouter.get('/v1/post', controller.post.index);
+  // apiRouter.post('/v1/room', controller.room.create);
+  // apiRouter.delete('/v1/room/:id', controller.room.destroy);
+  // apiRouter.put('/v1/room/:id', controller.room.update)
+  // apiRouter.get('/v1/room/:id', controller.room.show);
+  // apiRouter.get('/v1/room', controller.room.index);
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
   apiRouter.resources('room', '/v1/room', controller.room);
   // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
@@ -293,6 +318,30 @@ module.exports = app => {
   apiRouter.get('/v1/sign/activate', controller.sign.activate);
   apiRouter.get('/v1/sign/sendCodeEmail', controller.sign.sendCodeEmail);
   apiRouter.get('/v1/sign/sendVerifyEmail', controller.sign.sendVerifyEmail);
+
+  /**
+   * ----------------------------------------------------------
+   * 积分变动记录相关路由
+   */
+  // apiRouter.post('/v1/score', controller.score.create);
+  // apiRouter.delete('/v1/score/:id', controller.score.destroy);
+  // apiRouter.put('/v1/score/:id', controller.score.update)
+  // apiRouter.get('/v1/score/:id', controller.score.show);
+  // apiRouter.get('/v1/score', controller.score.index);
+  // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
+  apiRouter.resources('score', '/v1/score', controller.score);
+  // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
+  apiRouter.delete('/v1/score', controller.score.destroyList);
+
+  /**
+   * ----------------------------------------------------------
+   * 三方服务接口
+   */
+  // 支付相关接口
+  // 支付通知网关
+  apiRouter.post('/v1/third/pay/notifyCallback', controller.third.pay.notifyCallback);
+  // 授权回调接口
+  apiRouter.post('/v1/third/pay/authCallback', controller.third.pay.authCallback);
 
   /**
    * ----------------------------------------------------------

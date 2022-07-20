@@ -13,32 +13,6 @@ module.exports = () => {
   const config = {};
 
   /**
-   * 接口安全配置
-   */
-  config.security = {
-    csrf: {
-      enable: false,
-    },
-    domainWhiteList: [ 'http://localhost:5920' ], // '前端网页托管的域名'
-  };
-
-  // 配置 alinode 监控
-  config.alinode = {
-    appid: 'alinode appId',
-    secret: 'alinode secret',
-  };
-
-  /**
-   * 聚合平台相关配置
-   */
-  config.ads = {
-    secKeyCN: '', // TopOn聚合平台国内回调安全密钥
-    secKey: '', // TopOn聚合平台海外回调安全秘钥
-    mintegralSecKeyCN: '', // Mintegral 平台国内回调安全秘钥
-    mintegralSecKey: '', // Mintegral 平台海外回调安全秘钥
-  };
-
-  /**
    * Easemob IM 配置 https://console.easemob.com/app/im-service/detail
    */
   config.easemob = {
@@ -47,43 +21,6 @@ module.exports = () => {
     appName: 'appName', // 环信 appkey # 后半段
     clientId: 'client id', // 替换环信后台 clientId
     clientSecret: 'client secret', // 替换环信后台 clientSecret
-  };
-
-  /**
-   * Easemob MQTT 配置 https://console.easemob.com/app/generalizeMsg/overviewService
-   */
-  config.mqtt = {
-    host: 'host', // MQTT 链接地址
-    appId: 'appId', // MQTT AppId
-    port: [ 1883, 1884, 80, 443 ], // MQTT 端口 1883(mqtt),1884(mqtts),80(ws),443(wss)
-    restHost: 'restHost', // MQTT 服务 Rest API 地址
-    clientId: 'client id', // 替换环信后台 clientId
-    clientSecret: 'client secret', // 替换环信后台 clientSecret
-  };
-
-  /**
-   * 云服务相关配置
-   */
-  config.upyun = {
-    bucket: '', // 又拍云服务名，即存储空间名，其他平台也叫存储桶
-    operator: '', // 又拍云对象存储操作员名称
-    password: '', // 又拍云对象存储操作员密码
-  };
-
-  /**
-   * 支付相关配置
-   */
-  config.pay = {
-    alipayAppId: 'APP Id', // alipay app Id
-    alipayEncryptKey: 'AES 秘钥', // alipay AES 秘钥
-    alipayPrivateKey: '私钥', // alipay 私钥
-    alipayPublicKey: '公钥', // alipay 公钥
-    alipayGateway: 'https://openapi.alipaydev.com/gateway.do', // alipay 网关
-    format: 'JSON', // 格式类型
-    charset: 'utf-8', // 编码类型
-    signType: 'RSA2', // 签名类型
-    version: '1.0', // 版本 1.0
-    notifyUrl: '', // 通知回调地址
   };
 
   /**
@@ -121,7 +58,56 @@ module.exports = () => {
     },
   };
 
-  // 用户配置
+  /**
+   * Easemob MQTT 配置 https://console.easemob.com/app/generalizeMsg/overviewService
+   */
+  config.mqtt = {
+    host: 'host', // MQTT 链接地址
+    appId: 'appId', // MQTT AppId
+    port: [ 1883, 1884, 80, 443 ], // MQTT 端口 1883(mqtt),1884(mqtts),80(ws),443(wss)
+    restHost: 'restHost', // MQTT 服务 Rest API 地址
+    clientId: 'client id', // 替换环信后台 clientId
+    clientSecret: 'client secret', // 替换环信后台 clientSecret
+  };
+
+  /**
+   * 支付相关配置
+   */
+  config.pay = {
+    alipayAppId: 'APP Id', // alipay app Id
+    alipayEncryptKey: 'AES 秘钥', // alipay AES 秘钥
+    alipayPrivateKey: '私钥', // alipay 私钥
+    alipayPublicKey: '公钥', // alipay 公钥
+    alipayGateway: 'https://openapi.alipaydev.com/gateway.do', // alipay 网关
+    format: 'JSON', // 格式类型
+    charset: 'utf-8', // 编码类型
+    signType: 'RSA2', // 签名类型
+    version: '1.0', // 版本 1.0
+    notifyUrl: '', // 通知回调地址
+  };
+
+  /**
+   * 接口安全配置
+   */
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+    domainWhiteList: [ 'http://localhost:5920' ], // 域名白名单
+  };
+
+  /**
+   * 云服务相关配置
+   */
+  config.upyun = {
+    bucket: '', // 又拍云服务名，即存储空间名，其他平台也叫存储桶
+    operator: '', // 又拍云对象存储操作员名称
+    password: '', // 又拍云对象存储操作员密码
+  };
+
+  /**
+   * 数据配置
+   */
   const dataConfig = {
     // 部署服务地址
     host: '自己的服务器域名地址',

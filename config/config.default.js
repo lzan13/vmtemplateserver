@@ -17,21 +17,23 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1594006394883_6206';
 
+  // 配置中间件
+  config.middleware = [ 'errorHandler', 'auth' ];
+
   /**
-   * 配置端口
+   * 聚合平台相关配置
    */
-  config.cluster = {
-    listen: {
-      path: '',
-      port: 5920,
-      hostname: '127.0.0.1',
-    },
+  config.ads = {
+    secKey: 'vmnepenthe_seckey_1314', // 奖励回调签名所需安全秘钥
   };
 
   /**
-   * 配置中间件
+   * 配置 alinode 监控，这里本地调试暂时随便填写，正式环境另外配置
    */
-  config.middleware = [ 'errorHandler', 'auth' ];
+  config.alinode = {
+    appid: 'alinode appId',
+    secret: 'alinode secret',
+  };
 
   /**
    * 权限认证配置
@@ -41,7 +43,7 @@ module.exports = appInfo => {
     enable: true,
     // 设置符合某些规则的请求不经过这个中间件，和 match 互斥，同时只能配置一个
     // [ '/v1/init', /^\/v1\/(sign\/(in|up|activate))/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
-    ignore: /\/v1\/(sign\/(in|up|activate)|third)/,
+    ignore: /\/v1\/(sign\/(in|up|activate)|test|third)/,
     // 设置只有符合某些规则的请求才会经过这个中间件。
     // match: [ '' ],
     // 这里配置的是对应角色无权限访问的接口正则匹配
@@ -60,28 +62,43 @@ module.exports = appInfo => {
   };
 
   /**
-   * 上传文件支持配置，下便是默认支持的格式
-   * // images
-   * '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.wbmp', '.webp', '.tif', '.psd',
-   * // text
-   * '.svg', '.js', '.jsx', '.json', '.css', '.less', '.html', '.htm', '.xml',
-   * // tar
-   * '.zip', '.gz', '.tgz', '.gzip',
-   * // voice
-   * '.mp3',
-   * // video
-   * '.mp4', '.avi',
-   * binary: [ '.7z', '.apk', '.gz', '.gzip', '.rar', '.tgz', '.zip' ],
-   * document: [ '.csv', '.doc', '.docx', '.pdf', '.ppt', '.pptx', '.xls', '.xlsx', '.key', '.numbers', '.pages', '.json', '.txt' ],
-   * image: [ '.gif', '.ico', '.jpg', '.jpeg', '.png', 'svg', '.webp' ],
-   * voice: [ '.amr', '.mp3', '.ogg' ],
-   * video: [ '.avi', '.mp4' ],
+   * bcrypt 配置
    */
-  config.multipart = {
-    // 增加对 apk 扩展名的文件支持
-    fileExtensions: [ '.7z', '.apk', '.rar', '.doc', '.docx', '.pdf', '.ppt', '.pptx', '.xls', '.xlsx', '.key', '.numbers', '.pages', '.txt', '.ico', '.amr', '.ogg' ],
-    // 覆盖整个白名单，只允许上传 '.png' 格式，注意：当重写了 whitelist 时，fileExtensions 不生效。
-    // whitelist: [ '.png' ],
+  config.bcrypt = {
+    saltRounds: 10, // default 10
+  };
+
+  /**
+   * 配置端口
+   */
+  config.cluster = {
+    listen: {
+      path: '',
+      port: 5920,
+      hostname: '127.0.0.1',
+    },
+  };
+
+  /**
+   * 配置跨域信息
+   */
+  // config.cors = {
+  //   // credentials: true,
+  //   // 允许任何跨域，若只允许个别IP跨域，则：origin:['http://localhost:8080']
+  //   origin: '*',
+  //   // 被允许的请求方式
+  //   allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+  // };
+
+  /**
+   * Easemob IM 配置 https://console.easemob.com/app/im-service/detail
+   */
+  config.easemob = {
+    host: 'http://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
+    orgName: 'orgName', // 环信 appKey # 前半段
+    appName: 'appName', // 环信 appkey # 后半段
+    clientId: 'client id', // 替换环信后台 clientId
+    clientSecret: 'client secret', // 替换环信后台 clientSecret
   };
 
   /**
@@ -96,120 +113,6 @@ module.exports = appInfo => {
     // [ '/v1/admin/init', /^\/api\/sign\/(in|up|activate)/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
     ignore: '',
     // match: '/jwt',
-  };
-
-  /**
-   * bcrypt 配置
-   */
-  config.bcrypt = {
-    saltRounds: 10, // default 10
-  };
-
-  /**
-   * 支持文件类型配置
-   */
-  config.multipart = {
-    fileExtensions: [ '.apk', '.pptx', '.docx', '.csv', '.doc', '.ppt', '.pdf', '.pages', '.wav', '.mov' ], // 增加对 .apk 扩展名的支持
-  };
-
-
-  /**
-   * 参数过滤配置
-   */
-  config.parameters = {
-    logParameters: true,
-    // param names that you want filter in log.
-    filterParameters: [ 'token' ],
-  };
-
-
-  /**
-   * 接口安全配置
-   */
-  config.validate = {
-    convert: false,
-    widelyUndefined: true,
-  };
-
-  /**
-   * ------------------------------------------------------------------
-   * 以下配置需要根据自己实际情况进行修改
-   */
-
-  /**
-   * 接口安全配置
-   */
-  config.security = {
-    csrf: {
-      enable: false,
-    },
-    domainWhiteList: [ 'http://localhost:5920' ], // '前端网页托管的域名'
-  };
-
-  /**
-   * 配置 alinode 监控，这里本地调试暂时随便填写，正式环境另外配置
-   */
-  config.alinode = {
-    appid: 'alinode appId',
-    secret: 'alinode secret',
-  };
-
-  /**
-   * Easemob IM 配置 https://console.easemob.com/app/im-service/detail
-   */
-  config.easemob = {
-    host: 'http://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
-    orgName: 'orgName', // 环信 appKey # 前半段
-    appName: 'appName', // 环信 appkey # 后半段
-    clientId: 'client id', // 替换环信后台 clientId
-    clientSecret: 'client secret', // 替换环信后台 clientSecret
-  };
-
-  /**
-   * Easemob MQTT 配置 https://console.easemob.com/app/generalizeMsg/overviewService
-   */
-  config.mqtt = {
-    host: 'mqtt host', // MQTT 链接地址
-    appId: 'appId', // MQTT AppId
-    port: [ 1883, 1884, 80, 443 ], // MQTT 端口 1883(mqtt),1884(mqtts),80(ws),443(wss)
-    restHost: 'rest API', // MQTT 服务 API 地址
-    clientId: 'client id', // 替换环信后台 clientId
-    clientSecret: 'client secret', // 替换环信后台 clientSecret
-  };
-
-  /**
-   * 云服务相关配置
-   */
-  config.upyun = {
-    bucket: '', // 又拍云服务名，即存储空间名，其他平台也叫存储桶
-    operator: '', // 又拍云对象存储操作员名称
-    password: '', // 又拍云对象存储操作员密码
-  };
-
-  /**
-   * 聚合平台相关配置
-   */
-  config.ads = {
-    secKeyCN: '', // TopOn聚合平台国内回调安全密钥
-    secKey: '', // TopOn聚合平台海外回调安全秘钥
-    mintegralSecKeyCN: '', // Mintegral 平台国内回调安全秘钥
-    mintegralSecKey: '', // Mintegral 平台海外回调安全秘钥
-  };
-
-  /**
-   * 支付相关配置
-   */
-  config.pay = {
-    alipayAppId: 'APP Id', // alipay app Id
-    alipayEncryptKey: 'AES 秘钥', // alipay AES 秘钥
-    alipayPrivateKey: '私钥', // alipay 私钥
-    alipayPublicKey: '公钥', // alipay 公钥
-    alipayGateway: 'https://openapi.alipaydev.com/gateway.do', // alipay 网关
-    format: 'JSON', // 格式类型
-    charset: 'utf-8', // 编码类型
-    signType: 'RSA2', // 签名类型
-    version: '1.0', // 版本 1.0
-    notifyUrl: '', // 通知回调地址
   };
 
   /**
@@ -247,7 +150,106 @@ module.exports = appInfo => {
     },
   };
 
-  // 数据配置
+  /**
+   * Easemob MQTT 配置 https://console.easemob.com/app/generalizeMsg/overviewService
+   */
+  config.mqtt = {
+    host: 'mqtt host', // MQTT 链接地址
+    appId: 'appId', // MQTT AppId
+    port: [ 1883, 1884, 80, 443 ], // MQTT 端口 1883(mqtt),1884(mqtts),80(ws),443(wss)
+    restHost: 'rest API', // MQTT 服务 API 地址
+    clientId: 'client id', // 替换环信后台 clientId
+    clientSecret: 'client secret', // 替换环信后台 clientSecret
+  };
+
+  /**
+   * 上传文件支持配置，下便是默认支持的格式
+   * // images
+   * '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.wbmp', '.webp', '.tif', '.psd',
+   * // text
+   * '.svg', '.js', '.jsx', '.json', '.css', '.less', '.html', '.htm', '.xml',
+   * // tar
+   * '.zip', '.gz', '.tgz', '.gzip',
+   * // voice
+   * '.mp3',
+   * // video
+   * '.mp4', '.avi',
+   * 自定义扩展类型
+   * binary: [ '.7z', '.apk', '.gz', '.gzip', '.rar', '.svga', '.tgz', '.wgt', '.zip' ],
+   * document: [ '.csv', '.doc', '.docx', '.pdf', '.ppt', '.pptx', '.xls', '.xlsx', '.key', '.numbers', '.pages', '.json', '.txt' ],
+   * image: [ '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp' ],
+   * voice: [ '.amr', '.mp3', '.ogg' ],
+   * video: [ '.avi', '.mp4' ],
+   */
+  config.multipart = {
+    // 增加对 apk 扩展名的文件支持
+    fileExtensions: [ '.wgt' ],
+    // 覆盖整个白名单，注意：当重写了 whitelist 时，fileExtensions 不生效。
+    whitelist: [
+      '.7z', '.apk', '.gz', '.gzip', '.rar', '.svga', '.tgz', '.wgt', '.zip',
+      '.csv', '.doc', '.docx', '.pdf', '.ppt', '.pptx', '.xls', '.xlsx', '.key', '.numbers', '.pages', '.json', '.txt',
+      '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp',
+      '.amr', '.mp3', '.ogg',
+      '.avi', '.mp4',
+    ],
+  };
+
+  /**
+   * 参数过滤配置
+   */
+  config.parameters = {
+    logParameters: true,
+    // param names that you want filter in log.
+    filterParameters: [ 'token' ],
+  };
+
+
+  /**
+   * 支付相关配置
+   */
+  config.pay = {
+    alipayAppId: 'APP Id', // alipay app Id
+    alipayEncryptKey: 'AES 秘钥', // alipay AES 秘钥
+    alipayPrivateKey: '私钥', // alipay 私钥
+    alipayPublicKey: '公钥', // alipay 公钥
+    alipayGateway: 'https://openapi.alipaydev.com/gateway.do', // alipay 网关
+    format: 'JSON', // 格式类型
+    charset: 'utf-8', // 编码类型
+    signType: 'RSA2', // 签名类型
+    version: '1.0', // 版本 1.0
+    notifyUrl: '', // 通知回调地址
+  };
+
+  /**
+   * 接口安全配置，这个必须要配置，否则会请求接口 403 错误
+   */
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+    domainWhiteList: [ 'http://localhost:5920' ], // 安全请求白名单域名
+  };
+
+  /**
+   * 云服务相关配置
+   */
+  config.upyun = {
+    bucket: '', // 又拍云服务名，即存储空间名，其他平台也叫存储桶
+    operator: '', // 又拍云对象存储操作员名称
+    password: '', // 又拍云对象存储操作员密码
+  };
+
+  /**
+   * 参数校验配置
+   */
+  config.validate = {
+    convert: false,
+    widelyUndefined: true,
+  };
+
+  /**
+   * 数据配置
+   */
   const dataConfig = {
     // 部署服务地址，正式发布时需要改成你的域名地址
     host: 'http://localhost:5920',
@@ -264,23 +266,23 @@ module.exports = appInfo => {
     },
     siteList: [{ // 系统配置信息
       alias: 'nepenthe',
-      title: '忘忧服务系统',
-      desc: '忘忧服务数据管理系统，包含完整的社交逻辑处理',
+      title: '忘忧大陆服务系统',
+      desc: '忘忧大陆服务数据管理系统，包含完整的社交逻辑处理',
     }, {
       alias: 'agreement',
       title: '用户协议',
       desc: '用户协议配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://nepenthe.melove.net/#/agreement',
+      content: 'https://vmloft.com/nepenthe/#/agreement',
     }, {
       alias: 'policy',
       title: '隐私政策',
       desc: '隐私政策配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://nepenthe.melove.net/#/policy',
+      content: 'https://vmloft.com/nepenthe/#/policy',
     }, {
       alias: 'norm',
       title: '用户行为规范',
       desc: '用户行为规范配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://nepenthe.melove.net/#/norm',
+      content: 'https://vmloft.com/nepenthe/#/norm',
     }, {
       alias: 'client',
       title: '客户端配置信息',
@@ -304,8 +306,8 @@ module.exports = appInfo => {
     commodityList: [{ // 开通会员商品
       title: '月度会员',
       desc: '尊享多重会员独享服务',
-      price: '10.00',
-      currPrice: '8.88',
+      price: 1000,
+      currPrice: 888,
       inventory: '999999',
       status: 1,
       type: 1,
@@ -314,8 +316,8 @@ module.exports = appInfo => {
     }, {
       title: '季度会员',
       desc: '尊享多重会员独享服务',
-      price: '30.00',
-      currPrice: '25.50',
+      price: 3000,
+      currPrice: 2550,
       inventory: '999999',
       status: 1,
       type: 1,
@@ -324,8 +326,8 @@ module.exports = appInfo => {
     }, {
       title: '年度会员',
       desc: '尊享多重会员独享服务',
-      price: '120.00',
-      currPrice: '96.00',
+      price: 12000,
+      currPrice: 9600,
       inventory: '999999',
       status: 1,
       type: 1,
@@ -334,112 +336,112 @@ module.exports = appInfo => {
     }, { // 金币充值商品
       title: '充值 200 忘忧币',
       desc: '首冲体验',
-      price: '1.00',
-      currPrice: '1.00',
+      price: 100,
+      currPrice: 100,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 600 忘忧币',
       desc: '限时9.2折',
-      price: '6.00',
-      currPrice: '5.52',
+      price: 600,
+      currPrice: 552,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 1800 忘忧币',
       desc: '限时9.0折',
-      price: '18.00',
-      currPrice: '16.20',
+      price: 1800,
+      currPrice: 1620,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 3600 忘忧币',
       desc: '限时8.8折',
-      price: '36.00',
-      currPrice: '31.68',
+      price: 3600,
+      currPrice: 3168,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 7200 忘忧币',
       desc: '限时7.9折',
-      price: '72.00',
-      currPrice: '56.88',
+      price: 7200,
+      currPrice: 5688,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 12800 忘忧币',
       desc: '限时7.5折',
-      price: '128.00',
-      currPrice: '96.00',
+      price: 12800,
+      currPrice: 9600,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 25600 忘忧币',
       desc: '限时7.3折',
-      price: '256.00',
-      currPrice: '186.88',
+      price: 25600,
+      currPrice: 18688,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 51200 忘忧币',
       desc: '限时7.1折',
-      price: '512.00',
-      currPrice: '363.52',
+      price: 51200,
+      currPrice: 36352,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 102400 忘忧币',
       desc: '限时6.9折',
-      price: '1024.00',
-      currPrice: '706.56',
+      price: 102400,
+      currPrice: 70656,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 204800 忘忧币',
       desc: '限时6.7折',
-      price: '2048.00',
-      currPrice: '1372.16',
+      price: 204800,
+      currPrice: 137216,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }, {
       title: '充值 409600 忘忧币',
       desc: '限时6.5折',
-      price: '4096.00',
-      currPrice: '2662.40',
+      price: 409600,
+      currPrice: 266240,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     },
     {
       title: '充值 819200 忘忧币',
       desc: '限时6.3折',
-      price: '8192.00',
-      currPrice: '5160.96',
+      price: 819200,
+      currPrice: 516096,
       inventory: '999999',
       status: 1,
       type: 0,
-      remarks: '忘忧币充值',
+      remarks: '账户余额充值',
     }],
     // 系统配置信息
     professionList: [{
@@ -513,7 +515,7 @@ module.exports = appInfo => {
       platform: 0,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://nepenthe.melove.net',
+      url: 'https://vmloft.com/nepenthe',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
@@ -521,7 +523,7 @@ module.exports = appInfo => {
       platform: 1,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://nepenthe.melove.net',
+      url: 'https://vmloft.com/nepenthe',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
@@ -529,7 +531,7 @@ module.exports = appInfo => {
       platform: 2,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://nepenthe.melove.net',
+      url: 'https://vmloft.com/nepenthe',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
@@ -537,7 +539,7 @@ module.exports = appInfo => {
       platform: 3,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://nepenthe.melove.net',
+      url: 'https://vmloft.com/nepenthe',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,

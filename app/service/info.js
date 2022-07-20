@@ -51,7 +51,7 @@ class SignService extends Service {
   async updateAvatar(stream) {
     const { ctx, service } = this;
     // 调用通用上传方法
-    const params = await service.attachment.upload(stream, 'avatar');
+    const params = await service.attachment.upload(stream);
     const attachment = await service.attachment.create(params);
 
     // 查询用户信息
@@ -70,7 +70,7 @@ class SignService extends Service {
   async updateCover(stream) {
     const { ctx, service } = this;
     // 调用通用上传方法
-    const params = await service.attachment.upload(stream, 'cover');
+    const params = await service.attachment.upload(stream);
     const attachment = await service.attachment.create(params);
 
     // 更新用户头像
@@ -166,7 +166,7 @@ class SignService extends Service {
       ctx.throw(404, `用户不存在 ${id}`);
     }
     // 查询与用户的关系
-    user._doc.relation = await service.follow.relation(id);
+    user._doc.relation = await service.relation.relation(id);
 
     // 查询与用户拉黑状态
 

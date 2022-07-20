@@ -50,7 +50,7 @@ class LikeService extends Service {
     } else if (Number(type) === 1) {
       const post = await service.post.find(id);
       if (!post) {
-        ctx.throw(404, '内容不存在');
+        ctx.throw(404, '数据不存在');
       }
       // 修改用户获得喜欢数+1
       await ctx.model.User.findByIdAndUpdate(post.owner.id, { $inc: { likeCount: 1 } });
@@ -104,7 +104,7 @@ class LikeService extends Service {
     } else if (Number(type) === 1) {
       const post = await service.post.find(id);
       if (!post) {
-        ctx.throw(404, '内容不存在');
+        ctx.throw(404, '数据不存在');
       }
       // 修改用户获得喜欢数-1
       await ctx.model.User.findByIdAndUpdate(post.owner.id, { $inc: { likeCount: -1 } });

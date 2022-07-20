@@ -13,43 +13,47 @@ class ClockService extends Service {
    * @param params
    */
   async create() {
-    const { ctx } = this;
+    const { ctx, service } = this;
     // 查询今天是否已经打卡
     const userId = ctx.state.user.id;
-    const todayCount = await ctx.service.clock.findTodayCount(userId);
+    const todayCount = await service.clock.findTodayCount(userId);
     if (todayCount > 0) {
       ctx.throw(409, '今天已签到');
     }
     // 判断昨天是否打卡
-    const yesterdayCount = await ctx.service.clock.findYesterdayCount(userId);
+    const yesterdayCount = await service.clock.findYesterdayCount(userId);
     let update = {};
     let score = 5;
     if (yesterdayCount > 0) {
-      const user = await this.ctx.model.User.findById(userId, { clockContinuousCount: 1 });
-      if (user.clockContinuousCount < 20) {
+      const user = await ctx.model.User.findById(userId, { clockContinuousCount: 1 });
+      // 连续签到天数越多奖励越高
+      if (user.clockContinuousCount < 7) {
         score = (user.clockContinuousCount + 1) * 5;
       } else {
-        score = 100;
+        score = 50;
       }
-      // 连续签到积分 +20 同时恢复私聊和匹配次数
+      // 签到增加积分，同时恢复私聊和匹配次数
       update = {
         $inc: { clockContinuousCount: 1, clockTotalCount: 1, score },
         clockTime: Date.now(),
-        chatCount: 99,
-        matchCount: 99,
+        chatCount: 30,
+        matchCount: 30,
       };
     } else {
-      // 单次签到积分 +10 同时恢复私聊和匹配次数
+      // 签到增加积分，同时恢复私聊和匹配次数
       update = {
         $inc: { clockTotalCount: 1, score },
         clockContinuousCount: 1,
         clockTime: Date.now(),
-        chatCount: 99,
-        matchCount: 99,
+        chatCount: 30,
+        matchCount: 30,
       };
     }
     // 更新打卡天数，总数与连续天数都更新
     await ctx.model.User.findByIdAndUpdate(userId, update);
+
+    // 记录签到奖励
+    await service.score.create({ owner: userId, title: '签到奖励', count: score, type: 0, remarks: '用户签到任务奖励' });
 
     return ctx.model.Clock.create({ userId });
   }

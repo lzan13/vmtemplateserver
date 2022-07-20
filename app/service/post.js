@@ -47,7 +47,7 @@ class PostService extends Service {
     // 先判断下权限
     const post = await service.post.find(id);
     if (!post) {
-      ctx.throw(404, `内容不存在 ${id}`);
+      ctx.throw(404, `数据不存在 ${id}`);
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
@@ -79,7 +79,7 @@ class PostService extends Service {
     const { ctx, service } = this;
     const post = await service.post.find(id);
     if (!post) {
-      ctx.throw(404, `内容不存在 ${id}`);
+      ctx.throw(404, `数据不存在 ${id}`);
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
@@ -103,7 +103,7 @@ class PostService extends Service {
     // 先判断下权限
     const post = await service.post.find(id);
     if (!post) {
-      ctx.throw(404, '内容不存在');
+      ctx.throw(404, '数据不存在');
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
@@ -125,7 +125,7 @@ class PostService extends Service {
     const isLike = await this.service.like.isLike(1, currUserId, post.id);
     post._doc.isLike = isLike;
     if (!post) {
-      ctx.throw(404, `内容不存在 ${id}`);
+      ctx.throw(404, `数据不存在 ${id}`);
     }
     return post;
   }

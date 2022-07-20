@@ -31,7 +31,7 @@ class EmailService extends Service {
       data.from = app.config.mail.from;
       await transporter.sendMail(data);
     } catch (e) {
-      ctx.logger.error(`-lz-email-邮件发送失败 ${e} - ${data}`);
+      ctx.logger.error(`-lz-email-邮件发送失败 ${e} - ${JSON.stringify(data)}`);
       ctx.throw(500, `邮件发送失败 ${e}`);
       return false;
     }
@@ -67,8 +67,9 @@ class EmailService extends Service {
    */
   async sendCode(email, code) {
     const { app, ctx, service } = this;
-    // 保存验证码
-    await service.code.create({ email, code });
+
+    // 先删除之前的 code
+    await service.code.findOneAndRemove({ email });
 
     const html = ctx.helper.formatStrs(app.config.mail.codeContent, email, code);
     const mailData = {
@@ -77,7 +78,14 @@ class EmailService extends Service {
       subject: app.config.mail.codeSubject,
       html,
     };
-    return this.send(mailData);
+    const result = await this.send(mailData);
+
+    if (result) {
+      // 保存验证码
+      await service.code.create({ email, code });
+    }
+
+    return result;
   }
 }
 

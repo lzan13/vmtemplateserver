@@ -55,7 +55,7 @@ class MatchService extends Service {
     const { ctx, service } = this;
     const { gender, type } = params;
     let result = [];
-    const limit = 50;
+    const limit = 500;
     // 过滤掉自己
     const currId = ctx.state.user.id;
     const query = {
@@ -69,38 +69,60 @@ class MatchService extends Service {
       query.gender = { $ne: 0 };
     }
 
-    if (type) {
+    // 这里心情匹配不限制类型
+    if (type && Number(type) > 0) {
       query.type = type;
     }
     const user = await service.user.find(currId);
-    // 会员身份不需要消耗积分
+    // 会员身份不需要消耗次数和积分
     if (user.role.identity < 100) {
-      if (user.score <= 0) {
-        ctx.throw(412, '忘忧币不足，可通过签到或完成每日任务获取');
-      } else {
-        // 用户积分-1
-        let update = { $inc: { score: -1 } };
+      let update = {};
+      if (type === '0') {
         if (user.matchCount > 0) {
           update = { $inc: { matchCount: -1 } };
+        } else {
+          if (user.score > 0) {
+            update = { $inc: { score: -1 } };
+
+            // 记录资金消耗
+            await service.score.create({ owner: params.userId, title: '发起匹配', count: 1, type: 2, remarks: '用户发起匹配操作消耗' });
+
+          } else {
+            ctx.throw(412, '账户余额不足，可通过签到或充值等任务获取');
+          }
         }
-        service.user.findByIdAndUpdate(currId, update);
+      } else if (type === '1') {
+        if (user.fastCount > 0) {
+          update = { $inc: { fastCount: -1 } };
+        } else {
+          if (user.score > 0) {
+            update = { $inc: { score: -1 } };
+
+            // 记录资金消耗
+            await service.score.create({ owner: params.userId, title: '发起快速聊天', count: 1, type: 2, remarks: '用户发起快速聊天操作消耗' });
+
+          } else {
+            ctx.throw(412, '账户余额不足，可通过签到或充值等任务获取');
+          }
+        }
       }
+      service.user.findByIdAndUpdate(currId, update);
     }
 
     // 这里加上随机跳过是为了保证能随机到所有的匹配数据
     // 查询总数
-    const totalCount = await ctx.model.Match.countDocuments()
-      .exec();
-    // 随机跳过
-    let skip = Math.floor(Math.random() * (totalCount - 1));
-    if (skip > 50) {
-      skip -= 50;
-    }
+    // const totalCount = await ctx.model.Match.countDocuments()
+    //   .exec();
+    // // 随机跳过
+    // let skip = Math.floor(Math.random() *  ));
+    // if (skip > 50) {
+    //   skip -= 50;
+    // }
 
     // 查询最近的指定条数数据，然后在结果中随机选择一条返回
     result = await ctx.model.Match.find(query)
       .populate('user', userSelect)
-      .skip(skip)
+      // .skip(skip)
       .limit(limit)
       .sort({ updatedAt: -1 })
       .exec();
@@ -144,14 +166,14 @@ class MatchService extends Service {
     } else if (params.gender === '1') {
       query.gender = { $ne: 0 };
     }
-    if (type) {
+    if (type && Number(type) >= 0) {
       query.type = type;
     }
     result = await ctx.model.Match.find(query)
       .populate('user', userSelect)
       .skip(skip)
       .limit(Number(limit))
-      .sort({ createdAt: -1 })
+      .sort({ updatedAt: -1 })
       .exec();
     currentCount = result.length;
     totalCount = await ctx.model.Match.countDocuments(query)

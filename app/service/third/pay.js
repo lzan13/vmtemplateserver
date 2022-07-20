@@ -56,7 +56,7 @@ class PayService extends Service {
       /** 订单标题 **/
       Subject: order.title,
       /** 订单金额，精确到小数点后两位 **/
-      TotalAmount: order.realPrice,
+      TotalAmount: (order.realPrice / 100).toFixed(2),
       /** 订单描述 **/
       Body: order.remarks,
       // extendParams:{
@@ -162,7 +162,9 @@ class PayService extends Service {
           status = 3;
           extend = `订单不存在 ${params.out_trade_no}`;
         } else {
-          if (order.realPrice !== params.total_amount) {
+          if (order.status !== 0) {
+            extend = `订单已处理，不能重复操作 status:${order.status}`;
+          } else if ((order.realPrice / 100) !== Number(params.total_amount)) {
             status = 3;
             extend = `订单金额错误 ${params.total_amount}`;
           } else {
@@ -197,7 +199,7 @@ class PayService extends Service {
   async updateUserInfo(order) {
     const commodity = order.commoditys[0];
 
-    // 商品类型
+    // 根据商品类型不同进行不同操作
     if (commodity.type === 0) {
       this.updateUserScore(order.owner, commodity);
     } else if (commodity.type === 1) {
@@ -210,10 +212,9 @@ class PayService extends Service {
    */
   async updateUserScore(owner, commodity) {
     const { service } = this;
-    // 计算充值金币数量
-    const score = Number(commodity.price) * 100;
+    service.score.create({ owner, title: commodity.title, count: commodity.price, type: 1, remarks: '记录用户主动充值金币' });
     // 更新用户信息
-    service.user.update(owner, { $inc: { score } });
+    service.user.update(owner, { $inc: { score: commodity.price } });
   }
 
   /**
