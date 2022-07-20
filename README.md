@@ -1,5 +1,9 @@
-vmnepentheserver
+vmtemplateserver
 ======
+
+> 看完之后回来做个小问卷吧，帮助我促进项目的完善 [忘忧项目使用问卷](https://wenjuan.feishu.cn/m?t=s5qrpiqR87Di-4emr)
+
+### 介绍
 
 忘忧大陆-修仙一样交友
 
@@ -12,7 +16,7 @@ vmnepentheserver
 </div>
 
 
-### 准备
+### 准备阶段
 
 运行本项目前确认你已配置好`nodejs`开发环境，并且已安装`mongodb`，如果不熟悉可以参考以下两篇文章：
 
@@ -43,7 +47,7 @@ $ open http://localhost:5920/
 ```
 
 ### 接口调试
-这里方便大家调试，我把我的 `postman` 数据导出来了，大家可以导入到自己 `postman` 进行测试，接口文件放在了项目根目录下 `vmnepentheserver.postman.json`
+这里方便大家调试，我把我的 `postman` 数据导出来了，大家可以导入到自己 `postman` 进行测试，接口文件放在了项目根目录下 `vmtemplateserver.postman.json`
 不会用 `postman` 的话自行搜索下吧，很简单很方便
 
 这里需要注意导入的只是接口数据，环境配置需要你自己进行配置，主要就是 `{{host}}` `{{Authorization}}` 这两个参数
@@ -56,10 +60,10 @@ $ cp config.prod.template.js config.prod.js
 # 安装发布依赖
 $ npm i --production
 # 打包发布代码
-$ tar -czvf ../vmnepentheserver.tgz .
+$ tar -czvf ../vmtemplateserver.tgz .
 
 # 将打包的代码上传到要发布的服务器上，解包，运行
-$ tar -xzvf vmnepentheserver.tgz .
+$ tar -xzvf vmtemplateserver.tgz .
 $ ./vmrun.sh
 # 完成之后运行单元测试初始化数据库
 $ npm run test
@@ -75,7 +79,7 @@ $ cd /etc/nginx/sites-available
 # 新建并编辑配置，这个名字可以随便取，内容参考下方配置
 $ vim match
 # 保存之后需要连接当前配置到 /etc/nginx/sites-enabled/ 下
-$ ln -s /etc/nginx/sites-available/nepenthe /etc/nginx/sites-enabled/nepenthe
+$ ln -s /etc/nginx/sites-available/template /etc/nginx/sites-enabled/template
 # 重启 nginx
 $ /etc/init.d/nginx restart
 ```
@@ -87,29 +91,29 @@ $ /etc/init.d/nginx restart
 ```
 server {
 	listen 80;
-	server_name nepenthe.vmloft.com;
+	server_name template.vmloft.com;
 
 	rewrite ^(.*)$ https://$host$1 permanent;
 }
 server {
 	listen 443 ssl;
-	server_name nepenthe.vmloft.com;
+	server_name template.vmloft.com;
 
 	ssl on;
 
-	ssl_certificate     /var/www/certs/nepenthe.vmloft.com.pem;
-	ssl_certificate_key	/var/www/certs/nepenthe.vmloft.com.key;
+	ssl_certificate     /var/www/certs/template.vmloft.com.pem;
+	ssl_certificate_key	/var/www/certs/template.vmloft.com.key;
 	ssl_ciphers         ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
 	ssl_protocols		TLSv1 TLSv1.1 TLSv1.2;
 	ssl_prefer_server_ciphers on;
 
 	location / {
-		root /var/www/vmnepenthe/home;
+		root /var/www/vmtemplate/home;
 		index index.html;
 		try_files $uri $uri/ = index;
 	}
 	location /admin {
-		alias /var/www/vmnepenthe/admin;
+		alias /var/www/vmtemplate/admin;
 		index index.html
 		try_files $uri $uri/ = 404;
 	}
@@ -128,12 +132,13 @@ server {
 
 ### 更多
 
-可以看看 [项目整体介绍](https://www.yuque.com/lzan13/fn003n/ypa51f)  [更新记录](./UPDATE.md)
+总体介绍 [忘忧大陆项目整体介绍](https://www.yuque.com/lzan13/nepenthe/ypa51f)
+开发迭代 [更新记录](./UPDATE.md)
 
 **项目客户端下载体验**
 
 - [本地 APK 包下载](http://app.melove.net/fwn)
-- [GooglePlay 市场下载](https://play.google.com/store/apps/details?id=com.vmloft.develop.app.nepenthe)
+- [GooglePlay 市场下载](https://play.google.com/store/apps/details?id=com.vmloft.develop.app.template)
 
 **开源仓库地址**
 
@@ -149,7 +154,7 @@ server {
 
 **沟通交流**
 
-可以通过已下方式找到我，获取最新信息，以及技术支持
+可以通过以下方式找到我，获取最新信息，以及技术支持
 
 公众号: 穿裤衩闯天下
 

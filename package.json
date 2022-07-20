@@ -1,5 +1,5 @@
 {
-  "name": "vmnepentheserver",
+  "name": "vmtemplateserver",
   "version": "0.0.7",
   "description": "忘忧大陆服务端接口项目，包括账户登录注册，角色权限管理，附件管理，分类，职业，发帖，评论，关注等",
   "private": true,
@@ -35,8 +35,8 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmnepentheserver",
-    "stop": "egg-scripts stop --title=vmnepentheserver",
+    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmtemplateserver",
+    "stop": "egg-scripts stop --title=vmtemplateserver",
     "dev": "EGG_SERVER_ENV=local egg-bin dev --sticky",
     "dev:pre": "EGG_SERVER_ENV=pre egg-bin dev --sticky",
     "debug": "EGG_SERVER_ENV=local egg-bin debug --sticky",

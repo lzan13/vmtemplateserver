@@ -24,7 +24,7 @@ module.exports = appInfo => {
    * 聚合平台相关配置
    */
   config.ads = {
-    secKey: 'vmnepenthe_seckey_1314', // 奖励回调签名所需安全秘钥
+    secKey: 'vmtemplate_seckey_1314', // 奖励回调签名所需安全秘钥
   };
 
   /**
@@ -265,24 +265,24 @@ module.exports = appInfo => {
       password: '123123',
     },
     siteList: [{ // 系统配置信息
-      alias: 'nepenthe',
+      alias: 'template',
       title: '忘忧大陆服务系统',
       desc: '忘忧大陆服务数据管理系统，包含完整的社交逻辑处理',
     }, {
       alias: 'agreement',
       title: '用户协议',
       desc: '用户协议配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://vmloft.com/nepenthe/#/agreement',
+      content: 'https://vmloft.com/template/#/agreement',
     }, {
       alias: 'policy',
       title: '隐私政策',
       desc: '隐私政策配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://vmloft.com/nepenthe/#/policy',
+      content: 'https://vmloft.com/template/#/policy',
     }, {
       alias: 'norm',
       title: '用户行为规范',
       desc: '用户行为规范配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://vmloft.com/nepenthe/#/norm',
+      content: 'https://vmloft.com/template/#/norm',
     }, {
       alias: 'client',
       title: '客户端配置信息',
@@ -515,7 +515,7 @@ module.exports = appInfo => {
       platform: 0,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://vmloft.com/nepenthe',
+      url: 'https://vmloft.com/template',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
@@ -523,7 +523,7 @@ module.exports = appInfo => {
       platform: 1,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://vmloft.com/nepenthe',
+      url: 'https://vmloft.com/template',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
@@ -531,7 +531,7 @@ module.exports = appInfo => {
       platform: 2,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://vmloft.com/nepenthe',
+      url: 'https://vmloft.com/template',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
@@ -539,7 +539,7 @@ module.exports = appInfo => {
       platform: 3,
       title: '功能尝鲜',
       desc: '新功能上线，快来尝鲜',
-      url: 'https://vmloft.com/nepenthe',
+      url: 'https://vmloft.com/template',
       versionCode: 1,
       versionName: '0.0.1',
       force: false,
