@@ -27,7 +27,6 @@ class TokenService extends Service {
       data: params,
       // 测试状态设置 token 有效期为 2 分钟
       // exp: Math.floor(Date.now() / 1000) + (60 * 2),
-      // exp: Math.floor(Date.now() / 1000) + (60 * 60),
       // 设置 token 有效期为 30 天
       exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 30),
     }, app.config.jwt.secret);

@@ -165,7 +165,7 @@ class LikeService extends Service {
         query.comment = id;
       } else {
         // id 为空则判断当前身份，管理员查询全部数据，自己查询我喜欢的
-        if (currUser.identity < 200) {
+        if (currUser.identity < 300) {
           query.owner = currUser.id;
         }
       }

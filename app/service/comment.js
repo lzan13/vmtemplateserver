@@ -46,7 +46,7 @@ class CommentService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity < 200 && comment.owner.id !== userId) {
+      if (identity < 700 && comment.owner.id !== userId) {
         ctx.throw(403, '普通用户只能操作自己评论');
       }
     }

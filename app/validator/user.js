@@ -1,6 +1,6 @@
 /**
  * Create by lzan13 2021/1/13
- * 描述：用户信息校验规则
+ * 描述：用户信息校验规则 https://github.com/node-modules/parameter
  */
 'use strict';
 module.exports = app => {

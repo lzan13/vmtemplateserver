@@ -13,21 +13,18 @@ describe('test/service/role.test.js', () => {
       // 先查询下数据量是否和配置一样
       const count = await ctx.model.Role.estimatedDocumentCount();
       if (count === 0) {
-        let superRole;
         for (const item of app.config.roleList) {
           const role = await ctx.service.role.create(item);
           assert(role);
-          if (role.identity === 1000) {
-            superRole = role;
-          }
         }
-
-        // 检查是否存在超管账户，不存在则创建
-        let user = await ctx.service.user.findByEmail(app.config.super.email);
+      }
+      // 检查是否存在系统账户，不存在则创建
+      for (const item of app.config.userList) {
+        const user = await ctx.service.user.findByEmail(item.email);
         if (!user) {
-          const params = app.config.super;
-          params.roleId = superRole.id;
-          user = await ctx.service.user.create(params);
+          const role = await ctx.service.role.findByIdentity(item.identity);
+          item.roleId = role.id;
+          const user = await ctx.service.user.create(item);
           assert(user);
         }
       }

@@ -121,10 +121,6 @@ class SignService extends Service {
     // 修改密码需要清除 token 重新登录认证
     user.token = service.token.create(user);
 
-    const result = await service.third.easemob.updatePassword(id, user.password);
-    if (result !== 0) {
-      ctx.throw(result, '密码更新失败，请稍后重试');
-    }
     return service.user.findByIdAndUpdate(id, user);
   }
 
@@ -132,11 +128,19 @@ class SignService extends Service {
    * 个人信息认证
    * TODO 这里只是根据正则校验下身份证号格式，并没有联网真是的身份信息，正式上线需要做数据查询对比
    */
-  async personalAuth(params) {
+  async realAuth(params) {
     const { ctx, service } = this;
     const id = ctx.state.user.id;
-    // 调用 Service 进行业务处理
-    return await service.user.update(id, params);
+    const authResult = await service.third.auth.realAuth(params.idCardNumber, params.realName);
+    if (authResult && authResult.status === 200 && authResult.data && authResult.data.code === 0) {
+      // 调用 Service 进行业务处理
+      return await service.user.update(id, params);
+    }
+    const code = authResult.data.code;
+    const desc = authResult.data.desc;
+    // const code = authResult.res.status;
+    // const desc = authResult.res.statusMessage;
+    ctx.throw(412, `实名认证失败 ${code}-${desc} ，请检查身份证号和姓名`);
   }
 
   /**

@@ -41,6 +41,14 @@ class SignController extends Controller {
       hobby: 'string?',
     }, params);
 
+    // 敏感词过滤处理
+    if (params.nickname) {
+      params.nickname = ctx.helper.filterSensitiveWord(ctx.common.sensitiveWordMap, params.nickname);
+    }
+    if (params.signature) {
+      params.signature = ctx.helper.filterSensitiveWord(ctx.common.sensitiveWordMap, params.signature);
+    }
+
     // 调用 Service 进行业务处理
     await service.info.updateInfo(params);
     // 查询最新数据
@@ -139,7 +147,7 @@ class SignController extends Controller {
   /**
    * 个人信息认证
    */
-  async personalAuth() {
+  async realAuth() {
     const { ctx, service } = this;
     // 组装参数
     const params = ctx.params.permit('idCardNumber', 'realName');
@@ -147,7 +155,7 @@ class SignController extends Controller {
     ctx.validate({ idCardNumber: 'idCardNumber', realName: 'string' }, params);
 
     // 调用 Service 进行业务处理
-    await service.info.personalAuth(params);
+    await service.info.realAuth(params);
     // 查询最新数据
     const id = ctx.state.user.id;
     const user = await service.user.find(id, { password: 0 });

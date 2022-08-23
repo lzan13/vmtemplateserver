@@ -11,6 +11,7 @@ typings/
 *.un~
 .nyc_output/
 
+config/config.default.js
 config/config.local.js
 config/config.pre.js
 config/config.prod.js

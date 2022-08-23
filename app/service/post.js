@@ -51,7 +51,7 @@ class PostService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity < 200 && post.owner.id !== userId) {
+      if (identity < 700 && post.owner.id !== userId) {
         ctx.throw(403, '无权操作，普通用户只能操作自己内容');
       }
     }
@@ -63,7 +63,7 @@ class PostService extends Service {
     // 删除包含的附件
     if (post.attachments) {
       post.attachments.forEach(item => {
-        service.attachment.destroy(item._id);
+        service.attachment.destroy(item.id);
       });
     }
     // 删除内容
@@ -83,7 +83,7 @@ class PostService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity < 200 && post.owner.id !== userId) {
+      if (identity < 700 && post.owner.id !== userId) {
         ctx.throw(403, '无权操作，普通用户只能操作自己内容');
       }
     }
@@ -107,7 +107,7 @@ class PostService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity < 200 && post.owner.id !== userId) {
+      if (identity < 700 && post.owner.id !== userId) {
         ctx.throw(403, '普通用户只能操作自己发布的内容');
       }
     }
@@ -121,12 +121,13 @@ class PostService extends Service {
   async show(id) {
     const { ctx, service } = this;
     const post = await service.post.find(id);
-    const currUserId = ctx.state.user.id;
-    const isLike = await this.service.like.isLike(1, currUserId, post.id);
-    post._doc.isLike = isLike;
     if (!post) {
       ctx.throw(404, `数据不存在 ${id}`);
     }
+    const currUserId = ctx.state.user.id;
+    const isLike = await this.service.like.isLike(1, currUserId, post.id);
+    post._doc.isLike = isLike;
+
     return post;
   }
 

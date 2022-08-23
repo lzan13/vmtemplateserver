@@ -121,9 +121,12 @@ class UserController extends Controller {
       'strangerMsg',
       'profession',
       'role',
-      'roleDate',
+      'roleTime',
       'idCardNumber',
       'realName',
+      'banned',
+      'bannedTime',
+      'bannedReason',
       'deleted',
       'deletedReason'
     );
@@ -145,6 +148,9 @@ class UserController extends Controller {
       realName: 'string?',
     }, params);
 
+    if (params.banned && params.bannedTime > 0) {
+      params.bannedTime = new Date(Date.now()).getTime() + Number(params.bannedTime) * 1000;
+    }
     // 调用 Service 进行业务处理
     await service.user.update(id, params);
     const user = await service.user.show(id);

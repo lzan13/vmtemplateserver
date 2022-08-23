@@ -13,6 +13,13 @@ module.exports = () => {
   const config = {};
 
   /**
+   * 聚合平台相关配置
+   */
+  config.ads = {
+    secKey: 'vmtemplate_seckey_123', // 奖励回调签名所需安全秘钥
+  };
+
+  /**
    * 配置 alinode 监控，这里本地调试暂时随便填写，正式环境另外配置
    */
   config.alinode = {
@@ -21,14 +28,20 @@ module.exports = () => {
   };
 
   /**
-   * Easemob IM 配置 https://console.easemob.com/app/im-service/detail
+   * socket.io 配置 https://www.eggjs.org/zh-CN/tutorials/socketio
    */
-  config.easemob = {
-    host: 'http://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
-    orgName: 'orgName', // 环信 appKey # 前半段
-    appName: 'appName', // 环信 appkey # 后半段
-    clientId: 'client id', // 替换环信后台 clientId
-    clientSecret: 'client secret', // 替换环信后台 clientSecret
+  exports.io = {
+    init: {
+      path: '/im',
+      pingInterval: 10 * 60 * 1000,
+      pingTimeout: 10 * 1000,
+    },
+    namespace: {
+      '/': {
+        connectionMiddleware: [ 'connection' ],
+        packetMiddleware: [ 'packet' ],
+      },
+    },
   };
 
   /**
@@ -67,18 +80,6 @@ module.exports = () => {
   };
 
   /**
-   * Easemob MQTT 配置 https://console.easemob.com/app/generalizeMsg/overviewService
-   */
-  config.mqtt = {
-    host: 'host', // MQTT 链接地址
-    appId: 'appId', // MQTT AppId
-    port: [ 1883, 1884, 80, 443 ], // MQTT 端口 1883(mqtt),1884(mqtts),80(ws),443(wss)
-    restHost: 'restHost', // MQTT 服务 Rest API 地址
-    clientId: 'client id', // 替换环信后台 clientId
-    clientSecret: 'client secret', // 替换环信后台 clientSecret
-  };
-
-  /**
    * 支付相关配置
    */
   config.pay = {
@@ -95,13 +96,33 @@ module.exports = () => {
   };
 
   /**
+   * egg-redis 配置
+   */
+  exports.redis = {
+    client: {
+      host: '127.0.0.1', // redis 服务器地址，如果是本地运行不需要修改
+      port: 6379, // redis 端口
+      password: 123123, // redis 密码
+      db: 0, // redis 数据库索引
+    },
+  };
+
+  /**
    * 接口安全配置
    */
   config.security = {
     csrf: {
       enable: false,
     },
-    domainWhiteList: [ 'https://前端网页托管的域名' ], // '前端网页托管的域名'
+    domainWhiteList: [ 'http://localhost:5920', 'http://localhost:9527' ], // 安全请求白名单域名
+  };
+
+  /**
+   * 三方API配置
+   */
+  config.thirdApi = {
+    apiUrl: '',
+    apiCode: '',
   };
 
   /**

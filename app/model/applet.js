@@ -11,6 +11,11 @@ module.exports = app => {
     content: { type: String }, // 描述
     tips: { type: String }, // 提示
     isNeedVIP: { type: Boolean, default: false }, // 需要 vip 资格
+    status: { // 状态 0-待上架 1-已上架
+      type: Number,
+      enum: [ 0, 1 ],
+      default: 0,
+    },
     type: { // 类型 0-H5 1-小应用 2-小游戏
       type: Number,
       enum: [ 0, 1, 2 ],
@@ -22,11 +27,13 @@ module.exports = app => {
     url: { type: String }, // 地址
     versionCode: { type: Number, default: 0 }, // 版本号
     versionName: { type: String, default: '0.0.1' }, // 版本名称
+    createdAt: { type: Number },
+    updatedAt: { type: Number },
   },
   // schema 的选项options
   {
     // id: true, // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
-    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }, // 生成时间
+    timestamps: { currentTime: () => Date.now(), createdAt: true, updatedAt: true }, // 时间戳配置
   });
 
   return mongoose.model('Applet', AppletSchema);

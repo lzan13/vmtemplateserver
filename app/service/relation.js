@@ -169,7 +169,7 @@ class RelationService extends Service {
     // 根据 B=>A 查询关系
     relation = await ctx.model.Relation.findOne(params);
     if (relation) {
-      // 这里讲 B->A 转换为 A->B
+      // 这里将 B->A 转换为 A->B
       if (relation.relation === 0) {
         return 1;
       } else if (relation.relation === 1) {

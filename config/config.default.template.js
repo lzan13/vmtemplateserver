@@ -24,7 +24,7 @@ module.exports = appInfo => {
    * 聚合平台相关配置
    */
   config.ads = {
-    secKey: 'vmtemplate_seckey_1314', // 奖励回调签名所需安全秘钥
+    secKey: 'vmtemplate_seckey_123', // 奖励回调签名所需安全秘钥
   };
 
   /**
@@ -56,7 +56,7 @@ module.exports = appInfo => {
        * 类别、签到、验证码、商品、配置、订单、职业、角色、用户、版本 等相关接口，
        * 可通过对外暴露的对应接口操作，比如更新用户资料等
        */
-      user: /\/v1\/(category|clock|code|commodity|config|profession|role|user|version)/,
+      user: /\/v1\/(category|clock|code|commodity|config|packet|profession|role|user|version)/,
       lock: '',
     },
   };
@@ -82,23 +82,31 @@ module.exports = appInfo => {
   /**
    * 配置跨域信息
    */
-  // config.cors = {
-  //   // credentials: true,
-  //   // 允许任何跨域，若只允许个别IP跨域，则：origin:['http://localhost:8080']
-  //   origin: '*',
-  //   // 被允许的请求方式
-  //   allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
-  // };
+  config.cors = {
+    // credentials: true,
+    // 允许任何跨域，若只允许个别IP跨域，则：origin:['http://localhost:8080']
+    origin: '*',
+    // origin: () => 'http://localhost:8080',
+    // 此处只能设置一个域,函数的返回值为一个字符串，或者直接设置未字符串
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+  };
 
   /**
-   * Easemob IM 配置 https://console.easemob.com/app/im-service/detail
+   * socket.io 配置 https://www.eggjs.org/zh-CN/tutorials/socketio
    */
-  config.easemob = {
-    host: 'http://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
-    orgName: 'orgName', // 环信 appKey # 前半段
-    appName: 'appName', // 环信 appkey # 后半段
-    clientId: 'client id', // 替换环信后台 clientId
-    clientSecret: 'client secret', // 替换环信后台 clientSecret
+  exports.io = {
+    init: {
+      path: '/im',
+      pingInterval: 10 * 60 * 1000,
+      pingTimeout: 10 * 1000,
+    },
+    namespace: {
+      '/': {
+        connectionMiddleware: [ 'connection' ], // 针对链接的处理中间件
+        packetMiddleware: [ 'packet' ], // 针对消息的处理中间件
+      },
+    },
+    matchPiazzaId: '10000', // 匹配广场Id
   };
 
   /**
@@ -113,6 +121,13 @@ module.exports = appInfo => {
     // [ '/v1/admin/init', /^\/api\/sign\/(in|up|activate)/, '/v1/feedback', '/v1/test/', '/public/uploads' ],
     ignore: '',
     // match: '/jwt',
+  };
+  /**
+   * 日志配置
+   */
+  config.logger = {
+    outputJSON: true, // 日志输出格式
+    consoleLevel: 'DEBUG', // 终端日志级别
   };
 
   /**
@@ -148,18 +163,6 @@ module.exports = appInfo => {
         useUnifiedTopology: true,
       },
     },
-  };
-
-  /**
-   * Easemob MQTT 配置 https://console.easemob.com/app/generalizeMsg/overviewService
-   */
-  config.mqtt = {
-    host: 'mqtt host', // MQTT 链接地址
-    appId: 'appId', // MQTT AppId
-    port: [ 1883, 1884, 80, 443 ], // MQTT 端口 1883(mqtt),1884(mqtts),80(ws),443(wss)
-    restHost: 'rest API', // MQTT 服务 API 地址
-    clientId: 'client id', // 替换环信后台 clientId
-    clientSecret: 'client secret', // 替换环信后台 clientSecret
   };
 
   /**
@@ -221,13 +224,35 @@ module.exports = appInfo => {
   };
 
   /**
+   * egg-redis 配置
+   */
+  exports.redis = {
+    client: {
+      host: '127.0.0.1', // redis 服务器地址，如果是本地运行不需要修改
+      port: 6379, // redis 端口
+      password: 123123, // redis 密码
+      db: 0, // redis 数据库索引
+    },
+  };
+
+  /**
    * 接口安全配置，这个必须要配置，否则会请求接口 403 错误
+   * https://eggjs.org/zh-cn/core/security.html
    */
   config.security = {
     csrf: {
       enable: false,
+      ignoreJSON: false,
     },
-    domainWhiteList: [ 'http://localhost:5920' ], // 安全请求白名单域名
+    domainWhiteList: [ 'http://localhost:5920', 'http://localhost:9527' ], // 安全请求白名单域名
+  };
+
+  /**
+   * 三方API配置
+   */
+  config.thirdApi = {
+    apiUrl: '',
+    apiCode: '',
   };
 
   /**
@@ -259,291 +284,7 @@ module.exports = appInfo => {
     subSitePath: '/api',
     // 配置邮箱注册账户是否需要激活
     isNeedActivate: false,
-    super: { // 配置超管账户
-      email: 'admin@vmloft.com',
-      username: 'admin',
-      password: '123123',
-    },
-    siteList: [{ // 系统配置信息
-      alias: 'template',
-      title: '忘忧大陆服务系统',
-      desc: '忘忧大陆服务数据管理系统，包含完整的社交逻辑处理',
-    }, {
-      alias: 'agreement',
-      title: '用户协议',
-      desc: '用户协议配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://vmloft.com/template/#/agreement',
-    }, {
-      alias: 'policy',
-      title: '隐私政策',
-      desc: '隐私政策配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://vmloft.com/template/#/policy',
-    }, {
-      alias: 'norm',
-      title: '用户行为规范',
-      desc: '用户行为规范配置信息，这里可以配置隐私政策地址，也可以配置 html 内容',
-      content: 'https://vmloft.com/template/#/norm',
-    }, {
-      alias: 'client',
-      title: '客户端配置信息',
-      desc: '客户端所需配置信息，Json 格式，方便灵活配置',
-      content: '',
-    }],
-    categoryList: [{ // 分类配置
-      title: '吐槽广场',
-      desc: '这里有好多人，来一起吐槽吧',
-    }, {
-      title: '聊天交友',
-      desc: '嗨，我想和你做朋友，感兴趣的看过来',
-    }, {
-      title: '心情分享',
-      desc: '倾诉不快，分享快乐，一起哭，一起笑吧',
-    }, {
-      title: '无聊摸鱼',
-      desc: '闲的慌吗，来吹吹水、摸摸鱼啊',
-    }],
-    // 商品配置，这里主要是充值的虚拟商品
-    commodityList: [{ // 开通会员商品
-      title: '月度会员',
-      desc: '尊享多重会员独享服务',
-      price: 1000,
-      currPrice: 888,
-      inventory: '999999',
-      status: 1,
-      type: 1,
-      level: 1,
-      remarks: '订阅会员服务',
-    }, {
-      title: '季度会员',
-      desc: '尊享多重会员独享服务',
-      price: 3000,
-      currPrice: 2550,
-      inventory: '999999',
-      status: 1,
-      type: 1,
-      level: 3,
-      remarks: '订阅会员服务',
-    }, {
-      title: '年度会员',
-      desc: '尊享多重会员独享服务',
-      price: 12000,
-      currPrice: 9600,
-      inventory: '999999',
-      status: 1,
-      type: 1,
-      level: 12,
-      remarks: '订阅会员服务',
-    }, { // 金币充值商品
-      title: '充值 200 忘忧币',
-      desc: '首冲体验',
-      price: 100,
-      currPrice: 100,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 600 忘忧币',
-      desc: '限时9.2折',
-      price: 600,
-      currPrice: 552,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 1800 忘忧币',
-      desc: '限时9.0折',
-      price: 1800,
-      currPrice: 1620,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 3600 忘忧币',
-      desc: '限时8.8折',
-      price: 3600,
-      currPrice: 3168,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 7200 忘忧币',
-      desc: '限时7.9折',
-      price: 7200,
-      currPrice: 5688,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 12800 忘忧币',
-      desc: '限时7.5折',
-      price: 12800,
-      currPrice: 9600,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 25600 忘忧币',
-      desc: '限时7.3折',
-      price: 25600,
-      currPrice: 18688,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 51200 忘忧币',
-      desc: '限时7.1折',
-      price: 51200,
-      currPrice: 36352,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 102400 忘忧币',
-      desc: '限时6.9折',
-      price: 102400,
-      currPrice: 70656,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 204800 忘忧币',
-      desc: '限时6.7折',
-      price: 204800,
-      currPrice: 137216,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }, {
-      title: '充值 409600 忘忧币',
-      desc: '限时6.5折',
-      price: 409600,
-      currPrice: 266240,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    },
-    {
-      title: '充值 819200 忘忧币',
-      desc: '限时6.3折',
-      price: 819200,
-      currPrice: 516096,
-      inventory: '999999',
-      status: 1,
-      type: 0,
-      remarks: '账户余额充值',
-    }],
-    // 系统配置信息
-    professionList: [{
-      title: '搬砖滴',
-      desc: '上学不努力，长大去搬砖',
-    }, {
-      title: '种田滴',
-      desc: '劳动者是最美滴人，是生活的基石',
-    }, {
-      title: '学生娃',
-      desc: '未来的花朵，要好好爱护，努力加油',
-    }, {
-      title: '家庭主妇/夫',
-      desc: '为家庭舍弃自己的梦想，嗯',
-    }, {
-      title: '上班族',
-      desc: '为生活不断努力打拼，面包会有的，房子车子都会有的',
-    }, {
-      title: '自由职业',
-      desc: '无忧无虑，自由工作',
-    }, {
-      title: '大老板',
-      desc: '成功人士，快要走向人生巅峰了',
-    }, {
-      title: '退休享福',
-      desc: '我还可以燃烧，为社会奉献余热',
-    }, {
-      title: '神秘职业',
-      desc: '你问我是做什么的，不可说！',
-    }],
-    // 角色身份配置
-    roleList: [{
-      title: '超级管理员',
-      desc: '掌控整个系统的生死',
-      identity: 1000,
-    }, {
-      title: '管理员',
-      desc: '拥有管理普通用户及部分系统功能的人员',
-      identity: 900,
-    }, {
-      title: '运营者',
-      desc: '负责站点运营管理',
-      identity: 800,
-    }, {
-      title: '检查员',
-      desc: '负责站点输出内容审核',
-      identity: 700,
-    }, {
-      title: 'VIP账户',
-      desc: '享有使用系统及分享内容的权利，受到系统保护',
-      identity: 100,
-    }, {
-      title: '普通账户',
-      desc: '享有使用系统及分享内容的权利，受到系统保护',
-      identity: 9,
-    }, {
-      title: '待激活账户',
-      desc: '享有使用系统及分享内容的权利，受到系统保护',
-      identity: 8,
-    }, {
-      title: '锁定账户',
-      desc: '因特殊原因被锁定账户，暂不可用系统服务',
-      identity: 2,
-    }, {
-      title: '黑名单账户',
-      desc: '因特殊原因被删除账户，永不解封，设置为当前身份而不是删除，可以防止用户重复注册',
-      identity: 1,
-    }],
-    // 版本配置
-    versionList: [{
-      platform: 0,
-      title: '功能尝鲜',
-      desc: '新功能上线，快来尝鲜',
-      url: 'https://vmloft.com/template',
-      versionCode: 1,
-      versionName: '0.0.1',
-      force: false,
-    }, {
-      platform: 1,
-      title: '功能尝鲜',
-      desc: '新功能上线，快来尝鲜',
-      url: 'https://vmloft.com/template',
-      versionCode: 1,
-      versionName: '0.0.1',
-      force: false,
-    }, {
-      platform: 2,
-      title: '功能尝鲜',
-      desc: '新功能上线，快来尝鲜',
-      url: 'https://vmloft.com/template',
-      versionCode: 1,
-      versionName: '0.0.1',
-      force: false,
-    }, {
-      platform: 3,
-      title: '功能尝鲜',
-      desc: '新功能上线，快来尝鲜',
-      url: 'https://vmloft.com/template',
-      versionCode: 1,
-      versionName: '0.0.1',
-      force: false,
-    }],
+    // 更多初始化配置在 unittest 中初始化
   };
   return {
     ...config,

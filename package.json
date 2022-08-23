@@ -1,5 +1,5 @@
 {
-  "name": "vmtemplateserver",
+  "name": "vmnepentheserver",
   "version": "0.0.7",
   "description": "忘忧大陆服务端接口项目，包括账户登录注册，角色权限管理，附件管理，分类，职业，发帖，评论，关注等",
   "private": true,
@@ -15,8 +15,10 @@
     "egg-jwt": "^3.1.7",
     "egg-mongoose": "^3.2.0",
     "egg-parameters": "^1.1.2",
+    "egg-redis": "^2.4.0",
     "egg-router-plus": "^1.3.1",
     "egg-scripts": "^2.15.1",
+    "egg-socket.io": "^4.1.6",
     "egg-validate": "^2.0.2",
     "mocha": "^8.4.0",
     "nodemailer": "^6.7.0",
@@ -35,10 +37,10 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmtemplateserver",
-    "stop": "egg-scripts stop --title=vmtemplateserver",
+    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmnepentheserver --workers=1",
+    "stop": "egg-scripts stop --title=vmnepentheserver",
     "dev": "EGG_SERVER_ENV=local egg-bin dev --sticky",
-    "dev:pre": "EGG_SERVER_ENV=pre egg-bin dev --sticky",
+    "dev:pre": "EGG_SERVER_ENV=pre egg-bin dev --sticky --workers=1",
     "debug": "EGG_SERVER_ENV=local egg-bin debug --sticky",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",

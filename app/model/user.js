@@ -38,7 +38,7 @@ module.exports = app => {
 
     clockContinuousCount: { type: Number, default: 0 }, // 打卡连续次数
     clockTotalCount: { type: Number, default: 0 }, // 打卡总次数
-    clockTime: { type: Date }, // 最后一次打卡时间
+    clockTime: { type: Number }, // 最后一次打卡时间
 
     fansCount: { type: Number, default: 0 }, // 粉丝数量
     followCount: { type: Number, default: 0 }, // 关注数量
@@ -51,21 +51,30 @@ module.exports = app => {
 
     profession: { type: mongoose.Schema.Types.ObjectId, ref: 'Profession' }, // 职业
     role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' }, // 角色，和角色数据关联，不同角色拥有不同权限，默认为普通用户
-    roleDate: { type: Date }, // 角色到期时间，到期后自动变为普通用户
+    roleTime: { type: Number }, // 角色到期时间，到期后自动变为普通用户
 
     token: { type: String }, // 账户 token，记录账户登录认证信息
+
+    ip: { type: String }, // IP地址
+    devices: { type: String }, // 设备信息
+
     idCardNumber: { type: String }, // 身份证号
     realName: { type: String }, // 真实姓名
+
+    banned: { type: Number, enum: [ 0, 1 ] }, // 禁言状态 0-未禁言 1-禁言中
+    bannedTime: { type: Number }, // 禁言到期时间
+    bannedReason: { type: String }, // 禁言理由
+
     deleted: { type: Number, enum: [ 0, 1, 2 ], default: 0 }, // 记录是否删除，只是软删除，防止恶意注册捣乱 0-未删除 1-用户主动销户 2-违反平台规定
     deletedReason: { type: String }, // 删除理由
-    // createdAt: { type: Date, default: Date.now },      // 创建/修改/删除 时间
-    // updatedAt: { type: Date, default: Date.now },
-    deletedAt: { type: Date },
+    deletedAt: { type: Number },
+    createdAt: { type: Number },
+    updatedAt: { type: Number },
   },
   // schema 的选项options
   {
     // id: true, // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
-    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }, // 生成时间
+    timestamps: { currentTime: () => Date.now(), createdAt: true, updatedAt: true }, // 时间戳配置
   });
 
   return mongoose.model('User', UserSchema);

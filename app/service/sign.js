@@ -19,7 +19,7 @@ class SignService extends Service {
     }
     user = await service.user.create(params);
     // 创建成功查询下，主要是为了让结果包含角色信息
-    user = await service.user.find(user._id);
+    user = await service.user.find(user.id);
     // 生成Token令牌
     user.token = await service.token.create(user);
     // 更新下用户信息，主要是把用户 token 保存到数据库
@@ -43,7 +43,7 @@ class SignService extends Service {
     // 创建账户
     user = await service.user.create(params);
     // 创建成功查询下，主要是为了让结果包含角色信息
-    user = await service.user.find(user._id);
+    user = await service.user.find(user.id);
 
     // 生成Token令牌
     user.token = await service.token.create(user);
@@ -73,7 +73,7 @@ class SignService extends Service {
     }
     user = await service.user.create(params);
     // 创建成功查询下，主要是为了让结果包含角色信息
-    user = await service.user.find(user._id);
+    user = await service.user.find(user.id);
 
     // 生成Token令牌
     user.token = await service.token.create(user);
@@ -87,13 +87,14 @@ class SignService extends Service {
    */
   async signIn(params) {
     const { ctx, service } = this;
+    const { account, password, ip, devices } = params;
     // TODO 这种方式后续会吧 devicesId 删除，设备登录方式调用下边单独方法
-    const user = await service.user.findByQuery({ $or: [{ devicesId: params.account }, { username: params.account }, { email: params.account }, { phone: params.account }] });
+    const user = await service.user.findByQuery({ $or: [{ devicesId: account }, { username: account }, { email: account }, { phone: account }] });
     if (!user) {
       ctx.throw(404, '用户不存在');
     }
     // 校验密码
-    if (user.password !== ctx.helper.cryptoMD5(params.password)) {
+    if (user.password !== ctx.helper.cryptoMD5(password)) {
       ctx.throw(412, '密码错误');
     }
     // 校验账户状态
@@ -105,6 +106,8 @@ class SignService extends Service {
     // }
     // 生成Token令牌
     user.token = await service.token.create(user);
+    user.ip = ip;
+    user.devices = devices;
     // 更新下用户信息，主要是把用户 token 保存到数据库
     await service.user.findByIdAndUpdate(user.id, user);
     return user;
@@ -115,9 +118,10 @@ class SignService extends Service {
    */
   async signInByCode(params) {
     const { ctx, service } = this;
-    const user = await service.user.findByPhone(params.phone);
+    const { phone, ip, devices } = params;
+    const user = await service.user.findByPhone(phone);
     if (!user) {
-      ctx.throw(404, `用户不存在 ${params.phone}`);
+      ctx.throw(404, `用户不存在 ${phone}`);
     }
     // TODO 校验密码，需要新建验证码表存储验证码信息
     // if (user.code !== params.code) {
@@ -130,6 +134,8 @@ class SignService extends Service {
 
     // 生成Token令牌
     user.token = await service.token.create(user);
+    user.ip = ip;
+    user.devices = devices;
     // 更新下用户信息，主要是把用户 token 保存到数据库
     await service.user.findByIdAndUpdate(user.id, user);
     return user;
@@ -140,12 +146,13 @@ class SignService extends Service {
    */
   async signInByDevicesId(params) {
     const { ctx, service } = this;
-    const user = await service.user.findByDevicesId(params.devicesId);
+    const { devicesId, password, ip, devices } = params;
+    const user = await service.user.findByDevicesId(devicesId);
     if (!user) {
       ctx.throw(404, '用户不存在');
     }
     // 校验密码
-    if (user.password !== params.password) {
+    if (user.password !== password) {
       ctx.throw(412, '设备已绑定邮箱或用户名并设置密码，请使用账户密码登录');
     }
     // 校验账户状态
@@ -157,6 +164,8 @@ class SignService extends Service {
     // }
     // 生成Token令牌
     user.token = await service.token.create(user);
+    user.ip = ip;
+    user.devices = devices;
     // 更新下用户信息，主要是把用户 token 保存到数据库
     await service.user.findByIdAndUpdate(user.id, user);
     return user;

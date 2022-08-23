@@ -18,6 +18,8 @@ class SignController extends Controller {
     // 校验参数
     ctx.validate({ username: 'username?', devicesId: 'devicesId', password: 'password' }, params);
 
+    params.ip = ctx.request.ip;
+    params.devices = ctx.headers.devices;
     // 调用 Service 进行业务处理
     const user = await service.sign.signUpByDevicesId(params);
     // 设置响应内容和响应状态码
@@ -34,6 +36,8 @@ class SignController extends Controller {
     // 校验参数
     ctx.validate({ username: 'username?', email: 'email', password: 'password', devicesId: 'devicesId' }, params);
 
+    params.ip = ctx.request.ip;
+    params.devices = ctx.headers.devices;
     // 调用 Service 进行业务处理
     const user = await service.sign.signUpByEmail(params);
 
@@ -52,6 +56,8 @@ class SignController extends Controller {
     // 校验参数
     ctx.validate({ username: 'username?', phone: 'phone', password: 'password', devicesId: 'devicesId' }, params);
 
+    params.ip = ctx.request.ip;
+    params.devices = ctx.headers.devices;
     // 调用 Service 进行业务处理
     const user = await service.sign.signUpByPhone(params);
     // 设置响应内容和响应状态码
@@ -69,6 +75,8 @@ class SignController extends Controller {
     // 校验参数
     ctx.validate({ account: 'account', password: 'password' }, params);
 
+    params.ip = ctx.request.ip;
+    params.devices = ctx.headers.devices;
     // 调用 Service 进行业务处理
     const user = await service.sign.signIn(params);
     // 设置响应内容和响应状态码
@@ -86,6 +94,8 @@ class SignController extends Controller {
     // 校验参数
     ctx.validate({ phone: 'phone', code: 'code' }, params);
 
+    params.ip = ctx.request.ip;
+    params.devices = ctx.headers.devices;
     // 调用 Service 进行业务处理
     const user = await service.sign.signInByCode(params);
     // 设置响应内容和响应状态码
@@ -103,6 +113,8 @@ class SignController extends Controller {
     // 校验参数
     ctx.validate({ devicesId: 'devicesId' }, params);
 
+    params.ip = ctx.request.ip;
+    params.devices = ctx.headers.devices;
     // 调用 Service 进行业务处理
     const user = await service.sign.signInByDevicesId(params);
     // 设置响应内容和响应状态码

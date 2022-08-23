@@ -48,6 +48,15 @@ class ConfigController extends Controller {
     ctx.validate({ title: 'title?', desc: 'desc?' }, params);
     // 调用 Service 进行业务处理
     const config = await service.config.update(id, params);
+    // 如果是客户端配置信息，这里同时更新下内存配置
+    if (params.alias === 'appConfig') {
+      ctx.common.config = JSON.parse(params.content);
+      // console.log(ctx.common.config);
+      // 将敏感词解析为 DFA算法 所需Map https://www.jb51.net/article/144351.htm
+      ctx.common.sensitiveWordMap = ctx.helper.makeSensitiveMap(ctx.common.config.sensitiveWords);
+      // console.log(ctx.common.sensitiveWordMap);
+    }
+
     // 设置响应内容和响应状态码
     ctx.helper.success({ ctx, msg: '更新成功', data: config });
   }

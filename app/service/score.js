@@ -26,7 +26,7 @@ class ScoreService extends Service {
   async create(params) {
     const { ctx } = this;
     // const identity = ctx.state.user.identity;
-    // if (identity < 200) {
+    // if (identity < 700) {
     //   ctx.throw(403, '无权操作');
     // }
     if (!params.cover || params.cover === '') {
@@ -46,7 +46,7 @@ class ScoreService extends Service {
     const { ctx, service } = this;
     // 先判断下权限
     const identity = ctx.state.user.identity;
-    if (identity < 200) {
+    if (identity < 700) {
       ctx.throw(403, '无权操作');
     }
     const score = await service.score.find(id);
@@ -70,7 +70,7 @@ class ScoreService extends Service {
     const { ctx, service } = this;
     // 先判断下权限
     const identity = ctx.state.user.identity;
-    if (identity < 200) {
+    if (identity < 700) {
       ctx.throw(403, '无权操作');
     }
     const score = await service.score.find(id);

@@ -18,6 +18,10 @@ class RoomController extends Controller {
     // 校验参数
     ctx.validate({ title: 'title', desc: 'desc' }, params);
 
+    // 敏感词过滤处理
+    params.title = ctx.helper.filterSensitiveWord(ctx.common.sensitiveWordMap, params.title);
+    params.desc = ctx.helper.filterSensitiveWord(ctx.common.sensitiveWordMap, params.desc);
+
     // 调用 Service 进行业务处理
     const room = await service.room.create(params);
 

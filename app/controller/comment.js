@@ -18,6 +18,9 @@ class CommentController extends Controller {
     // 校验参数
     ctx.validate({ content: 'content', post: 'string?', user: 'string?' }, params);
 
+    // 敏感词过滤处理
+    params.content = ctx.helper.filterSensitiveWord(ctx.common.sensitiveWordMap, params.content);
+
     // 调用 Service 进行业务处理
     const comment = await service.comment.create(params);
     // 设置响应内容和响应状态码

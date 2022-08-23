@@ -25,7 +25,7 @@ class GiftRelationService extends Service {
     const { ctx, service } = this;
     // 先判断下权限
     const identity = ctx.state.user.identity;
-    if (identity < 200) {
+    if (identity < 700) {
       ctx.throw(403, '无权操作');
     }
     const giftRelation = await service.giftRelation.find(id);
@@ -76,7 +76,7 @@ class GiftRelationService extends Service {
       query.user = user;
     } else {
       // id 为空则判断当前身份，管理员查询全部数据，自己查询我喜欢的
-      if (currUser.identity < 200) {
+      if (currUser.identity < 300) {
         query.user = currUser.id;
       } else {
         select.user = 1;

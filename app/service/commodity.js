@@ -26,7 +26,7 @@ class CommodityService extends Service {
       ctx.throw(404, `商品不存在 ${id}`);
     } else {
       const identity = ctx.state.user.identity;
-      if (identity < 200) {
+      if (identity < 700) {
         ctx.throw(403, '无权操作');
       }
     }
@@ -47,7 +47,7 @@ class CommodityService extends Service {
       ctx.throw(404, '商品不存在');
     } else {
       const identity = ctx.state.user.identity;
-      if (identity < 200) {
+      if (identity < 700) {
         ctx.throw(403, '无权操作');
       }
     }

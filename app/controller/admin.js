@@ -28,11 +28,21 @@ class AdminController extends Controller {
   }
 
   async test() {
+    const { ctx } = this;
+
     let num = 880;
     num = num / 100;
-    console.log(num);
     num = num.toFixed(2);
     console.log(num);
+
+    /**
+     * 敏感词校验
+     */
+    const content = '测试内容，设置一个大香蕉哈哈哈';
+    const result = ctx.helper.filterSensitiveWord(ctx.common.sensitiveWordMap, content);
+    console.log(content);
+    console.log(result);
+    ctx.helper.success({ ctx, msg: '数据处理完成', data: { src: content, target: result } });
   }
 }
 

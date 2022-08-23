@@ -236,17 +236,17 @@ class PayService extends Service {
     const user = await service.user.find(owner);
     // 角色过期时间戳
     let roleTime;
-    if (user.roleDate && user.roleDate > Date.now()) {
-      roleTime = new Date(new Date(user.roleDate)).getTime() + 24 * 60 * 60 * 1000 - 1 + time;// 当天23:59
+    if (user.roleTime > Date.now()) {
+      // 在已有基础上+
+      roleTime = new Date(new Date(user.roleTime)).getTime() + 24 * 60 * 60 * 1000 - 1 + time;
     } else {
+      // 在当天 23:59 基础上+
       roleTime = new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1 + time;// 当天23:59
     }
-    // 过期日期
-    const roleDate = new Date(roleTime);
     // 获取会员角色信息
     const role = await service.role.findByIdentity(100);
     // 更新用户信息
-    await service.user.update(owner, { role: role.id, roleDate });
+    await service.user.update(owner, { role: role.id, roleTime });
   }
 
 }

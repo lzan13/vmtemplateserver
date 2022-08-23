@@ -42,7 +42,7 @@ class OrderService extends Service {
     const userId = ctx.state.user.id;
     const identity = ctx.state.user.identity;
     // 权限判断
-    if (identity < 200 && order.owner !== userId) {
+    if (identity < 700 && order.owner !== userId) {
       ctx.throw(403, '无权操作，普通用户只能操作自己创建的订单');
     }
     // 删除
@@ -57,7 +57,7 @@ class OrderService extends Service {
     const { ctx, service } = this;
     // 先判断下权限
     const identity = ctx.state.user.identity;
-    if (identity < 200) {
+    if (identity < 700) {
       ctx.throw(403, '无权操作，普通用户不能直接修改订单');
     }
     // 先判断下权限
@@ -80,7 +80,7 @@ class OrderService extends Service {
     // 判断下权限
     const userId = ctx.state.user.id;
     const identity = ctx.state.user.identity;
-    if (identity < 200 && order.owner !== userId) {
+    if (identity < 700 && order.owner !== userId) {
       ctx.throw(403, '无权操作，普通用户不能查看他人订单信息');
     }
 
@@ -99,7 +99,7 @@ class OrderService extends Service {
     // 判断下权限
     const userId = ctx.state.user.id;
     const identity = ctx.state.user.identity;
-    if (identity < 200 && order.owner !== userId) {
+    if (identity < 700 && order.owner !== userId) {
       ctx.throw(403, '无权操作，普通用户不能获取他人订单信息');
     }
     const payInfo = await service.third.pay.payInfo(order);
@@ -126,7 +126,7 @@ class OrderService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity < 200) {
+      if (identity < 700) {
         // 普通用户只能查询自己的数据
         query.owner = userId;
       }

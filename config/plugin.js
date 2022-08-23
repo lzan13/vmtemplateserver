@@ -27,10 +27,18 @@ exports.bcrypt = {
 /**
  * 启用插件 egg-cors，用于跨域访问
  */
-// exports.cors = {
-//   enable: false,
-//   package: 'egg-cors',
-// };
+exports.cors = {
+  enable: true,
+  package: 'egg-cors',
+};
+
+/**
+ * 启用插件 socket.io
+ */
+exports.io = {
+  enable: true,
+  package: 'egg-socket.io',
+};
 
 /**
  * 启用插件 egg-jwt，用于 token 生成与校验
@@ -57,6 +65,14 @@ exports.parameters = {
 };
 
 /**
+ * 开启插件 egg-redis
+ */
+exports.redis = {
+  enable: true,
+  package: 'egg-redis',
+};
+
+/**
  * 启用路由插件 egg-router-plus 配置，可配置二级路由
  */
 exports.routerPlus = {
@@ -73,7 +89,7 @@ exports.routerPlus = {
 // };
 
 /**
- * 启用插件 egg-validate，用于参数验证
+ * 启用插件 egg-validate，用于参数验证 https://github.com/node-modules/parameter
  */
 exports.validate = {
   enable: true,

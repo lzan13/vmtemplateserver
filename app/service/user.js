@@ -26,19 +26,10 @@ class UserService extends Service {
         ctx.throw(404, '角色不存在');
       }
     }
-    params.role = role._id;
+    params.role = role.id;
     // 密码加密，这里是简单的 md5 加密
     params.password = await ctx.helper.cryptoMD5(params.password);
-    const user = await ctx.model.User.create(params);
-
-    const result = await service.third.easemob.createUser(user.id, user.password);
-    if (result) {
-      return user;
-    }
-    // 删除用户
-    ctx.model.User.findByIdAndRemove(user.id);
-
-    ctx.throw(412, '创建 IM 账户失败，请联系管理员解决');
+    return await ctx.model.User.create(params);
   }
 
   /**
@@ -54,20 +45,12 @@ class UserService extends Service {
 
     // 删除用户的签到信息
     await ctx.model.Clock.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
-
     // 删除用户的喜欢数据
     await ctx.model.Like.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
-
     // 删除用户的评论数据
     await ctx.model.Comment.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
-
     // 删除用户名下的帖子
     await ctx.model.Post.deleteMany({ owner: this.app.mongoose.Types.ObjectId(user.id) });
-
-    // 删除环信账户
-    await service.third.easemob.delUser(user.id);
-    // 删除用户创建的房间
-    await service.room.findOneAndRemove({ owner: user.id });
 
     // 删除用户并返回
     return ctx.model.User.findByIdAndRemove(id);

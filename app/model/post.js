@@ -28,12 +28,14 @@ module.exports = app => {
     commentCount: { type: Number, default: 0 }, // 被评论数量
     likeCount: { type: Number, default: 0 }, // 被喜欢数量
     deleted: { type: Number, enum: [ 0, 1 ], default: 0 }, // 记录是否被删除，只是软删除 0-未删除 1-已删除
-    deletedAt: { type: Date }, // 删除 时间
+    deletedAt: { type: Number }, // 删除 时间
+    createdAt: { type: Number },
+    updatedAt: { type: Number },
   },
   // schema 的选项options
   {
     // id: true, // id: 默认true，Mongoose会默认生成一个虚拟值id,指向数据库的_id，但会转成字符串返回
-    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }, // 生成时间
+    timestamps: { currentTime: () => Date.now(), createdAt: true, updatedAt: true }, // 时间戳配置
   });
 
   return mongoose.model('Post', PostSchema);

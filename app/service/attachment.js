@@ -33,7 +33,7 @@ class AttachmentService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity < 200 && attachment.owner !== userId) {
+      if (identity < 700 && attachment.owner !== userId) {
         ctx.throw(403, '无权操作，普通用户只能删除自己的附件');
       }
       await this.service.third.upyun.deleteFile(attachment.path);

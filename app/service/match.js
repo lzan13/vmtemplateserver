@@ -18,10 +18,10 @@ class MatchService extends Service {
    * 创建一条新纪录
    */
   async create(params) {
-    const { ctx } = this;
+    const { app, ctx, service } = this;
     const id = ctx.state.user.id;
     // 查询是否有提交匹配数据
-    const match = await ctx.service.match.findByUserId(id);
+    let match = await ctx.service.match.findByUserId(id);
     let data = { ...params };
     if (match) {
       // 存在匹配数据，可供匹配次数+1
@@ -29,11 +29,31 @@ class MatchService extends Service {
         $inc: { fromCount: 1 },
         ...params,
       };
-      return ctx.model.Match.findOneAndUpdate({ user: id }, data);
-    }
+      await ctx.model.Match.findOneAndUpdate({ user: id }, data);
+    } else {
     // 首次提交匹配数据，直接创建
-    data.user = id;
-    return ctx.model.Match.create(data);
+      data.user = id;
+      await ctx.model.Match.create(data);
+    }
+    // 广播信令消息
+    match = await service.match.findByUserId(id);
+    const user = await service.user.find(id, { avatar: 1, nickname: 1, username: 1 });
+
+    const signal = {
+      from: id,
+      to: app.config.io.matchPiazzaId,
+      chatType: 3,
+      action: 'matchInfo',
+      extend: JSON.stringify({
+        user,
+        content: match.content,
+        emotion: match.emotion,
+        gender: match.gender,
+        type: match.type,
+      }),
+    };
+    service.ws.im.sendSignal(signal);
+    return match;
   }
 
   /**
@@ -59,8 +79,8 @@ class MatchService extends Service {
     // 过滤掉自己
     const currId = ctx.state.user.id;
     const query = {
-      user: { $ne: currId },
-      fromCount: { $gte: 0 }, // 防止男女比例差别过大，这里暂时放开匹配限制
+      user: { $ne: currId }, // 排除自己
+      fromCount: { $gte: 0 }, // 待匹配次数 >0
     };
 
     if (gender === '0') {
@@ -70,8 +90,8 @@ class MatchService extends Service {
     }
 
     // 这里心情匹配不限制类型
-    if (type && Number(type) > 0) {
-      query.type = type;
+    if (type) {
+      query.type = { $gte: 0 };
     }
     const user = await service.user.find(currId);
     // 会员身份不需要消耗次数和积分
@@ -158,8 +178,8 @@ class MatchService extends Service {
     const currId = ctx.state.user.id;
     // 组装查询参数
     const query = {
-      user: { $ne: currId },
-      fromCount: { $gte: 0 }, // 防止男女比例差别过大，这里暂时放开匹配限制
+      user: { $ne: currId }, // 排除自己
+      fromCount: { $gte: 0 }, // 待匹配次数 >0
     };
     if (gender === '0') {
       query.gender = { $ne: 1 };

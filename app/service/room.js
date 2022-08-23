@@ -30,13 +30,8 @@ class RoomService extends Service {
     if (!params.maxCount) {
       params.maxCount = 500;
     }
-    const id = await service.third.easemob.createRoom(params);
-    if (!id || id === '') {
-      ctx.throw(500, '房间创建失败');
-    }
-    params._id = id;
-    await ctx.model.Room.create(params);
-    return await service.room.find(id);
+    const room = await ctx.model.Room.create(params);
+    return await service.room.find(room.id);
   }
 
   /**
@@ -52,12 +47,10 @@ class RoomService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity < 200 && room.owner.id !== userId) {
+      if (identity < 700 && room.owner.id !== userId) {
         ctx.throw(403, '无权操作，普通用户只能操作自己创建的房间');
       }
     }
-    // 先删除三方的数据
-    await service.third.easemob.destroyRoom(id);
     // 删除
     return ctx.model.Room.findByIdAndRemove(id);
   }
@@ -76,13 +69,10 @@ class RoomService extends Service {
     } else {
       const userId = ctx.state.user.id;
       const identity = ctx.state.user.identity;
-      if (identity < 200 && room.owner.id !== userId) {
+      if (identity < 700 && room.owner.id !== userId) {
         ctx.throw(403, '无权操作，普通用户只能操作自己创建的房间');
       }
     }
-    // 同步更新到三方服务
-    await service.third.easemob.updateRoom(id, params);
-
     return service.room.findByIdAndUpdate(id, params);
   }
 
@@ -136,7 +126,7 @@ class RoomService extends Service {
 
     // 去三方服务查下当前房间人数，后续还要查下人员信息
     for (const room of result) {
-      const info = await service.third.easemob.roomInfo(room._id);
+      const info = await service.third.easemob.roomInfo(room.id);
       room._doc.count = info.affiliations_count;
     }
     // 整理数据源 -> Ant Design Pro

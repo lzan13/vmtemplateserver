@@ -14,6 +14,10 @@ class MatchController extends Controller {
   async create() {
     const { ctx, service } = this;
     const params = ctx.params.permit('content', 'emotion', 'gender', 'type');
+
+    // 敏感词过滤处理
+    params.content = ctx.helper.filterSensitiveWord(ctx.common.sensitiveWordMap, params.content);
+
     // 调用 Service 进行业务处理
     let match = await service.match.create(params);
     // 这里查询下包括用户信息
