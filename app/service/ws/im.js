@@ -97,7 +97,7 @@ class IMService extends Service {
       ack && ack(0, message);
     }
     // 将消息投递出去
-    this.sendMessage(message.to, [ message ]);
+    await this.sendMessage(message.to, [ message ]);
   }
 
   /**
@@ -111,28 +111,28 @@ class IMService extends Service {
     const socket = app.io.of('/').sockets[socketId];
     if (socketId && socket) {
       // 设置定时器
-      const timer = setTimeout(() => {
+      const timer = setTimeout(async () => {
         clearTimeout(timer);
         console.log('-lz-消息发送失败 timeout');
         // 更新消息状态
-        this.updateMessageStatus(3, messages);
+        await this.updateMessageStatus(3, messages);
       }, 5000);
-      socket.emit('message', messages, (code, obj) => {
+      socket.emit('message', messages, async (code, obj) => {
         clearTimeout(timer);
         if (code === 0) {
           console.log(`-lz-消息发送成功 ${obj}`);
-          this.updateMessageStatus(1, messages);
+          await this.updateMessageStatus(1, messages);
         } else {
           console.log(`-lz-消息发送失败 ${code}`);
           // 更新消息状态
-          this.updateMessageStatus(3, messages);
+          await this.updateMessageStatus(3, messages);
         }
       });
 
     } else {
       console.log('-lz-消息发送失败 user is not online');
       // 未能投递，将消息标注离线
-      this.updateMessageStatus(3, messages);
+      await this.updateMessageStatus(3, messages);
     }
   }
 
@@ -140,10 +140,13 @@ class IMService extends Service {
    * 更新消息状态
    */
   async updateMessageStatus(status, messages) {
-    const ids = messages.map(message => { return message.id; });
+    const ids = messages.map(message => { return message._id; });
     const query = { _id: { $in: ids } };
     const params = { status };
-    this.service.ws.message.updateByQuery(query, params);
+    // console.log('-lz-updateMessageStatus ' + JSON.stringify(query) + ' - ' + JSON.stringify(params));
+    await this.service.ws.message.updateByQuery(query, params);
+    // console.log('-lz-updateMessageStatus result ' + result);
+
   }
 
   /**
@@ -160,14 +163,14 @@ class IMService extends Service {
 
     switch (data.action) {
       case 'onlineStatus': // 在线状态
-        this.onlineStatus(data);
+        await this.onlineStatus(data);
         break;
       case 'recallMessage': // 撤回消息
-        this.recallMessage(data);
+        await this.recallMessage(data);
         break;
       default:
         // 将信令投递出去
-        this.sendSignal(data);
+        await this.sendSignal(data);
         break;
     }
   }
@@ -182,8 +185,7 @@ class IMService extends Service {
     }
     if (signal.chatType === 3) {
       // 这里要广播给所有人
-      app.io.of('/')
-        .emit('signal', signal);
+      app.io.of('/').emit('signal', signal);
     } else {
       // 查找接收方 socket
       const key = `socket_${signal.to}`;
@@ -222,7 +224,7 @@ class IMService extends Service {
       await service.ws.message.findByIdAndUpdate(signal.id, { extend: JSON.stringify(extend) });
       // 下发撤回后的消息
       message.extend = JSON.stringify(extend);
-      this.sendMessage(message.to, [ message ]);
+      await this.sendMessage(message.to, [ message ]);
     }
   }
 }

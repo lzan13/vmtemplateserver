@@ -6,10 +6,10 @@
 module.exports = () => {
   return async (ctx, next) => {
 
-    ctx.service.ws.im.connect();
+    await ctx.service.ws.im.connect();
 
     await next();
 
-    ctx.service.ws.im.disconnect();
+    await ctx.service.ws.im.disconnect();
   };
 };
