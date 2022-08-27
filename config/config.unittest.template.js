@@ -71,11 +71,39 @@ module.exports = () => {
     subSitePath: '/api',
     // 配置邮箱注册账户是否需要激活
     isNeedActivate: false,
-    super: { // 配置超管账户
-      email: 'admin@vmloft.com',
-      username: 'admin',
-      password: '123123',
-    },
+    userList: [
+      { // 超管账户
+        email: 'admin@vmloft.com',
+        username: 'admin',
+        password: '123123',
+        devicesId: 'f64efecaac6d5980',
+        identity: 1000,
+      }, { // 管理后台内容监督账户
+        email: 'police@vmloft.com',
+        username: 'police',
+        password: 'policev5123',
+        devicesId: 'f64efecaac6d5981',
+        identity: 600,
+      }, { // 管理后台测试账户
+        email: 'visitor@vmloft.com',
+        username: 'visitor',
+        password: 'visitor123',
+        devicesId: 'f64efecaac6d5982',
+        identity: 600,
+      }, { // 上线审核测试账户1
+        email: 'test01@vmloft.com',
+        username: 'test01',
+        password: '123123',
+        devicesId: 'f64efecaac6d5983',
+        identity: 8,
+      }, { // 上线审核测试账户2
+        email: 'test02@vmloft.com',
+        username: 'test02',
+        password: '123123',
+        devicesId: 'f64efecaac6d5984',
+        identity: 8,
+      },
+    ],
     siteList: [{ // 系统配置信息
       alias: 'nepenthe',
       title: '社交项目服务系统',
