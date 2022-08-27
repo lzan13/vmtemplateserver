@@ -23,12 +23,22 @@ class RoomService extends Service {
    * @param params
    */
   async create(params) {
-    const { ctx, service } = this;
+    const { app, ctx, service } = this;
     if (!params.owner) {
       params.owner = ctx.state.user.id;
     }
     if (!params.maxCount) {
       params.maxCount = 500;
+    }
+
+    if (app.config.easemob.enable) {
+      const id = await service.third.easemob.createRoom(params);
+      if (!id || id === '') {
+        ctx.throw(500, '房间创建失败');
+      }
+      params._id = id;
+      await ctx.model.Room.create(params);
+      return await service.room.find(id);
     }
     const room = await ctx.model.Room.create(params);
     return await service.room.find(room.id);
@@ -39,7 +49,7 @@ class RoomService extends Service {
    * @param id 房间 id
    */
   async destroy(id) {
-    const { ctx, service } = this;
+    const { app, ctx, service } = this;
     // 先判断下权限
     const room = await service.room.find(id);
     if (!room) {
@@ -51,6 +61,10 @@ class RoomService extends Service {
         ctx.throw(403, '无权操作，普通用户只能操作自己创建的房间');
       }
     }
+    if (app.config.easemob.enable) {
+      // 先删除三方的数据
+      await service.third.easemob.destroyRoom(id);
+    }
     // 删除
     return ctx.model.Room.findByIdAndRemove(id);
   }
@@ -61,7 +75,7 @@ class RoomService extends Service {
    * @param params
    */
   async update(id, params) {
-    const { ctx, service } = this;
+    const { app, ctx, service } = this;
     // 先判断下权限
     const room = await service.room.find(id);
     if (!room) {
@@ -72,6 +86,10 @@ class RoomService extends Service {
       if (identity < 700 && room.owner.id !== userId) {
         ctx.throw(403, '无权操作，普通用户只能操作自己创建的房间');
       }
+    }
+    if (app.config.easemob.enable) {
+      // 同步更新到三方服务
+      await service.third.easemob.updateRoom(id, params);
     }
     return service.room.findByIdAndUpdate(id, params);
   }
@@ -94,7 +112,7 @@ class RoomService extends Service {
    * @param params 查询参数
    */
   async index(params) {
-    const { ctx, service } = this;
+    const { app, ctx, service } = this;
     const { page, limit, owner } = params;
     let result = [];
     let currentCount = 0;
@@ -122,12 +140,15 @@ class RoomService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Room.countDocuments(query).exec();
+    totalCount = await ctx.model.Room.countDocuments(query)
+      .exec();
 
-    // 去三方服务查下当前房间人数，后续还要查下人员信息
-    for (const room of result) {
-      const info = await service.third.easemob.roomInfo(room.id);
-      room._doc.count = info.affiliations_count;
+    if (app.config.easemob.enable) {
+      // 去三方服务查下当前房间人数，后续还要查下人员信息
+      for (const room of result) {
+        const info = await service.third.easemob.roomInfo(room.id);
+        room._doc.count = info.affiliations_count;
+      }
     }
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {

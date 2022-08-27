@@ -13,6 +13,18 @@ module.exports = () => {
   const config = {};
 
   /**
+   * Easemob IM 配置 https://console.easemob.com/app/im-service/detail
+   */
+  config.easemob = {
+    enable: false, // 是否启用环信 IM
+    host: 'http://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
+    orgName: 'orgName', // 环信 appKey # 前半段
+    appName: 'appName', // 环信 appkey # 后半段
+    clientId: 'client id', // 替换环信后台 clientId
+    clientSecret: 'client secret', // 替换环信后台 clientSecret
+  };
+
+  /**
    * 聚合平台相关配置
    */
   config.ads = {

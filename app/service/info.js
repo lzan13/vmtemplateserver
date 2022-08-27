@@ -103,7 +103,7 @@ class SignService extends Service {
    * @param params
    */
   async updatePassword(params) {
-    const { ctx, service } = this;
+    const { app, ctx, service } = this;
 
     const code = await service.code.findByEmail(params.email);
     if (!code || code._doc.code !== params.code) {
@@ -120,6 +120,13 @@ class SignService extends Service {
     user.password = await ctx.helper.cryptoMD5(params.password);
     // 修改密码需要清除 token 重新登录认证
     user.token = service.token.create(user);
+
+    if (app.config.easemob.enable) {
+      const result = await service.third.easemob.updatePassword(id, user.password);
+      if (result !== 0) {
+        ctx.throw(result, '密码更新失败，请稍后重试');
+      }
+    }
 
     return service.user.findByIdAndUpdate(id, user);
   }

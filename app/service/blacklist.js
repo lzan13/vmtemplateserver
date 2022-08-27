@@ -23,7 +23,7 @@ class BlacklistService extends Service {
    * @param user2 被拉黑的人
    */
   async create(user2) {
-    const { ctx, service } = this;
+    const { app, ctx, service } = this;
     const user1 = ctx.state.user.id;
     let params = { user1, user2 };
     // 首先通过 A=>B 查询关系
@@ -57,6 +57,10 @@ class BlacklistService extends Service {
       // 创建拉黑关系
       blacklist = await ctx.model.Blacklist.create({ user1, user2, relation: 0 });
     }
+    if (app.config.easemob.enable) {
+      // 不论后端关系怎样，到im那边就是A->B
+      service.third.easemob.addBlacklist(user1, user2);
+    }
     return blacklist;
   }
 
@@ -77,7 +81,7 @@ class BlacklistService extends Service {
    * @param user2
    */
   async cancel(user2) {
-    const { ctx, service } = this;
+    const { app, ctx, service } = this;
     const user1 = ctx.state.user.id;
 
     let params = { user1, user2 };
@@ -117,7 +121,10 @@ class BlacklistService extends Service {
         ctx.throw(404, '你没有拉黑对方');
       }
     }
-
+    if (app.config.easemob.enable) {
+      // 不论后端关系怎样，到im那边就是A-B
+      await service.third.easemob.delBlacklist(user1, user2);
+    }
     if (blacklist.relation === -1) {
       return ctx.model.Blacklist.findByIdAndRemove(blacklist.id);
     }
@@ -207,7 +214,7 @@ class BlacklistService extends Service {
       };
     } else if (Number(type) === 2) {
       // 查询互相拉黑的用户集合
-      query = { $or: [{ user1: currUserId }, { user2: currUserId }], relation: 2 };
+      query = { $or: [ { user1: currUserId }, { user2: currUserId } ], relation: 2 };
     } else {
       query = {};
     }
