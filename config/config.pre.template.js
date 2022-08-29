@@ -16,7 +16,7 @@ module.exports = () => {
    * Easemob IM 配置 https://console.easemob.com/app/im-service/detail
    */
   config.easemob = {
-    enable: false, // 是否启用环信 IM
+    enable: true, // 是否启用环信 IM，这里默认启用，如果设置为false 需要将下方 io 以及 redis 配置放开
     host: 'http://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
     orgName: 'orgName', // 环信 appKey # 前半段
     appName: 'appName', // 环信 appkey # 后半段
