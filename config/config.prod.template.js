@@ -17,7 +17,7 @@ module.exports = () => {
    */
   config.easemob = {
     enable: true, // 是否启用环信 IM，这里默认启用，如果设置为false 需要将下方 io 以及 redis 配置放开
-    host: 'http://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
+    host: 'https://a1.easemob.com', // 环信 API 请求接口，在环信后台查看
     orgName: 'orgName', // 环信 appKey # 前半段
     appName: 'appName', // 环信 appkey # 后半段
     clientId: 'client id', // 替换环信后台 clientId
@@ -39,22 +39,22 @@ module.exports = () => {
     secret: 'alinode secret',
   };
 
-  /**
-   * socket.io 配置 https://www.eggjs.org/zh-CN/tutorials/socketio
-   */
-  exports.io = {
-    init: {
-      path: '/im',
-      pingInterval: 10 * 60 * 1000,
-      pingTimeout: 10 * 1000,
-    },
-    namespace: {
-      '/': {
-        connectionMiddleware: [ 'connection' ],
-        packetMiddleware: [ 'packet' ],
-      },
-    },
-  };
+  // /**
+  //  * socket.io 配置 https://www.eggjs.org/zh-CN/tutorials/socketio
+  //  */
+  // exports.io = {
+  //   init: {
+  //     path: '/im',
+  //     pingInterval: 10 * 60 * 1000,
+  //     pingTimeout: 10 * 1000,
+  //   },
+  //   namespace: {
+  //     '/': {
+  //       connectionMiddleware: [ 'connection' ],
+  //       packetMiddleware: [ 'packet' ],
+  //     },
+  //   },
+  // };
 
   /**
    * 邮箱配置
@@ -107,17 +107,17 @@ module.exports = () => {
     notifyUrl: '', // 通知回调地址
   };
 
-  /**
-   * egg-redis 配置
-   */
-  exports.redis = {
-    client: {
-      host: '127.0.0.1', // redis 服务器地址，如果是本地运行不需要修改
-      port: 6379, // redis 端口
-      password: 123123, // redis 密码
-      db: 0, // redis 数据库索引
-    },
-  };
+  // /**
+  //  * egg-redis 配置
+  //  */
+  // exports.redis = {
+  //   client: {
+  //     host: '127.0.0.1', // redis 服务器地址，如果是本地运行不需要修改
+  //     port: 6379, // redis 端口
+  //     password: 123123, // redis 密码
+  //     db: 0, // redis 数据库索引
+  //   },
+  // };
 
   /**
    * 接口安全配置
