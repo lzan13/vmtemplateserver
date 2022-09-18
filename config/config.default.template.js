@@ -168,7 +168,7 @@ module.exports = appInfo => {
   config.mongoose = {
     client: {
       url: 'mongodb://127.0.0.1:27017/vmtemplate', // 未开启验证的链接方式
-      // url: 'mongodb://template:123456@127.0.0.1:27017/vmtemplate', // 开启验证的链接方式
+      // url: 'mongodb://vmtemplate:123456@127.0.0.1:27017/vmtemplate', // 开启验证的链接方式
       options: {
         bufferMaxEntries: 0,
         useFindAndModify: false,
