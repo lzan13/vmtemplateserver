@@ -73,6 +73,9 @@ class CommonController extends Controller {
     if (!params.post) {
       delete params.post;
     }
+    if (!params.comment) {
+      delete params.comment;
+    }
 
     // 校验参数
     ctx.validate({ content: 'content' }, params);

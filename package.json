@@ -37,10 +37,10 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmnepentheserver --workers=1",
+    "start": "EGG_SERVER_ENV=prod egg-scripts start --daemon --title=vmnepentheserver",
     "stop": "egg-scripts stop --title=vmnepentheserver",
     "dev": "EGG_SERVER_ENV=local egg-bin dev --sticky",
-    "dev:pre": "EGG_SERVER_ENV=pre egg-bin dev --sticky --workers=1",
+    "dev:pre": "EGG_SERVER_ENV=pre egg-bin dev --sticky",
     "debug": "EGG_SERVER_ENV=local egg-bin debug --sticky",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",

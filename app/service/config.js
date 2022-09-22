@@ -27,6 +27,11 @@ class ConfigService extends Service {
    */
   async destroy(id) {
     const { ctx, service } = this;
+    // 先判断下权限
+    const identity = ctx.state.user.identity;
+    if (identity < 700) {
+      ctx.throw(403, '无权操作');
+    }
     const config = await service.config.find(id);
     if (!config) {
       ctx.throw(404, `配置信息不存在 ${id}`);
@@ -34,6 +39,18 @@ class ConfigService extends Service {
     return ctx.model.Config.findByIdAndRemove(id);
   }
 
+  /**
+   * 批量删除
+   * @param ids 需要删除的 Id 集合
+   */
+  async destroyList(ids) {
+    const { ctx } = this;
+    const identity = ctx.state.user.identity;
+    if (identity < 700) {
+      ctx.throw(403, '无权操作，请联系管理员开通权限');
+    }
+    return ctx.model.Comment.remove({ _id: { $in: ids } });
+  }
   /**
    * 更新配置
    * @param id

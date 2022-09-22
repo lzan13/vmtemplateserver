@@ -69,6 +69,11 @@ class BlacklistService extends Service {
    */
   async destroy(id) {
     const { ctx, service } = this;
+    // 先判断下权限
+    const identity = ctx.state.user.identity;
+    if (identity < 700) {
+      ctx.throw(403, '无权操作');
+    }
     const blacklist = await service.blacklist.find(id);
     if (!blacklist) {
       ctx.throw(404, `数据不存在 ${id}`);
@@ -76,6 +81,18 @@ class BlacklistService extends Service {
     return ctx.model.Blacklist.findByIdAndRemove(id);
   }
 
+  /**
+   * 批量删除
+   * @param ids 需要删除的 Id 集合
+   */
+  async destroyList(ids) {
+    const { ctx } = this;
+    const identity = ctx.state.user.identity;
+    if (identity < 700) {
+      ctx.throw(403, '无权操作，请联系管理员开通权限');
+    }
+    return ctx.model.Blacklist.remove({ _id: { $in: ids } });
+  }
   /**
    * 取消
    * @param user2
@@ -214,7 +231,7 @@ class BlacklistService extends Service {
       };
     } else if (Number(type) === 2) {
       // 查询互相拉黑的用户集合
-      query = { $or: [ { user1: currUserId }, { user2: currUserId } ], relation: 2 };
+      query = { $or: [{ user1: currUserId }, { user2: currUserId }], relation: 2 };
     } else {
       query = {};
     }

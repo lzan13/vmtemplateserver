@@ -183,7 +183,7 @@ exports.filterSensitiveWord = function(sensitiveMap, content) {
   }
   let contentReplace = content;
   matchs.forEach(match => {
-    contentReplace = contentReplace.replace(match.sensitiveWord, '***');
+    contentReplace = contentReplace.replace(match.sensitiveWord, '**');
   });
   return contentReplace;
 };

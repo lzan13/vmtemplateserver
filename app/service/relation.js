@@ -71,6 +71,11 @@ class RelationService extends Service {
    */
   async destroy(id) {
     const { ctx, service } = this;
+    // 先判断下权限
+    const identity = ctx.state.user.identity;
+    if (identity < 700) {
+      ctx.throw(403, '无权操作');
+    }
     const relation = await service.relation.find(id);
     if (!relation) {
       ctx.throw(404, `数据不存在 ${id}`);
@@ -78,6 +83,18 @@ class RelationService extends Service {
     return ctx.model.Relation.findByIdAndRemove(id);
   }
 
+  /**
+   * 批量删除
+   * @param ids 需要删除的 Id 集合
+   */
+  async destroyList(ids) {
+    const { ctx } = this;
+    const identity = ctx.state.user.identity;
+    if (identity < 700) {
+      ctx.throw(403, '无权操作，请联系管理员开通权限');
+    }
+    return ctx.model.Relation.remove({ _id: { $in: ids } });
+  }
   /**
    * 取消关注
    * @param user2

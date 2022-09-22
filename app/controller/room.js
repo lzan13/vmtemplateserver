@@ -43,7 +43,7 @@ class RoomController extends Controller {
   }
 
   /**
-   * 批量销毁
+   * 批量删除
    * 参数 {ids: "5a452a44ab122b16a0231b42,5a452a3bab122b16a0231b41"}
    */
   async destroyList() {
@@ -57,7 +57,7 @@ class RoomController extends Controller {
       await service.room.destroy(id);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '批量销毁成功' });
+    ctx.helper.success({ ctx, msg: '批量删除成功' });
   }
 
   /**

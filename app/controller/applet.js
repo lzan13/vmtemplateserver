@@ -14,7 +14,7 @@ class AppletController extends Controller {
   async create() {
     const { ctx, service } = this;
     // 组装参数
-    const params = ctx.params.permit('title', 'content', 'tips', 'isNeedVIP', 'type', 'appId', 'cover', 'body', 'url', 'versionCode', 'versionName');
+    const params = ctx.params.permit('title', 'content', 'tips', 'isNeedVIP', 'status', 'type', 'appId', 'cover', 'body', 'url', 'versionCode', 'versionName');
     // 校验参数
     ctx.validate({ title: 'title', content: 'content', cover: 'string' }, params);
 
@@ -38,7 +38,7 @@ class AppletController extends Controller {
   }
 
   /**
-   * 批量销毁
+   * 批量删除
    * 参数 {ids: "5a452a44ab122b16a0231b42,5a452a3bab122b16a0231b41"}
    */
   async destroyList() {
@@ -52,9 +52,8 @@ class AppletController extends Controller {
       await service.applet.destroy(id);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '批量销毁成功' });
+    ctx.helper.success({ ctx, msg: '批量删除成功' });
   }
-
 
   /**
    * 修改内容
@@ -64,7 +63,7 @@ class AppletController extends Controller {
     // 组装参数
     const { id } = ctx.params;
     // 组装参数
-    const params = ctx.params.permit('title', 'content', 'tips', 'isNeedVIP', 'type', 'appId', 'cover', 'body', 'url', 'versionCode', 'versionName');
+    const params = ctx.params.permit('title', 'content', 'tips', 'isNeedVIP', 'status', 'type', 'appId', 'cover', 'body', 'url', 'versionCode', 'versionName');
     // 校验参数
     ctx.validate({ title: 'title?', content: 'content?' }, params);
 

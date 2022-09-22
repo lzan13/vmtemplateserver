@@ -15,12 +15,21 @@ class FeedbackController extends Controller {
     const { ctx, service } = this;
     // 组装参数
     const params = ctx.params.permit('contact', 'content', 'user', 'post', 'comment', 'remark', 'attachments', 'type');
+    if (!params.user) {
+      delete params.user;
+    }
+    if (!params.post) {
+      delete params.post;
+    }
+    if (!params.comment) {
+      delete params.comment;
+    }
     // 校验参数
     ctx.validate({ content: 'content' }, params);
     // 调用 Service 进行业务处理
-    const role = await service.feedback.create(params);
+    const feedbock = await service.feedback.create(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '反馈成功', data: role });
+    ctx.helper.success({ ctx, msg: '反馈成功', data: feedbock });
   }
 
   /**
@@ -37,7 +46,7 @@ class FeedbackController extends Controller {
   }
 
   /**
-   * 批量删除反馈
+   * 批量删除
    * 参数 {ids: "5a452a44ab122b16a0231b42,5a452a3bab122b16a0231b41"}
    */
   async destroyList() {
@@ -48,7 +57,7 @@ class FeedbackController extends Controller {
     // 调用 Service 进行业务处理
     await service.feedback.destroyList(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '批量删除反馈成功' });
+    ctx.helper.success({ ctx, msg: '批量删除成功' });
   }
 
   /**
@@ -75,9 +84,9 @@ class FeedbackController extends Controller {
     // 组装参数
     const { id } = ctx.params;
     // 调用 Service 进行业务处理
-    const role = await service.feedback.show(id);
+    const feedbock = await service.feedback.show(id);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '获取反馈成功', data: role });
+    ctx.helper.success({ ctx, msg: '获取反馈成功', data: feedbock });
   }
 
   /**
@@ -88,9 +97,9 @@ class FeedbackController extends Controller {
     // 组装参数
     const params = ctx.params.permit('page', 'limit', 'contact', 'status', 'type');
     // 调用 Service 进行业务处理
-    const roles = await service.feedback.index(params);
+    const feedbocks = await service.feedback.index(params);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '查询反馈成功', data: roles });
+    ctx.helper.success({ ctx, msg: '查询反馈成功', data: feedbocks });
   }
 
 }

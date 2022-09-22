@@ -16,7 +16,7 @@ module.exports = app => {
   /** 消息路由 */
   // RESTful 风格的 URL 定义，一个配置实现 增删改查接口，需要在对应的 Controller 内实现对应方法，具体对应看上边注释
   apiRouter.resources('message', '/v1/message', controller.message);
-  // 批量销毁，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
+  // 批量删除，因为 RESTFul 风格 Api 没有批量删除，这里单独加一下
   apiRouter.delete('/v1/message', controller.message.destroyList);
 
   // 消息包路由

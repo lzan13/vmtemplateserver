@@ -102,7 +102,7 @@ class AppletService extends Service {
    */
   async index(params) {
     const { ctx } = this;
-    const { page, limit } = params;
+    const { page, limit, status, type } = params;
     let result = [];
     let currentCount = 0;
     let totalCount = 0;
@@ -110,6 +110,18 @@ class AppletService extends Service {
     const skip = Number(page || 0) * Number(limit || 20);
     // 组装查询参数
     const query = {};
+    if (status) {
+      if (Number(status) === -1) {
+        query.$or = [{ status: 0 }, { status: 1 }];
+      } else {
+        query.status = Number(type);
+      }
+    } else {
+      query.status = 1;
+    }
+    if (type) {
+      query.type = Number(type);
+    }
 
     result = await ctx.model.Applet.find(query)
       .skip(skip)
@@ -119,7 +131,8 @@ class AppletService extends Service {
       .sort({ createdAt: -1 })
       .exec();
     currentCount = result.length;
-    totalCount = await ctx.model.Applet.countDocuments(query).exec();
+    totalCount = await ctx.model.Applet.countDocuments(query)
+      .exec();
 
     // 整理数据源 -> Ant Design Pro
     const data = result.map(item => {

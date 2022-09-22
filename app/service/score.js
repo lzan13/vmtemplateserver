@@ -53,14 +53,22 @@ class ScoreService extends Service {
     if (!score) {
       ctx.throw(404, `数据不存在 ${id}`);
     }
-    // 删除封面
-    service.attachment.destroy(score.cover);
-    // 删除特效数据
-    service.attachment.destroy(score.animation);
     // 删除
     return ctx.model.Score.findByIdAndRemove(id);
   }
 
+  /**
+   * 批量删除
+   * @param ids 需要删除的 Id 集合
+   */
+  async destroyList(ids) {
+    const { ctx } = this;
+    const identity = ctx.state.user.identity;
+    if (identity < 700) {
+      ctx.throw(403, '无权操作，请联系管理员开通权限');
+    }
+    return ctx.model.Score.remove({ _id: { $in: ids } });
+  }
   /**
    * 更新内容
    * @param id

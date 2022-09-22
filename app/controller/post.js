@@ -41,7 +41,7 @@ class PostController extends Controller {
   }
 
   /**
-   * 批量销毁
+   * 批量删除
    * 参数 {ids: "5a452a44ab122b16a0231b42,5a452a3bab122b16a0231b41"}
    */
   async destroyList() {
@@ -55,7 +55,7 @@ class PostController extends Controller {
       await service.post.destroy(id);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '批量销毁成功' });
+    ctx.helper.success({ ctx, msg: '批量删除成功' });
   }
 
   /**
@@ -69,7 +69,7 @@ class PostController extends Controller {
     // 调用 Service 进行业务处理
     await service.post.delete(id);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '删除内容成功' });
+    ctx.helper.success({ ctx, msg: '软删除成功' });
   }
 
   /**
@@ -85,7 +85,7 @@ class PostController extends Controller {
       // 调用 Service 进行业务处理
       await service.post.delete(id);
     }
-    ctx.helper.success({ ctx, msg: '批量删除内容成功' });
+    ctx.helper.success({ ctx, msg: '批量软删除成功' });
   }
 
   /**

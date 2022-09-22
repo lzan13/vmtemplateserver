@@ -33,9 +33,26 @@ class VersionController extends Controller {
     // 调用 Service 进行业务处理
     await service.version.destroy(id);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '删除版本成功' });
+    ctx.helper.success({ ctx, msg: '删除成功' });
   }
 
+  /**
+   * 批量删除
+   * 参数 {ids: "5a452a44ab122b16a0231b42,5a452a3bab122b16a0231b41"}
+   */
+  async destroyList() {
+    const { ctx, service } = this;
+    // 组装参数
+    const { ids } = ctx.params;
+    const idArray = ids.split(',') || [];
+    // 设置响应内容和响应状态码
+    for (const id of idArray) {
+      // 调用 Service 进行业务处理
+      await service.version.destroy(id);
+    }
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '批量删除成功' });
+  }
   /**
    * 修改版本
    */

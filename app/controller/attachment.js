@@ -91,7 +91,7 @@ class AttachmentController extends Controller {
       await service.attachment.destroy(id);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '批量删除附件成功' });
+    ctx.helper.success({ ctx, msg: '批量删除成功' });
   }
 
   /**

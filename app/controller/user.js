@@ -38,7 +38,7 @@ class UserController extends Controller {
   }
 
   /**
-   * 批量销毁用户，参数为 Id 集合，这里的销毁是物理删除，从数据库删除用户全部信息
+   * 批量删除用户，参数为 Id 集合，这里的销毁是物理删除，从数据库删除用户全部信息
    */
   async destroyList() {
     const { ctx, service } = this;
@@ -50,7 +50,7 @@ class UserController extends Controller {
       await service.user.destroy(id);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '批量销毁用户成功' });
+    ctx.helper.success({ ctx, msg: '批量删除成功' });
   }
 
   /**
@@ -64,7 +64,7 @@ class UserController extends Controller {
     // 调用 Service 进行业务处理
     await service.user.delete(params.id, params.reason);
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '删除用户成功' });
+    ctx.helper.success({ ctx, msg: '软删除成功' });
   }
 
   /**
@@ -80,7 +80,7 @@ class UserController extends Controller {
       // 调用 Service 进行业务处理
       await service.user.delete(id, reason);
     }
-    ctx.helper.success({ ctx, msg: '批量删除用户成功' });
+    ctx.helper.success({ ctx, msg: '批量软删除成功' });
   }
 
   /**

@@ -35,21 +35,7 @@ class BlacklistController extends Controller {
   }
 
   /**
-   * 取消拉黑
-   */
-  async cancel() {
-    const { ctx, service } = this;
-    // 校验参数
-    const { id } = ctx.params;
-    // 调用 Service 进行业务处理
-    await service.blacklist.cancel(id);
-    // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '取消拉黑成功' });
-  }
-
-
-  /**
-   * 批量删除拉黑
+   * 批量删除
    * 参数 {ids: "5a452a44ab122b16a0231b42,5a452a3bab122b16a0231b41"}
    */
   async destroyList() {
@@ -63,7 +49,20 @@ class BlacklistController extends Controller {
       await service.blacklist.destroy(id);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '批量删除拉黑成功' });
+    ctx.helper.success({ ctx, msg: '批量删除成功' });
+  }
+
+  /**
+   * 取消拉黑
+   */
+  async cancel() {
+    const { ctx, service } = this;
+    // 校验参数
+    const { id } = ctx.params;
+    // 调用 Service 进行业务处理
+    await service.blacklist.cancel(id);
+    // 设置响应内容和响应状态码
+    ctx.helper.success({ ctx, msg: '取消拉黑成功' });
   }
 
   /**

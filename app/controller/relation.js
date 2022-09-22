@@ -49,7 +49,7 @@ class RelationController extends Controller {
 
 
   /**
-   * 批量删除关注
+   * 批量删除
    * 参数 {ids: "5a452a44ab122b16a0231b42,5a452a3bab122b16a0231b41"}
    */
   async destroyList() {
@@ -63,7 +63,7 @@ class RelationController extends Controller {
       await service.relation.destroy(id);
     }
     // 设置响应内容和响应状态码
-    ctx.helper.success({ ctx, msg: '批量删除关注成功' });
+    ctx.helper.success({ ctx, msg: '批量删除成功' });
   }
 
   /**
